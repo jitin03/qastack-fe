@@ -4,24 +4,27 @@ import {
   TableHead,
   TableRow,
   TableCell,
+  makeStyles,
   TablePagination,
   TableSortLabel,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   table: {
-    marginTop: theme.spacing(3),
+    // marginTop: theme.spacing(3),
     "& thead th": {
+      textAlign: "center",
       fontWeight: "600",
-      color: theme.palette.primary.main,
-      //   backgroundColor: theme.palette.primary.light,
+
+      // color: theme.palette.primary.main,
+      // backgroundColor: theme.palette.primary.light,
     },
     "& tbody td": {
+      textAlign: "center",
       fontWeight: "300",
     },
     "& tbody tr:hover": {
-      backgroundColor: "#fffbf2",
+      backgroundColor: "rgb(232, 232, 232)",
       cursor: "pointer",
     },
   },
@@ -42,6 +45,7 @@ export default function useTable(records, headCells, filterFn) {
 
   const TblHead = (props) => {
     const handleSortRequest = (cellId) => {
+      console.log(cellId);
       const isAsc = orderBy === cellId && order === "asc";
       setOrder(isAsc ? "desc" : "asc");
       setOrderBy(cellId);
@@ -51,7 +55,24 @@ export default function useTable(records, headCells, filterFn) {
       <TableHead>
         <TableRow>
           {headCells.map((headCell) => (
-            <TableCell key={headCell.id}>{headCell.label}</TableCell>
+            <TableCell
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              {headCell.disableSorting ? (
+                headCell.label
+              ) : (
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={() => {
+                    handleSortRequest(headCell.id);
+                  }}
+                >
+                  {headCell.label}
+                </TableSortLabel>
+              )}
+            </TableCell>
           ))}
         </TableRow>
       </TableHead>

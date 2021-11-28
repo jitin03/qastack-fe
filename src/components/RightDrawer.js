@@ -19,21 +19,24 @@ import CloseIcon from "@mui/icons-material/Close";
 import ReleaseForm from "./Releases/ReleaseForm";
 import ProjectForm from "./Projects/ProjectForm";
 import ProjectEditForm from "./Projects/ProjectEditForm";
+import CreateComponent from "../layouts/Component/Create";
+import EditComponent from "../layouts/Component/Edit";
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   padding: theme.spacing(0, 1),
   marginTop: "20px",
+  // width: 300px;
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
-export default function RightDrawer({ configTitle }) {
+export default function RightDrawer({ configTitle, width = "550px" }) {
   const { state, toggleDrawer, module, anchor, handleCloseRightDrawer } =
     useGlobalContext();
 
-  const list = (anchor) => (
-    <Box sx={{ width: 550 }}>
+  const list = (width) => (
+    <Box sx={{ width: width }}>
       <DrawerHeader>
         <Grid
           container
@@ -55,14 +58,16 @@ export default function RightDrawer({ configTitle }) {
         </Grid>
       </DrawerHeader>
       {(function () {
-        if (configTitle === "Add Module") {
-          return <ModuleForm />;
+        if (configTitle === "Add Component") {
+          return <CreateComponent />;
         } else if (configTitle === "Add Project") {
           return <ProjectForm />;
         } else if (configTitle === "Add Release") {
           return <ReleaseForm />;
         } else if (configTitle === "Edit Project") {
           return <ProjectEditForm />;
+        } else if (configTitle === "Edit Component") {
+          return <EditComponent />;
         }
       })()}
     </Box>
@@ -77,7 +82,7 @@ export default function RightDrawer({ configTitle }) {
         // onClose={toggleDrawer("right", state)}
         style={{ zIndex: 1201 }}
       >
-        {list(anchor)}
+        {list(width)}
       </Drawer>
     </>
   );

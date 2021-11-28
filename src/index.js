@@ -9,15 +9,18 @@ import { AppProvider } from "./context/provider/context";
 
 import theme from "./theme";
 import { ProjectProvider } from "./context/provider/projectContext";
+import { AuthProvider } from "./context/provider/authContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <Router>
         <AppProvider>
-          <ProjectProvider>
-            <App />
-          </ProjectProvider>
+          <AuthProvider>
+            <ProjectProvider>
+              <App />
+            </ProjectProvider>
+          </AuthProvider>
         </AppProvider>
       </Router>
     </ThemeProvider>

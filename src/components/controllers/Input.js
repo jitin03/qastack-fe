@@ -12,7 +12,6 @@ function Input(props) {
         name={name}
         value={value || null}
         onChange={onChange}
-        {...others}
       ></TextField>
     </>
   );

@@ -5,7 +5,7 @@ import { useGlobalContext } from "../../context/provider/context";
 import Controls from "../controllers/Controls";
 import { Form } from "../useForm";
 import { useMutation, useQueryClient } from "react-query";
-import { addProject, updateProject } from "../../context/actions/api";
+import { addProject, updateProject } from "../../context/actions/project/api";
 import { useHistory, useParams } from "react-router-dom";
 const useStyles = makeStyles({
   bottomDrawer: {
@@ -39,13 +39,13 @@ export default function ProjectEditForm() {
       console.log(projectState.project.name);
       await mutateAsync({ editId, projectState });
       queryClient.invalidateQueries("project");
-      history.push("/projects");
     }
 
     handleCloseRightDrawer();
     projectDispatch({
       type: "RESET_PROJECT_FORM",
     });
+    history.push("/projects");
     console.log(projectState);
   };
 

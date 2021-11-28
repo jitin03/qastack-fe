@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
-import { IconButton, Typography } from "@mui/material";
+import { IconButton, Tooltip, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -100,10 +100,12 @@ export default function SideMenu(props) {
           {menus.map((item, index) => {
             const { id, url, text, icon } = item;
             return (
-              <ListItem button key={id} component={Link} href={url}>
-                {icon && <ListItemIcon>{icon}</ListItemIcon>}
-                <ListItemText primary={text} />
-              </ListItem>
+              <Tooltip title={text} arrow disableInteractive>
+                <ListItem button key={id} component={Link} href={url}>
+                  {icon && <ListItemIcon>{icon}</ListItemIcon>}
+                  <ListItemText primary={text} />
+                </ListItem>
+              </Tooltip>
             );
           })}
         </List>

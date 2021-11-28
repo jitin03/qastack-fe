@@ -3,15 +3,18 @@ import { Badge, Grid, IconButton, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
 import { makeStyles } from "@mui/styles";
-
+import { Link } from "react-router-dom";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import Menu from "@mui/icons-material/Menu";
 import Controls from "./controllers/Controls";
 import { useGlobalContext } from "../context/provider/context";
 import { useQuery } from "react-query";
-import { getAllProjects } from "../context/actions/api";
+import { useHistory } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useProjectContext } from "../context/provider/projectContext";
+import Button from "./controllers/Button";
+import isAuthenticated from "../context/actions/auth/isAuthenticated";
+import { getAllProjects } from "../context/actions/project/api";
 const drawerWidth = 240;
 const useStyles = makeStyles({
   headerRight: {
@@ -53,19 +56,25 @@ export default function Header(props) {
   const classes = useStyles();
   const cars = ["tset", "asdad"];
   let getProjectList = [];
-  const { data, error, isLoading, isError } = useQuery(
-    "project",
-    getAllProjects
+  const { data, error, isLoading, isError } = useQuery(["project", 3], () =>
+    getAllProjects(3)
   );
+
+  const history = useHistory();
+  const handleUserLogout = () => {
+    localStorage.removeItem("token");
+    history.push("/auth/login");
+  };
   useEffect(() => {
     if (data) {
+      console.log(data);
       const temp = data.map((item) => {
         return item.Name;
       });
-
       setProjectList(temp);
     }
-  }, [data]);
+    localStorage.setItem("starProject", starProject);
+  }, [data, starProject]);
 
   // const handleInputChange = (e) => {
   //   const { name, value } = e.target;
@@ -80,7 +89,7 @@ export default function Header(props) {
 
   console.log(getProjectList);
   return (
-    <AppBar position="fixed" open={open}>
+    <AppBar position="fixed" open={open} style={{ background: "#2E3B55" }}>
       <Toolbar>
         <Grid
           container
@@ -98,18 +107,22 @@ export default function Header(props) {
             alignItems="center"
           >
             <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                sx={{ mr: 2, ...(open && { display: "none" }) }}
-              >
-                <Menu />
-              </IconButton>
+              {isAuthenticated() && (
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={handleDrawerOpen}
+                  edge="start"
+                  sx={{ mr: 2, ...(open && { display: "none" }) }}
+                >
+                  <Menu />
+                </IconButton>
+              )}
             </Grid>
             <Grid item>
-              <Typography>QA-Stack</Typography>
+              <Typography variant="h5" style={{ marginLeft: "20px" }}>
+                QA-Stack
+              </Typography>
             </Grid>
           </Grid>
 
@@ -119,33 +132,48 @@ export default function Header(props) {
             container
             md={4}
             columnSpacing={3}
-            justifyContent="flex-start"
+            justifyContent="flex-end"
             alignContent="center"
             alignItems="center"
           >
-            <Grid item className={classes.headerRight}>
-              {isLoading ? (
-                <CircularProgress />
-              ) : (
-                <Controls.Select
-                  name="projectName"
-                  label="Select Project"
-                  value={starProject}
-                  onChange={(e) => setStarProject(e.target.value)}
-                  options={projectList}
-                />
-              )}
-            </Grid>
+            {isAuthenticated() && (
+              <Grid item className={classes.headerRight}>
+                {isLoading ? (
+                  <CircularProgress />
+                ) : (
+                  <Controls.Select
+                    variant="standard"
+                    name="projectName"
+                    label="Select Project"
+                    value={starProject}
+                    onChange={(e) => setStarProject(e.target.value)}
+                    options={projectList}
+                  />
+                )}
+              </Grid>
+            )}
             <Grid item>
               <Typography>Org.ABC</Typography>
             </Grid>
-            <Grid item textAlign="end">
-              <IconButton>
-                <Badge badgeContent={4} color="secondary">
-                  <NotificationsNoneIcon />
-                </Badge>
-              </IconButton>
-            </Grid>
+            {!isAuthenticated() ? (
+              <Grid item textAlign="end">
+                <Button
+                  variant="outlined"
+                  text="Sign Up"
+                  component={Link}
+                  to={"/auth/register"}
+                ></Button>
+              </Grid>
+            ) : (
+              <Grid item textAlign="end">
+                <Button
+                  color="error"
+                  variant="outlined"
+                  text="Logout"
+                  onClick={handleUserLogout}
+                ></Button>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Toolbar>

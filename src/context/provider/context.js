@@ -4,6 +4,8 @@ import release from "../reducers/release";
 import project from "../reducers/project";
 import { useHistory } from "react-router-dom";
 import projectInitialState from "../initialStates/projectInitialState";
+import componentInitialState from "../initialStates/componentInitialState";
+import component from "../reducers/component";
 const AppContext = React.createContext();
 
 const anchor = "right";
@@ -19,6 +21,11 @@ const AppProvider = ({ children }) => {
   const history = useHistory();
   // useState for Module
   const [configTitle, setConfigTitle] = useState("");
+  const [passwordIsMasked, setPasswordIsMasked] = useState(true);
+  const [registerPasswordIsMasked, setRegisterPasswordIsMasked] =
+    useState(true);
+  const [confirmPasswordIsMasked, setConfirmPasswordIsMasked] = useState(true);
+  const [openToast, setOpenToast] = useState(false);
   const [editId, setEditId] = useState(0);
   const [projectList, setProjectList] = useState([]);
   const [values, setValues] = useState(initialModuleValues);
@@ -39,6 +46,11 @@ const AppProvider = ({ children }) => {
     releaseInitialState
   );
 
+  const [componentState, componentDispatch] = useReducer(
+    component,
+    componentInitialState
+  );
+
   const [projectState, projectDispatch] = useReducer(
     project,
     projectInitialState
@@ -46,6 +58,10 @@ const AppProvider = ({ children }) => {
 
   const addModule = () => {
     setAddModuleOpen(true);
+  };
+
+  const handleCloseToast = () => {
+    setOpenToast(false);
   };
 
   const handleCloseModal = () => {
@@ -59,8 +75,11 @@ const AppProvider = ({ children }) => {
       history.push("/project/create");
     } else if (configTitle === "Edit Project") {
       history.push(`/project/edit/${param}`);
+    } else if (configTitle === "Edit Component") {
+      console.log("param", param);
+      history.push(`/component/edit/${param}`);
     } else {
-      history.push("/module/create");
+      history.push("/component/create");
     }
     setState(!state);
     setConfigTitle(configTitle);
@@ -117,6 +136,7 @@ const AppProvider = ({ children }) => {
     console.log(newModules);
   };
   const handleCloseRightDrawer = () => {
+    // e.preventDefault();
     setState(!state);
   };
   const toggleDrawer = () => (event) => {
@@ -127,6 +147,16 @@ const AppProvider = ({ children }) => {
       return;
     }
     setState(!state);
+  };
+  const togglePasswordMask = () => {
+    setPasswordIsMasked(!passwordIsMasked);
+  };
+  const toggleRegisterPasswordMask = (e) => {
+    e.preventDefault();
+    setRegisterPasswordIsMasked(!registerPasswordIsMasked);
+  };
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
   };
 
   return (
@@ -143,12 +173,24 @@ const AppProvider = ({ children }) => {
         setProjects,
         setModuleName,
         toggleDrawer,
+        passwordIsMasked,
         setState,
         subModule,
         setSubModule,
         openRightDrawer,
         handleDeleteModule,
         moduleType,
+        confirmPasswordIsMasked,
+        setConfirmPasswordIsMasked,
+        registerPasswordIsMasked,
+        setRegisterPasswordIsMasked,
+        toggleRegisterPasswordMask,
+        handleCloseToast,
+        setPasswordIsMasked,
+        togglePasswordMask,
+        handleMouseDownPassword,
+        openToast,
+        setOpenToast,
         state,
         values,
         setValues,
@@ -160,6 +202,8 @@ const AppProvider = ({ children }) => {
         handleRightDrawer,
         handleReleaseFormInput,
         releaseState,
+        componentState,
+        componentDispatch,
         projectState,
         releases,
         projectList,

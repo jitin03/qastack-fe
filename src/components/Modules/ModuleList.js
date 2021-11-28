@@ -77,7 +77,13 @@ export default function ModuleList() {
   return (
     <>
       <Grid container spacing={2} justifyItems="center" alignItems="center">
-        <Grid item style={{ textAlign: "right", flex: "1" }}>
+        <Grid
+          item
+          style={{
+            textAlign: "right",
+            flex: "1",
+          }}
+        >
           <Button
             variant="outlined"
             startIcon={<AddIcon />}

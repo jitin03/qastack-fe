@@ -8,14 +8,14 @@ import {
 } from "@mui/material";
 
 export default function Select(props) {
-  const { name, label, value, onChange, options, ...others } = props;
+  const { variant, name, label, value, onChange, options, ...others } = props;
   console.log(value);
 
   return (
-    <FormControl variant="outlined" fullWidth margin="dense">
+    <FormControl variant={variant || "outlined"} fullWidth margin="dense">
       <InputLabel>{label}</InputLabel>
       <MuiSelect label={label} name={name} value={value} onChange={onChange}>
-        <MenuItem value="">None</MenuItem>
+        <MenuItem value="">All</MenuItem>
 
         {options.map((item, index) => {
           return (

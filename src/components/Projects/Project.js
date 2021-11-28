@@ -1,9 +1,9 @@
-import { Button, Container, Grid, Typography } from "@mui/material";
+import { Button, Container, Grid, Tooltip, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 
 import { useGlobalContext } from "../../context/provider/context";
 import Breadcrumb from "../Breadcrumb";
-import { getAllProjects } from "../../context/actions/api";
+
 import AddIcon from "@mui/icons-material/Add";
 import { makeStyles } from "@mui/styles";
 import RightDrawer from "../RightDrawer";
@@ -14,6 +14,9 @@ import { useHistory, useParams } from "react-router-dom";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import { useProjectContext } from "../../context/provider/projectContext";
+import Toast from "../controllers/Toast";
+import { getAllProjects } from "../../context/actions/project/api";
 
 const useStyle = makeStyles({
   noModules: {
@@ -21,16 +24,35 @@ const useStyle = makeStyles({
   },
 });
 const Project = () => {
-  const { module, state, setState, setEditId, handleRightDrawer } =
-    useGlobalContext();
-  const { data, error, isLoading, isError } = useQuery(
-    "project",
-    getAllProjects
+  const {
+    module,
+    state,
+    setState,
+    setEditId,
+    handleRightDrawer,
+    handleCloseToast,
+    openToast,
+    setOpenToast,
+  } = useGlobalContext();
+  const classes = useStyle();
+
+  const { starProject } = useProjectContext();
+  const { data, error, isLoading, isError } = useQuery(["project", 3], () =>
+    getAllProjects(3)
   );
   let { id } = useParams();
-  console.log(useParams());
+
   setEditId(id);
-  const classes = useStyle();
+  let newData;
+  if (data) {
+    newData = data.filter(function (item) {
+      if (starProject) {
+        return item.Name == starProject;
+      } else {
+        return item;
+      }
+    });
+  }
 
   if (isLoading) {
     return (
@@ -65,33 +87,64 @@ const Project = () => {
   }
   return (
     <>
-      <Grid container>
-        <Grid item style={{ flex: "1" }} color="GrayText">
-          <Breadcrumb />
-        </Grid>
-        <Grid
-          item
-          container
-          justifyContent="center"
-          style={{ padding: "50px 10px" }}
-        >
-          {data.length > 0 ? (
-            <ProjectList projects={data} />
-          ) : (
+      <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
+        <Grid container justifyItems="center" alignItems="center">
+          <Grid
+            item
+            container
+            justifyContent="flex-end"
+            alignItems="center"
+            style={{
+              backgroundColor: "rgb(248, 248, 248)",
+            }}
+          >
             <Grid item>
-              <Typography>No Project avaiable</Typography>
-              <Button
-                variant="outlined"
-                startIcon={<AddIcon />}
-                onClick={() => handleRightDrawer("Add Project")}
-              >
-                Add Project
-              </Button>
+              <Tooltip title="Add new project" arrow disableInteractive>
+                <Button
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  onClick={() => handleRightDrawer("Add Project")}
+                >
+                  Add Project
+                </Button>
+              </Tooltip>
             </Grid>
-          )}
-          <Grid item></Grid>
+          </Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ padding: "50px 10px" }}
+          >
+            {data?.length ? (
+              <ProjectList projects={newData} />
+            ) : (
+              <Grid item>
+                <Typography>No Project avaiable</Typography>
+                <Tooltip title="Add new project" arrow disableInteractive>
+                  <Button
+                    variant="outlined"
+                    startIcon={<AddIcon />}
+                    onClick={() => handleRightDrawer("Add Project")}
+                  >
+                    Add Project
+                  </Button>
+                </Tooltip>
+              </Grid>
+            )}
+            <Grid item></Grid>
+            {isError && (
+              <>
+                <Toast
+                  openToast={openToast}
+                  message={JSON.stringify(error.message)}
+                  handleCloseToast={handleCloseToast}
+                ></Toast>
+              </>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </>
   );
 };

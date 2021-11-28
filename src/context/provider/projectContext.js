@@ -6,8 +6,16 @@ import { useHistory } from "react-router-dom";
 import projectInitialState from "../initialStates/projectInitialState";
 const ProjectContext = React.createContext();
 
+const getStarProject = () => {
+  let project = localStorage.getItem("starProject");
+  if (project) {
+    return localStorage.getItem("starProject");
+  } else {
+    return "";
+  }
+};
 const ProjectProvider = ({ children }) => {
-  const [starProject, setStarProject] = useState("");
+  const [starProject, setStarProject] = useState(getStarProject());
   return (
     <ProjectContext.Provider
       value={{

@@ -1,0 +1,64 @@
+import axiosAppInstance from "../../../helper/appAxios";
+import axios from "axios";
+
+axios.defaults.baseURL = process.env.REACT_APP_API_SERVER;
+export const getAllProjects = async (userid) => {
+  const response = await axiosAppInstance().get(
+    `/api/projects?userid=${userid}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  console.log("User is created successfully with user_id" + response);
+  return response.data;
+};
+
+export const deleteProject = async (id) => {
+  console.log(id);
+  const response = await axiosAppInstance().delete(
+    `${process.env.REACT_APP_API_SERVER}/api/project/delete/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return await response.data;
+};
+
+export const addProject = async ({ ...data }) => {
+  let payload = JSON.stringify(data);
+  const response = await axiosAppInstance().post(
+    `/api/project/create`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const updateProject = async ({ ...data }) => {
+  console.log(data.editId);
+  console.log(data);
+  let payload = JSON.stringify(data.projectState.project);
+
+  const response = await axiosAppInstance().put(
+    `/api/project/update/${data.editId}`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};

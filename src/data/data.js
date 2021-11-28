@@ -17,14 +17,14 @@ export const menus = [
   },
   {
     id: 3,
-    url: "/modules",
-    text: "Modules",
+    url: "/releases",
+    text: "Releases",
     icon: <ListAltIcon />,
   },
   {
     id: 4,
-    url: "/releases",
-    text: "Releases",
+    url: "/components",
+    text: "Components",
     icon: <ListAltIcon />,
   },
   {

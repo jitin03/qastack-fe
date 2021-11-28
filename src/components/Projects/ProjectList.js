@@ -11,6 +11,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Tooltip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -24,7 +25,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import useTable from "../Shared/useTable";
 import { modules } from "../../data/modules";
 import { useMutation, useQueryClient } from "react-query";
-import { deleteProject, updateProject } from "../../context/actions/api";
+import {
+  deleteProject,
+  updateProject,
+} from "../../context/actions/project/api";
 import projectInitialState from "../../context/initialStates/projectInitialState";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -81,17 +85,7 @@ export default function ProjectList(props) {
   };
   return (
     <>
-      <Grid container justifyItems="center" alignItems="center">
-        <Grid item style={{ textAlign: "right", flex: "1" }}>
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            onClick={() => handleRightDrawer("Add Project")}
-          >
-            Add Project
-          </Button>
-        </Grid>
-      </Grid>
+      <Grid container justifyItems="center" alignItems="center"></Grid>
 
       <Grid
         container
@@ -131,30 +125,35 @@ export default function ProjectList(props) {
                   height: "100%",
                 }}
               >
-                <IconButton aria-label="add to favorites">
-                  <BookmarkBorderIcon />
-                </IconButton>
-                <IconButton
-                  edge="start"
-                  aria-label="edit"
-                  onClick={() => handleEditProject(item.ID, item.Name)}
-                >
-                  <EditIcon />
-                </IconButton>
-
+                <Tooltip title="Bookmark project" arrow disableInteractive>
+                  <IconButton aria-label="add to favorites">
+                    <BookmarkBorderIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Edit project" arrow disableInteractive>
+                  <IconButton
+                    edge="start"
+                    aria-label="edit"
+                    onClick={() => handleEditProject(item.ID, item.Name)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
                 {isLoading ? (
                   <CircularProgress />
                 ) : (
-                  <IconButton
-                    edge="start"
-                    aria-label="delete"
-                    onClick={async () => {
-                      await mutateAsync(item.ID);
-                      queryClient.invalidateQueries("project");
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  <Tooltip title="Delete project" arrow disableInteractive>
+                    <IconButton
+                      edge="start"
+                      aria-label="delete"
+                      onClick={async () => {
+                        await mutateAsync(item.ID);
+                        queryClient.invalidateQueries("project");
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
                 )}
               </CardActions>
             </Card>

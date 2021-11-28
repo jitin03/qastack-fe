@@ -3,23 +3,19 @@ import { makeStyles } from "@mui/styles";
 import Header from "../components/Header";
 import SideMenu from "../components/SideMenu";
 import "./App.css";
-import { IconButton, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import MuiDrawer from "@mui/material/Drawer";
-import { styled, useTheme } from "@mui/material/styles";
-import Requirement from "../components/Requirement";
-import Modules from "../components/Modules/Modules";
-import Error from "../components/Error";
+import { styled } from "@mui/material/styles";
 import RightDrawer from "../components/RightDrawer";
-import Release from "../components/Releases/Release";
 import { useGlobalContext } from "../context/provider/context";
-import Project from "../components/Projects/Project";
 import { QueryClientProvider, QueryClient } from "react-query";
+import routes from "../routes";
+
+import { useHistory } from "react-router-dom";
 import { ReactQueryDevtools } from "react-query/devtools";
-import ProjectEditForm from "../components/Projects/ProjectEditForm";
-import ProjectList from "../components/Projects/ProjectList";
+import isAuthenticated from "../context/actions/auth/isAuthenticated";
 const drawerWidth = 240;
 const useStyles = makeStyles({
   appMain: {
@@ -74,10 +70,11 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
+
 function App() {
   const [open, setOpen] = useState(false);
   const { configTitle } = useGlobalContext();
-
+  const history = useHistory();
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -90,33 +87,37 @@ function App() {
     <QueryClientProvider client={queryClient} contextSharing={true}>
       <Box sx={{ display: "flex" }}>
         <Header open={open} handleDrawerOpen={handleDrawerOpen} />
-
-        <SideMenu open={open} handleDrawerClose={handleDrawerClose} />
+        {isAuthenticated() && (
+          <SideMenu open={open} handleDrawerClose={handleDrawerClose} />
+        )}
 
         <Box component="main" sx={{ flexGrow: 1, p: 3, minHeight: "100vh" }}>
           <DrawerHeader />
 
           <Switch>
-            <Route exact path="/" exact component={Requirement} />
-            <Route exact path="/modules" component={Modules} />
-            <Route exact path="/projects" component={Project} />
-            <Route exact path="/project/create" component={Project} />
-            <Route exact path="/releases" component={Release} />
-            <Route exact path="/release/create" component={Release} />
-            <Route exact path="/module/create" component={Modules} />
-            <Route exact path="/project/edit/:id" component={Project} />
-            <Route path="*">
+            {routes.map((route, index) => {
+              const { path, component } = route;
+              if (route.needsAuth && !isAuthenticated()) {
+                history.push("/auth/login");
+              }
+              return (
+                <Route key={index} exact path={path} component={component} />
+              );
+            })}
+            {/* <Route path="*">
               <Error />
-            </Route>
+            </Route> */}
           </Switch>
         </Box>
       </Box>
       <RightDrawer
         open={open}
+        // width="1300px"
         configTitle={configTitle}
         handleDrawerClose={handleDrawerClose}
       />
       <CssBaseline />
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

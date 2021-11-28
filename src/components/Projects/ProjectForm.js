@@ -5,7 +5,7 @@ import { useGlobalContext } from "../../context/provider/context";
 import Controls from "../controllers/Controls";
 import { Form } from "../useForm";
 import { useMutation, useQueryClient } from "react-query";
-import { addProject } from "../../context/actions/api";
+import { addProject } from "../../context/actions/project/api";
 import { useHistory } from "react-router-dom";
 const useStyles = makeStyles({
   bottomDrawer: {

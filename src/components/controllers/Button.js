@@ -4,7 +4,7 @@ import { Button as MuiButton } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: theme.spacing(0.5),
+    margin: theme.spacing(1),
   },
   label: {
     textTransform: "none",
