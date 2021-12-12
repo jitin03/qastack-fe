@@ -21,12 +21,17 @@ import ProjectForm from "./Projects/ProjectForm";
 import ProjectEditForm from "./Projects/ProjectEditForm";
 import CreateComponent from "../layouts/Component/Create";
 import EditComponent from "../layouts/Component/Edit";
+import CreateTestCase from "../layouts/TestCase/Create";
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   padding: theme.spacing(0, 1),
   marginTop: "20px",
+  position: "sticky",
+  top: "0",
+  zIndex: 2,
+  backgroundColor: "rgb(255, 255, 255)",
   // width: 300px;
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
@@ -52,11 +57,12 @@ export default function RightDrawer({ configTitle, width = "550px" }) {
           <Grid item style={{ flex: "1" }}></Grid>
           <Grid item>
             <IconButton>
-              <CloseIcon onClick={handleCloseRightDrawer} />
+              <CloseIcon onClick={(e) => handleCloseRightDrawer(e)} />
             </IconButton>
           </Grid>
         </Grid>
       </DrawerHeader>
+
       {(function () {
         if (configTitle === "Add Component") {
           return <CreateComponent />;
@@ -68,6 +74,8 @@ export default function RightDrawer({ configTitle, width = "550px" }) {
           return <ProjectEditForm />;
         } else if (configTitle === "Edit Component") {
           return <EditComponent />;
+        } else if (configTitle === "Add TestCase") {
+          return <CreateTestCase />;
         }
       })()}
     </Box>
@@ -82,7 +90,9 @@ export default function RightDrawer({ configTitle, width = "550px" }) {
         // onClose={toggleDrawer("right", state)}
         style={{ zIndex: 1201 }}
       >
-        {list(width)}
+        {configTitle === "Add TestCase"
+          ? list((width = "1300px"))
+          : list(width)}
       </Drawer>
     </>
   );

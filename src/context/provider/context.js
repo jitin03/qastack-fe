@@ -78,6 +78,8 @@ const AppProvider = ({ children }) => {
     } else if (configTitle === "Edit Component") {
       console.log("param", param);
       history.push(`/component/edit/${param}`);
+    } else if (configTitle === "Add TestCase") {
+      history.push("/testcase/create");
     } else {
       history.push("/component/create");
     }
@@ -135,8 +137,8 @@ const AppProvider = ({ children }) => {
     setModule(newModules);
     console.log(newModules);
   };
-  const handleCloseRightDrawer = () => {
-    // e.preventDefault();
+  const handleCloseRightDrawer = (e) => {
+    e.preventDefault();
     setState(!state);
   };
   const toggleDrawer = () => (event) => {

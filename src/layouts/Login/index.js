@@ -11,15 +11,23 @@ import React from "react";
 import Controls from "../../components/controllers/Controls";
 import { makeStyles } from "@mui/styles";
 import { LoadingButton } from "@mui/lab";
-
+import { useQuery } from "react-query";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import { useHistory } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { useGlobalContext } from "../../context/provider/context";
-import { registerUser, verifyUser } from "../../context/actions/auth/api";
+import {
+  getUserDetail,
+  registerUser,
+  verifyUser,
+} from "../../context/actions/auth/api";
 import Toast from "../../components/controllers/Toast";
-import { LOGIN_ERROR, LOGIN_SUCCESS } from "../../constants/actionTypes";
+import {
+  LOGIN_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_USER_DETAIL,
+} from "../../constants/actionTypes";
 import { useAuthContext } from "../../context/provider/authContext";
 import Button from "../../components/controllers/Button";
 
@@ -54,6 +62,7 @@ const LoginUI = ({
   const history = useHistory();
   const {
     authState: { auth },
+    authState: { loggedIn },
     authDispatch,
   } = useAuthContext();
   const {
@@ -66,22 +75,49 @@ const LoginUI = ({
     togglePasswordMask,
     handleMouseDownPassword,
   } = useGlobalContext();
-  const { mutateAsync, isLoading, isError, error, reset, data, isSuccess } =
-    useMutation(verifyUser, {
-      onError: (error) => {
-        setOpenToast(true);
-      },
-      onSuccess: (data) => {
-        console.log(data);
-        localStorage.token = data.data;
-        authDispatch({
-          type: LOGIN_SUCCESS,
-          payload: data,
-        });
-        history.push("/projects");
-      },
-    });
+  const {
+    mutateAsync,
+    isLoading,
+    isError,
+    error,
+    reset,
+    data: token,
+    status,
+    isSuccess,
+  } = useMutation(verifyUser, {
+    onError: (error) => {
+      setOpenToast(true);
+    },
+    onSuccess: (token) => {
+      console.log(token);
+      localStorage.token = token.data;
+      authDispatch({
+        type: LOGIN_SUCCESS,
+        payload: token,
+      });
+    },
+  });
 
+  console.log("isSuccess", isSuccess);
+  let userName = form?.username;
+  const { data: user, isSuccess: userDetails } = useQuery(
+    ["users", userName],
+    getUserDetail,
+    {
+      enabled: !!token,
+    }
+  );
+  console.log(userDetails);
+  if (userDetails) {
+    console.log("userDetails");
+    history.push("/projects");
+    console.log(user);
+    console.log("userDetails", user);
+    authDispatch({
+      type: LOGIN_USER_DETAIL,
+      payload: user,
+    });
+  }
   const classes = useStyles();
 
   const onSubmit = async (e) => {
@@ -90,7 +126,7 @@ const LoginUI = ({
     try {
       await mutateAsync(form);
 
-      setForm({});
+      // setForm({});
     } catch (error) {
       authDispatch({
         type: LOGIN_ERROR,

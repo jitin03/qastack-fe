@@ -29,3 +29,19 @@ export const verifyUser = async ({ ...data }) => {
     throw Error(error.response.data.message);
   }
 };
+
+export const getUserDetail = async ({ queryKey }) => {
+  const [_key, userName] = queryKey;
+  console.log("userName", userName);
+  try {
+    const response = await axiosInstance().get(`/api/users/${userName}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response;
+  } catch (error) {
+    throw Error(error.response.data.message);
+  }
+};

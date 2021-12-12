@@ -68,8 +68,6 @@ export default function EditComponent() {
   };
   const queryClient = useQueryClient();
   const handleComponentSubmit = async (e) => {
-    e.preventDefault();
-
     console.log("component", component);
     component.data.project_id = 57;
     let editPayload = component.data;
@@ -77,13 +75,14 @@ export default function EditComponent() {
       await mutateAsync({ editId, editPayload });
       queryClient.invalidateQueries("component");
       setForm({});
-      handleCloseRightDrawer();
+      handleCloseRightDrawer(e);
     } catch (error) {
       console.log(error.message);
       componentDispatch({
         type: COMPONENT_CREATE_ERROR,
         payload: error.message,
       });
+      handleCloseRightDrawer(e);
       setForm({});
     }
   };
@@ -112,7 +111,10 @@ export default function EditComponent() {
           style={{ marginRight: "10px" }}
           onClick={handleCloseRightDrawer}
         />
-        <Controls.Button text="Submit" onClick={handleComponentSubmit} />
+        <Controls.Button
+          text="Submit"
+          onClick={(e) => handleComponentSubmit(e)}
+        />
       </Grid>
       <Toast
         openToast={openToast}

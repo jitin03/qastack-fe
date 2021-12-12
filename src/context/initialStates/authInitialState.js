@@ -4,4 +4,9 @@ export default {
     data: null,
     error: null,
   },
+  loggedIn: {
+    data: null,
+    error: null,
+    loading: false,
+  },
 };

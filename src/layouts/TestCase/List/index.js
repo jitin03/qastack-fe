@@ -1,52 +1,48 @@
 import {
   Button,
-  CircularProgress,
-  Container,
   Divider,
   Grid,
   IconButton,
   InputAdornment,
   List,
-  ListItem,
   ListItemButton,
   ListItemText,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import FolderIcon from "@mui/icons-material/Folder";
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  makeStyles,
+  TableBody,
+  TablePagination,
+  TableSortLabel,
+} from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FolderIcon from "@mui/icons-material/Folder";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import SearchIcon from "@mui/icons-material/Search";
-import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useState } from "react";
+import { useQuery } from "react-query";
 import Box from "@mui/material/Box";
 import AddIcon from "@mui/icons-material/Add";
 import { useGlobalContext } from "../../../context/provider/context";
-import useTable from "../../../components/Shared/useTable";
 import { Search } from "@material-ui/icons";
-import { makeStyles } from "@mui/styles";
-import { useQuery } from "react-query";
-import { useHistory, useParams } from "react-router-dom";
-import {
-  deleteComponent,
-  getAllComponents,
-} from "../../../context/actions/component/api";
+
 import Controls from "../../../components/controllers/Controls";
-import Toast from "../../../components/controllers/Toast";
-import { useMutation, useQueryClient } from "react-query";
+import { getAllComponents } from "../../../context/actions/component/api";
 import {
   COMPONENT_CREATE_ERROR,
-  EDIT_COMPONENT,
+  COMPONENT_LIST_ERROR,
 } from "../../../constants/actionTypes";
+import { getAllTestCases } from "../../../context/actions/testcase/api";
+import useTable from "../../../components/Shared/useTable";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -55,44 +51,176 @@ const useStyles = makeStyles((theme) => ({
   searchInput: {
     width: "75%",
   },
+  table: {
+    // marginTop: theme.spacing(3),
+    "& thead th": {
+      textAlign: "center",
+      fontWeight: "600",
+
+      // color: theme.palette.primary.main,
+      // backgroundColor: theme.palette.primary.light,
+    },
+    "& tbody td": {
+      textAlign: "center",
+      fontWeight: "300",
+    },
+    "& tbody tr:hover": {
+      backgroundColor: "rgb(232, 232, 232)",
+      cursor: "pointer",
+    },
+  },
 }));
 const TestCaseList = () => {
-  const columns = [
-    { field: "id", headerName: "ID", width: 70 },
-    { field: "firstName", headerName: "First name", width: 130 },
-    { field: "lastName", headerName: "Last name", width: 130 },
-    {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      width: 90,
-    },
-    {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-      valueGetter: (params) =>
-        `${params.getValue(params.id, "firstName") || ""} ${
-          params.getValue(params.id, "lastName") || ""
-        }`,
-    },
-  ];
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const { handleRightDrawer, setOpenToast, componentDispatch } =
+    useGlobalContext();
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+  const pages = [5, 10, 25];
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
+  const [order, setOrder] = useState();
+  const [orderBy, setOrderBy] = useState();
+  const [componentId, setComponentId] = useState(0);
+  const {
+    data: components,
+    error,
+    isLoading,
+    isError,
+  } = useQuery("component", getAllComponents, {
+    onError: (error) => {
+      setOpenToast(true);
+      componentDispatch({
+        type: COMPONENT_CREATE_ERROR,
+        payload: error.message,
+      });
+    },
+  });
+  const {
+    data: testcases,
+    error: componentError,
+    isLoading: isComponentLoading,
+    isError: isComponentsError,
+  } = useQuery(["testcases", componentId, rowsPerPage], getAllTestCases, {
+    onError: (error) => {
+      setOpenToast(true);
+      componentDispatch({
+        type: COMPONENT_LIST_ERROR,
+        payload: error.message,
+      });
+    },
+  });
+  const handleListItemClick = (event, index, id) => {
+    setSelectedIndex(index);
+    console.log(id);
+    setComponentId(id);
+  };
+  const headCells = [
+    { id: "testcaseId", label: "TestCase ID " },
+    { id: "teststeps", label: "TestSteps " },
+    { id: "title", label: "Title" },
+    { id: "type", label: "Type" },
+    { id: "priority", label: "Priority" },
+    { id: "action", label: "Actions" },
   ];
+  const TblContainer = (props) => (
+    <Table className={classes.table}>{props.children}</Table>
+  );
+  const TblHead = (props) => {
+    const classes = useStyles();
+    const handleSortRequest = (cellId) => {
+      console.log(cellId);
+      const isAsc = orderBy === cellId && order === "asc";
+      setOrder(isAsc ? "desc" : "asc");
+      setOrderBy(cellId);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              {headCell.disableSorting ? (
+                headCell.label
+              ) : (
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={() => {
+                    handleSortRequest(headCell.id);
+                  }}
+                >
+                  {headCell.label}
+                </TableSortLabel>
+              )}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  };
+  const [filterFn, setFilterFn] = useState({
+    fn: (items) => {
+      return items;
+    },
+  });
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+  const recordsAfterPagingAndSorting = () => {
+    return stableSort(
+      filterFn.fn(testcases),
+      getComparator(order, orderBy)
+    ).slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+  };
 
   const classes = useStyles();
+  const handleChangePage = (event, newPage) => {
+    console.log("newPage", newPage);
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const handleSearchByTitle = (e) => {
+    let target = e.target;
+    setFilterFn({
+      fn: (items) => {
+        if (target.value == "") return items;
+        else
+          return items.filter((x) =>
+            x.component_name.includes(target.value.toLowerCase())
+          );
+      },
+    });
+  };
+  console.log("components", components);
   return (
     <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
       <Grid container justifyItems="center" alignItems="center">
@@ -117,7 +245,6 @@ const TestCaseList = () => {
                     </InputAdornment>
                   ),
                 }}
-                // onChange={handleSearch}
               />
             </Toolbar>
           </Grid>
@@ -125,7 +252,7 @@ const TestCaseList = () => {
             <Button
               variant="outlined"
               startIcon={<AddIcon />}
-              //   onClick={() => handleRightDrawer("Add Component")}
+              onClick={() => handleRightDrawer("Add TestCase")}
               sx={{ m: 1 }}
             >
               Add Test Case
@@ -184,26 +311,23 @@ const TestCaseList = () => {
                   />
                 </Grid>
                 <Grid item sx={{ width: "100%" }}>
-                  <List dense="true">
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <FolderIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Component 1" />
-                    </ListItemButton>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <FolderIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Component 2" />
-                    </ListItemButton>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <FolderIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Component 3" />
-                    </ListItemButton>
-                  </List>
+                  {components?.map((item, index) => (
+                    <>
+                      <List dense="true" key={item.index}>
+                        <ListItemButton
+                          selected={selectedIndex === index}
+                          onClick={(event) =>
+                            handleListItemClick(event, index, item.component_id)
+                          }
+                        >
+                          <ListItemIcon>
+                            <FolderIcon />
+                          </ListItemIcon>
+                          <ListItemText primary={item.component_name} />
+                        </ListItemButton>
+                      </List>
+                    </>
+                  ))}
                 </Grid>
               </Grid>
             </Grid>
@@ -239,69 +363,71 @@ const TestCaseList = () => {
               <Grid item container>
                 <Divider sx={{ width: "100%", paddingTop: 1 }} />
               </Grid>
-              <Grid item sx={{ flex: 1 }}>
-                <TableContainer component={Paper}>
-                  <Table aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Dessert (100g serving)</TableCell>
-                        <TableCell align="right">Calories</TableCell>
-                        <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                        <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                        <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {rows.map((row) => (
-                        <TableRow
-                          key={row.name}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {row.name}
-                          </TableCell>
-                          <TableCell align="right">{row.calories}</TableCell>
-                          <TableCell align="right">{row.fat}</TableCell>
-                          <TableCell align="right">{row.carbs}</TableCell>
-                          <TableCell align="right">{row.protein}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TableContainer component={Paper}>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Dessert (100g serving)</TableCell>
-                        <TableCell align="right">Calories</TableCell>
-                        <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                        <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                        <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {rows.map((row) => (
-                        <TableRow
-                          key={row.name}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {row.name}
-                          </TableCell>
-                          <TableCell align="right">{row.calories}</TableCell>
-                          <TableCell align="right">{row.fat}</TableCell>
-                          <TableCell align="right">{row.carbs}</TableCell>
-                          <TableCell align="right">{row.protein}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+              <Grid item container sx={{ flex: 1 }}>
+                {testcases?.length ? (
+                  <Grid item container justifyContent="flex-end">
+                    <TblContainer>
+                      <TblHead />
+                      <TableBody>
+                        {recordsAfterPagingAndSorting().map((item) => (
+                          <TableRow key={item.testcaseId}>
+                            <TableCell>{item.testcaseId}</TableCell>
+                            <TableCell>{item.testStepCounts}</TableCell>
+                            <TableCell>{item.title}</TableCell>
+                            <TableCell>{item.type}</TableCell>
+                            <TableCell>{item.priority}</TableCell>
+                            <TableCell>
+                              <Tooltip
+                                title="Edit component"
+                                arrow
+                                disableInteractive
+                              >
+                                <IconButton aria-label="Edit component">
+                                  <EditIcon />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip
+                                title="Delete component"
+                                arrow
+                                disableInteractive
+                              >
+                                <IconButton aria-label="delete component">
+                                  <DeleteIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </TblContainer>
+                    <TablePagination
+                      component="div"
+                      page={page}
+                      rowsPerPageOptions={pages}
+                      rowsPerPage={rowsPerPage}
+                      count={testcases.length}
+                      onChangePage={handleChangePage}
+                      onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                  </Grid>
+                ) : (
+                  <Grid
+                    item
+                    container
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{ m: 5 }}
+                  >
+                    <TblContainer>
+                      <TblHead />
+                      <TableBody>
+                        <Grid item container justifyContent="center">
+                          <Typography>No Record found !</Typography>
+                        </Grid>
+                      </TableBody>
+                    </TblContainer>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           </Grid>

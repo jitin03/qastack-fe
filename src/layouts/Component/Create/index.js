@@ -76,9 +76,7 @@ export default function CreateComponent() {
     setForm({ ...form, [name]: value });
   };
   const queryClient = useQueryClient();
-  const handleComponentSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleComponentSubmit = async () => {
     form.project_id = 57;
     try {
       await mutateAsync(form);

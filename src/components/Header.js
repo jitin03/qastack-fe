@@ -15,6 +15,9 @@ import { useProjectContext } from "../context/provider/projectContext";
 import Button from "./controllers/Button";
 import isAuthenticated from "../context/actions/auth/isAuthenticated";
 import { getAllProjects } from "../context/actions/project/api";
+import { useAuthContext } from "../context/provider/authContext";
+import { getUserDetail } from "../context/actions/auth/api";
+import { getUserDetailFromToken } from "../helper/token";
 const drawerWidth = 240;
 const useStyles = makeStyles({
   headerRight: {
@@ -54,12 +57,16 @@ export default function Header(props) {
   const { projectState, projectList, setProjectList } = useGlobalContext();
   const { starProject, setStarProject } = useProjectContext();
   const classes = useStyles();
+  const {
+    authState: { loggedIn },
+    authDispatch,
+  } = useAuthContext();
   const cars = ["tset", "asdad"];
   let getProjectList = [];
   const { data, error, isLoading, isError } = useQuery(["project", 3], () =>
     getAllProjects(3)
   );
-
+  console.log("loggedInd", loggedIn);
   const history = useHistory();
   const handleUserLogout = () => {
     localStorage.removeItem("token");
@@ -137,24 +144,31 @@ export default function Header(props) {
             alignItems="center"
           >
             {isAuthenticated() && (
-              <Grid item className={classes.headerRight}>
-                {isLoading ? (
-                  <CircularProgress />
-                ) : (
-                  <Controls.Select
-                    variant="standard"
-                    name="projectName"
-                    label="Select Project"
-                    value={starProject}
-                    onChange={(e) => setStarProject(e.target.value)}
-                    options={projectList}
-                  />
-                )}
-              </Grid>
-            )}
-            <Grid item>
-              <Typography>Org.ABC</Typography>
-            </Grid>
+                <Grid item className={classes.headerRight}>
+                  {isLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    <Controls.Select
+                      variant="standard"
+                      name="projectName"
+                      label="Select Project"
+                      value={starProject}
+                      onChange={(e) => setStarProject(e.target.value)}
+                      options={projectList}
+                    />
+                  )}
+                </Grid>
+              ) && (
+                <Grid item>
+                  <Typography>
+                    {
+                      getUserDetailFromToken(localStorage.getItem("token"))
+                        .Username
+                    }
+                  </Typography>
+                </Grid>
+              )}
+
             {!isAuthenticated() ? (
               <Grid item textAlign="end">
                 <Button

@@ -6,6 +6,7 @@ import RegisterContainer from "../components/Register";
 import CreateComponent from "../layouts/Component/Create";
 import EditComponent from "../layouts/Component/Edit";
 import ComponentList from "../layouts/Component/List";
+import CreateTestCase from "../layouts/TestCase/Create";
 import TestCaseList from "../layouts/TestCase/List";
 
 {
@@ -75,6 +76,12 @@ const routes = [
     path: "/testcases",
     component: TestCaseList,
     title: "TestCases",
+    needsAuth: true,
+  },
+  {
+    path: "/testcase/create",
+    component: TestCaseList,
+    title: "Create TestCase",
     needsAuth: true,
   },
 ];

@@ -1,6 +1,7 @@
 import {
   LOGIN_ERROR,
   LOGIN_SUCCESS,
+  LOGIN_USER_DETAIL,
   REGISTER_ERROR,
   REGISTER_LOADING,
   REGISTER_SUCCESS,
@@ -32,6 +33,15 @@ const auth = (state, { type, field, payload }) => {
         ...state,
         auth: {
           ...state.auth,
+          loading: false,
+          data: payload,
+        },
+      };
+    case LOGIN_USER_DETAIL:
+      return {
+        ...state,
+        loggedIn: {
+          ...state.loggedIn,
           loading: false,
           data: payload,
         },
