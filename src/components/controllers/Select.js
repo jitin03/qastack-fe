@@ -9,7 +9,6 @@ import {
 
 export default function Select(props) {
   const { variant, name, label, value, onChange, options, ...others } = props;
-  console.log(value);
 
   return (
     <FormControl variant={variant || "outlined"} fullWidth margin="dense">

@@ -15,7 +15,6 @@ export default function Button(props) {
   const { text, size, color, variant, type, onClick, ...other } = props;
   const classes = useStyles();
 
-  console.log(other);
   return (
     <MuiButton
       variant={variant || "contained"}

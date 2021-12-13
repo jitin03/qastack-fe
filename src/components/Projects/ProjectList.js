@@ -38,7 +38,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 export default function ProjectList(props) {
   const { projects } = props;
-  // console.log(projects.length);
+
   const {
     module,
     projectState,
@@ -64,23 +64,12 @@ export default function ProjectList(props) {
   const queryClient = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(deleteProject);
 
-  console.log("Before edit state");
-  console.log(projectState);
   const handleEditProject = (id, name) => {
-    console.log(id);
-    console.log(name);
-
     projectDispatch({
       type: "EDIT_PROJECT",
       payload: name,
     });
 
-    console.log("after edit state");
-    console.log(projectState);
-
-    // console.log(specificProject);
-
-    // history.push(`/project/edit/${id}`);
     handleRightDrawer("Edit Project", id);
   };
   return (

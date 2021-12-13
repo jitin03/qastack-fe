@@ -25,7 +25,7 @@ export default () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log("called");
+
     setForm({ ...form, [name]: value });
   };
 

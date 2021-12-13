@@ -76,7 +76,6 @@ const AppProvider = ({ children }) => {
     } else if (configTitle === "Edit Project") {
       history.push(`/project/edit/${param}`);
     } else if (configTitle === "Edit Component") {
-      console.log("param", param);
       history.push(`/component/edit/${param}`);
     } else if (configTitle === "Add TestCase") {
       history.push("/testcase/create");
@@ -105,37 +104,30 @@ const AppProvider = ({ children }) => {
 
   const handleReleaseFormSubmit = (e) => {
     e.preventDefault();
-    console.log(releaseState.release.name);
+
     if (releaseState.release.name) {
-      console.log("call reducer");
       releaseDispatch({
         type: "ADD_RELEASE",
         payload: releaseState.release,
       });
     }
-    console.log(releaseState);
   };
 
   const handleProjectFormSubmit = (e) => {
     e.preventDefault();
-    console.log(projectState.project.name);
+
     if (projectState.project.name) {
-      console.log("call reducer");
       releaseDispatch({
         type: "ADD_PROJECT",
         payload: projectState.project,
       });
     }
-    console.log(releaseState);
   };
   const handleDeleteModule = (checkedModule, module) => {
-    console.log(checkedModule);
-    console.log(module);
     const newModules = module.filter((ar) => {
       return !checkedModule.find((rm) => rm === ar.moduleName);
     });
     setModule(newModules);
-    console.log(newModules);
   };
   const handleCloseRightDrawer = (e) => {
     e.preventDefault();

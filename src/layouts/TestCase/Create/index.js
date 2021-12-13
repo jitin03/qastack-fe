@@ -76,7 +76,6 @@ export default function CreateTestCase() {
         setOpenToast(true);
       },
       onSuccess: (data) => {
-        console.log(data);
         componentDispatch({
           type: COMPONENT_CREATE_SUCCESS,
           payload: data,
@@ -86,7 +85,6 @@ export default function CreateTestCase() {
 
   const queryClient = useQueryClient();
   const onSubmit = async (data, e) => {
-    console.log(data);
     try {
       await mutateAsync(data);
 

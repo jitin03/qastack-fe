@@ -44,7 +44,6 @@ export default function ReleaseForm() {
   //   if (fieldValues == values) return Object.values(temp).every((x) => x == "");
   // };
 
-  console.log(releaseState.release.startDate);
   return (
     <Form>
       <Divider />

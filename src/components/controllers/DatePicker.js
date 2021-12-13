@@ -15,7 +15,6 @@ export default function DatePicker(props) {
     },
   });
   const onChange1 = (date) => {
-    console.log(date);
     onChange(convertToDefEventPara(name, date));
   };
   return (

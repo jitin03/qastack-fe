@@ -63,10 +63,11 @@ export default function Header(props) {
   } = useAuthContext();
   const cars = ["tset", "asdad"];
   let getProjectList = [];
-  const { data, error, isLoading, isError } = useQuery(["project", 3], () =>
-    getAllProjects(3)
+  const { data, error, isLoading, isError } = useQuery(
+    isAuthenticated() && ["project", 3],
+    () => getAllProjects(3)
   );
-  console.log("loggedInd", loggedIn);
+
   const history = useHistory();
   const handleUserLogout = () => {
     localStorage.removeItem("token");
@@ -74,7 +75,6 @@ export default function Header(props) {
   };
   useEffect(() => {
     if (data) {
-      console.log(data);
       const temp = data.map((item) => {
         return item.Name;
       });
@@ -83,18 +83,6 @@ export default function Header(props) {
     localStorage.setItem("starProject", starProject);
   }, [data, starProject]);
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   console.log(name);
-  //   console.log(value);
-
-  //   setValues({
-  //     ...values,
-  //     [name]: value,
-  //   });
-  // };
-
-  console.log(getProjectList);
   return (
     <AppBar position="fixed" open={open} style={{ background: "#2E3B55" }}>
       <Toolbar>

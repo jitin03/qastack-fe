@@ -53,7 +53,6 @@ const RegisterUI = ({
         setOpenToast(true);
       },
       onSuccess: (data) => {
-        console.log(data);
         authDispatch({
           type: REGISTER_SUCCESS,
           payload: data,
@@ -82,22 +81,11 @@ const RegisterUI = ({
         type: REGISTER_ERROR,
         payload: error.message,
       });
-      console.log(error.message);
+
       setForm({});
     }
   };
 
-  // if (data) {
-  //   authDispatch({
-  //     type: REGISTER_SUCCESS,
-  //     payload: form,
-  //   });
-  //   history.push("/auth/login");
-  // }
-
-  console.log("registerFormValid", registerFormValid);
-  console.log("form", auth);
-  console.log("openToast", openToast);
   return (
     <>
       <Grid

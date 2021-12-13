@@ -8,7 +8,6 @@ import {
 const component = (state, { type, field, payload }) => {
   switch (type) {
     case COMPONENT_CREATE_SUCCESS:
-      console.log("inside component success case");
       return {
         ...state,
         component: {

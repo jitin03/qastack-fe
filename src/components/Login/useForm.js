@@ -27,7 +27,6 @@ export default () => {
     setForm({ ...form, [name]: value });
   };
 
-  console.log("form", form);
   const loginFormValid = !form.username?.length || !form.password?.length;
 
   return {

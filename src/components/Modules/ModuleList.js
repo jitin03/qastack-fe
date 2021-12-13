@@ -47,24 +47,23 @@ export default function ModuleList() {
     setModule(
       module.map((item) => {
         if (item.moduleName === moduleName) {
-          console.log("Update the module edit to true ");
           return { ...item, isEditing: true };
         } else {
           return item;
         }
       })
     );
-    console.log(module);
+
     setState(!state);
   };
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
-    console.log(currentIndex);
+
     let newCheckModule = {
       moduleName: value,
     };
     const newChecked = [...checked];
-    // console.log(newChecked);
+
     if (currentIndex === -1) {
       newChecked.push(value);
     } else {
@@ -72,7 +71,6 @@ export default function ModuleList() {
     }
 
     setChecked(newChecked);
-    console.log(newChecked);
   };
   return (
     <>

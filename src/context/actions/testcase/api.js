@@ -17,7 +17,6 @@ export const addTestcase = async ({ ...data }) => {
 
 export const getAllTestCases = async ({ queryKey }) => {
   const [_key, componentId, pageId] = queryKey;
-  console.log(componentId);
 
   const response = await axiosAppTestcaseInstance().get(
     `/api/testcases?componentId=${componentId}&page=${pageId}`,

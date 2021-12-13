@@ -12,12 +12,10 @@ export const getAllProjects = async (userid) => {
     }
   );
 
-  console.log("User is created successfully with user_id" + response);
   return response.data;
 };
 
 export const deleteProject = async (id) => {
-  console.log(id);
   const response = await axiosAppInstance().delete(
     `${process.env.REACT_APP_API_SERVER}/api/project/delete/${id}`,
     {
@@ -46,8 +44,6 @@ export const addProject = async ({ ...data }) => {
 };
 
 export const updateProject = async ({ ...data }) => {
-  console.log(data.editId);
-  console.log(data);
   let payload = JSON.stringify(data.projectState.project);
 
   const response = await axiosAppInstance().put(

@@ -38,9 +38,6 @@ export default function EditComponent() {
     handleCloseToast,
   } = useGlobalContext();
 
-  console.log("component.data", component);
-  console.log("component.id", editId);
-
   const [form, setForm] = useState({});
 
   const [fieldErrors, setFieldErrors] = useState({});
@@ -51,7 +48,6 @@ export default function EditComponent() {
         setOpenToast(true);
       },
       onSuccess: (data) => {
-        console.log(data);
         componentDispatch({
           type: COMPONENT_CREATE_SUCCESS,
           payload: data,
@@ -68,7 +64,6 @@ export default function EditComponent() {
   };
   const queryClient = useQueryClient();
   const handleComponentSubmit = async (e) => {
-    console.log("component", component);
     component.data.project_id = 57;
     let editPayload = component.data;
     try {
@@ -77,7 +72,6 @@ export default function EditComponent() {
       setForm({});
       handleCloseRightDrawer(e);
     } catch (error) {
-      console.log(error.message);
       componentDispatch({
         type: COMPONENT_CREATE_ERROR,
         payload: error.message,

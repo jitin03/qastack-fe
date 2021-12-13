@@ -28,7 +28,6 @@ export const addComponent = async ({ ...data }) => {
 };
 
 export const deleteComponent = async (id) => {
-  console.log(id);
   const response = await axiosAppInstance().delete(
     `/api/component/delete/${id}`,
     {
@@ -42,8 +41,6 @@ export const deleteComponent = async (id) => {
 };
 
 export const updateComponent = async ({ ...data }) => {
-  console.log(data.editId);
-  console.log(data);
   let payload = JSON.stringify(data.editPayload);
 
   const response = await axiosAppInstance().put(

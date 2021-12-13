@@ -8,9 +8,6 @@ export const registerUser = async ({ ...data }) => {
     },
   });
 
-  console.log(
-    "User is created successfully with user_id" + response.data.user_id
-  );
   return response.data.user_id;
 };
 
@@ -22,8 +19,6 @@ export const verifyUser = async ({ ...data }) => {
         "Content-Type": "application/json",
       },
     });
-
-    console.log("User is authorised", response);
     return response;
   } catch (error) {
     throw Error(error.response.data.message);
@@ -32,7 +27,7 @@ export const verifyUser = async ({ ...data }) => {
 
 export const getUserDetail = async ({ queryKey }) => {
   const [_key, userName] = queryKey;
-  console.log("userName", userName);
+
   try {
     const response = await axiosInstance().get(`/api/users/${userName}`, {
       headers: {

@@ -54,8 +54,6 @@ export default function ModuleForm() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(name);
-    console.log(value);
 
     setValues({
       ...values,
@@ -65,11 +63,8 @@ export default function ModuleForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values.isEditing);
-    if (values.moduleType == 2) {
-      console.log("````new sub module```````");
 
-      console.log(values);
+    if (values.moduleType == 2) {
       let newSubModule = {
         subModuleName: values.subModuleName,
         id: new Date().getTime().toString(),
@@ -94,7 +89,6 @@ export default function ModuleForm() {
       });
       handleCloseRightDrawer();
     } else if (values.moduleType == 1 && !values.isEditing) {
-      console.log("new");
       let newModule = {
         moduleName: values.moduleName,
         id: new Date().getTime().toString(),
@@ -109,21 +103,19 @@ export default function ModuleForm() {
         moduleType: "1",
         isEditing: false,
       });
-      console.log(module);
+
       handleCloseRightDrawer();
     } else if (values.moduleType == 1 && values.isEditing) {
-      console.log("in side edit");
       setModule(
         module.map((item) => {
           if (item.isEditing === true) {
-            console.log("found");
             return { ...item, moduleName: values.moduleName, isEditing: false };
           } else {
             return item;
           }
         })
       );
-      console.log(module);
+
       setValues({
         id: 0,
         moduleName: "",

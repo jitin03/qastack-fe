@@ -111,7 +111,7 @@ const TestCaseList = () => {
   });
   const handleListItemClick = (event, index, id) => {
     setSelectedIndex(index);
-    console.log(id);
+
     setComponentId(id);
   };
   const headCells = [
@@ -128,7 +128,6 @@ const TestCaseList = () => {
   const TblHead = (props) => {
     const classes = useStyles();
     const handleSortRequest = (cellId) => {
-      console.log(cellId);
       const isAsc = orderBy === cellId && order === "asc";
       setOrder(isAsc ? "desc" : "asc");
       setOrderBy(cellId);
@@ -200,7 +199,6 @@ const TestCaseList = () => {
 
   const classes = useStyles();
   const handleChangePage = (event, newPage) => {
-    console.log("newPage", newPage);
     setPage(newPage);
   };
 
@@ -220,7 +218,7 @@ const TestCaseList = () => {
       },
     });
   };
-  console.log("components", components);
+
   return (
     <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
       <Grid container justifyItems="center" alignItems="center">

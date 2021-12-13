@@ -31,12 +31,9 @@ export default function ProjectEditForm() {
   const queryClient = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(updateProject);
 
-  console.log(projectState);
   const handleProjectFormSave = async (e) => {
     e.preventDefault();
     if (projectState.project.name) {
-      console.log("new name", editId);
-      console.log(projectState.project.name);
       await mutateAsync({ editId, projectState });
       queryClient.invalidateQueries("project");
     }
@@ -46,7 +43,6 @@ export default function ProjectEditForm() {
       type: "RESET_PROJECT_FORM",
     });
     history.push("/projects");
-    console.log(projectState);
   };
 
   return (

@@ -17,6 +17,10 @@ import Box from "@mui/material/Box";
 import { useProjectContext } from "../../context/provider/projectContext";
 import Toast from "../controllers/Toast";
 import { getAllProjects } from "../../context/actions/project/api";
+import { getUserDetail } from "../../context/actions/auth/api";
+import isAuthenticated from "../../context/actions/auth/isAuthenticated";
+import { getUserDetailFromToken } from "../../helper/token";
+import project from "../../context/reducers/project";
 
 const useStyle = makeStyles({
   noModules: {
@@ -37,15 +41,31 @@ const Project = () => {
   const classes = useStyle();
 
   const { starProject } = useProjectContext();
-  const { data, error, isLoading, isError } = useQuery(["project", 3], () =>
-    getAllProjects(3)
+
+  const { data: user, isSuccess: userDetails } = useQuery(
+    isAuthenticated() && [
+      "users",
+      getUserDetailFromToken(localStorage.getItem("token")).Username,
+    ],
+    getUserDetail
   );
+
+  let userId = user?.data.users_id;
+  const {
+    data: projects,
+    error,
+    isLoading,
+    isError,
+  } = useQuery(["project", userId], () => getAllProjects(userId), {
+    enabled: !!user,
+  });
+  console.log(projects);
   let { id } = useParams();
 
   setEditId(id);
   let newData;
-  if (data) {
-    newData = data.filter(function (item) {
+  if (projects) {
+    newData = projects.filter(function (item) {
       if (starProject) {
         return item.Name == starProject;
       } else {
@@ -116,8 +136,8 @@ const Project = () => {
             justifyContent="center"
             style={{ padding: "50px 10px" }}
           >
-            {data?.length ? (
-              <ProjectList projects={newData} />
+            {projects?.length ? (
+              <ProjectList projects={projects} />
             ) : (
               <Grid item>
                 <Typography>No Project avaiable</Typography>

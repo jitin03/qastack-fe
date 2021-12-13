@@ -62,14 +62,13 @@ export default function CreateComponent() {
         setOpenToast(true);
       },
       onSuccess: (data) => {
-        console.log(data);
         componentDispatch({
           type: COMPONENT_CREATE_SUCCESS,
           payload: data,
         });
       },
     });
-  console.log("componentState", component);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -89,7 +88,7 @@ export default function CreateComponent() {
         type: COMPONENT_CREATE_ERROR,
         payload: error.message,
       });
-      console.log(error.message);
+
       setForm({});
     }
   };

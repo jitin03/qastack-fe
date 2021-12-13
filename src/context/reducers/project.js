@@ -17,11 +17,10 @@ const project = (state, { type, field, payload }) => {
       };
 
     case "EDIT_PROJECT":
-      console.log("inside edit project redcuer", payload);
       const specificProject = state.projects.find(
         (item) => item.name === payload.name
       );
-      console.log(specificProject);
+
       return {
         ...state,
         project: {
@@ -32,7 +31,6 @@ const project = (state, { type, field, payload }) => {
       };
 
     case "RESET_PROJECT_FORM":
-      console.log("call reset project reducer");
       return {
         ...state,
         project: {

@@ -6,7 +6,7 @@ import useForm from "./useForm";
 
 const LoginContainer = () => {
   const { form, authState } = useAuthContext();
-  console.log("authState", authState);
+
   return <LoginUI form={useForm()} />;
 };
 

@@ -10,7 +10,6 @@ import {
 export default function RadioGroup(props) {
   const { name, label, value, onChange, items, ...other } = props;
 
-  console.log(other);
   return (
     <FormControl>
       <FormLabel>{label}</FormLabel>

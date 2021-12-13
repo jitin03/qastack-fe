@@ -18,7 +18,6 @@ const auth = (state, { type, field, payload }) => {
         },
       };
     case REGISTER_SUCCESS:
-      console.log("inside register success case");
       return {
         ...state,
         auth: {
@@ -28,7 +27,6 @@ const auth = (state, { type, field, payload }) => {
         },
       };
     case LOGIN_SUCCESS:
-      console.log("inside register success case");
       return {
         ...state,
         auth: {

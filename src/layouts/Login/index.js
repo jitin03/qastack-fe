@@ -89,16 +89,15 @@ const LoginUI = ({
       setOpenToast(true);
     },
     onSuccess: (token) => {
-      console.log(token);
       localStorage.token = token.data;
       authDispatch({
         type: LOGIN_SUCCESS,
         payload: token,
       });
+      history.push("/projects");
     },
   });
 
-  console.log("isSuccess", isSuccess);
   let userName = form?.username;
   const { data: user, isSuccess: userDetails } = useQuery(
     ["users", userName],
@@ -107,12 +106,8 @@ const LoginUI = ({
       enabled: !!token,
     }
   );
-  console.log(userDetails);
+
   if (userDetails) {
-    console.log("userDetails");
-    history.push("/projects");
-    console.log(user);
-    console.log("userDetails", user);
     authDispatch({
       type: LOGIN_USER_DETAIL,
       payload: user,
@@ -125,18 +120,15 @@ const LoginUI = ({
 
     try {
       await mutateAsync(form);
-
-      // setForm({});
     } catch (error) {
       authDispatch({
         type: LOGIN_ERROR,
         payload: error.message,
       });
-      console.log(error.message);
+
       setForm({});
     }
   };
-  console.log("form", auth);
 
   return (
     <>

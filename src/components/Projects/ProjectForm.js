@@ -28,7 +28,6 @@ export default function ProjectForm() {
   const queryClient = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(addProject);
 
-  // console.log(projectState.project.name);
   const handleProjectFormSubmit = async (e) => {
     e.preventDefault();
     if (projectState.project.name) {
@@ -44,7 +43,6 @@ export default function ProjectForm() {
     projectDispatch({
       type: "RESET_PROJECT_FORM",
     });
-    console.log(projectState);
   };
 
   return (

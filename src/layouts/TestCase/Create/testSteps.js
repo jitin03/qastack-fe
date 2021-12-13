@@ -98,20 +98,6 @@ export default function TestSteps(props) {
       });
     },
   });
-  // const { mutateAsync, isLoading, isError, error, data, isSuccess } =
-  //   useMutation(addComponent, {
-  //     onError: (error) => {
-  //       setOpenToast(true);
-  //     },
-  //     onSuccess: (data) => {
-  //       console.log(data);
-  //       componentDispatch({
-  //         type: COMPONENT_CREATE_SUCCESS,
-  //         payload: data,
-  //       });
-  //     },
-  //   });
-  console.log("componentState", component);
 
   const handleAddStep = () => {
     append({
@@ -231,7 +217,7 @@ const YourCard = () => {
 
 const CustomeAttributes = (props) => {
   const { control, handleAddStep, remove, fields, components } = props;
-  console.log(components);
+
   const classes = {};
   return (
     <Card
