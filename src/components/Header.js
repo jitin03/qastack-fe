@@ -63,10 +63,23 @@ export default function Header(props) {
   } = useAuthContext();
   const cars = ["tset", "asdad"];
   let getProjectList = [];
-  const { data, error, isLoading, isError } = useQuery(
-    isAuthenticated() && ["project", 3],
-    () => getAllProjects(3)
+  const { data: user, isSuccess: userDetails } = useQuery(
+    isAuthenticated() && [
+      "users",
+      getUserDetailFromToken(localStorage.getItem("token")).Username,
+    ],
+    getUserDetail
   );
+
+  let userId = user?.data.users_id;
+  const {
+    data: projects,
+    error,
+    isLoading,
+    isError,
+  } = useQuery(["project", userId], () => getAllProjects(userId), {
+    enabled: !!user,
+  });
 
   const history = useHistory();
   const handleUserLogout = () => {
@@ -74,14 +87,14 @@ export default function Header(props) {
     history.push("/auth/login");
   };
   useEffect(() => {
-    if (data) {
-      const temp = data.map((item) => {
+    if (projects) {
+      const temp = projects.map((item) => {
         return item.Name;
       });
       setProjectList(temp);
     }
     localStorage.setItem("starProject", starProject);
-  }, [data, starProject]);
+  }, [projects, starProject]);
 
   return (
     <AppBar position="fixed" open={open} style={{ background: "#2E3B55" }}>

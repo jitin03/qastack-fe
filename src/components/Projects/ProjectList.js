@@ -82,9 +82,9 @@ export default function ProjectList(props) {
         alignItems="center"
         style={{ flex: "1" }}
       >
-        {projects.map((item) => (
+        {projects.map((item, index) => (
           <Grid
-            key={item.ID}
+            key={index}
             item
             md={2}
             style={{
@@ -123,7 +123,7 @@ export default function ProjectList(props) {
                   <IconButton
                     edge="start"
                     aria-label="edit"
-                    onClick={() => handleEditProject(item.ID, item.Name)}
+                    onClick={() => handleEditProject(item.Id, item.Name)}
                   >
                     <EditIcon />
                   </IconButton>
@@ -136,7 +136,7 @@ export default function ProjectList(props) {
                       edge="start"
                       aria-label="delete"
                       onClick={async () => {
-                        await mutateAsync(item.ID);
+                        await mutateAsync(item.Id);
                         queryClient.invalidateQueries("project");
                       }}
                     >

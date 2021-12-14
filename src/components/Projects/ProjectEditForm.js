@@ -38,7 +38,7 @@ export default function ProjectEditForm() {
       queryClient.invalidateQueries("project");
     }
 
-    handleCloseRightDrawer();
+    handleCloseRightDrawer(e);
     projectDispatch({
       type: "RESET_PROJECT_FORM",
     });

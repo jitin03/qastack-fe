@@ -4,9 +4,12 @@ import React, { useState } from "react";
 import { useGlobalContext } from "../../context/provider/context";
 import Controls from "../controllers/Controls";
 import { Form } from "../useForm";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient, useQuery } from "react-query";
 import { addProject } from "../../context/actions/project/api";
 import { useHistory } from "react-router-dom";
+import { getUserDetail } from "../../context/actions/auth/api";
+import { getUserDetailFromToken } from "../../helper/token";
+import isAuthenticated from "../../context/actions/auth/isAuthenticated";
 const useStyles = makeStyles({
   bottomDrawer: {
     position: "absolute",
@@ -26,6 +29,15 @@ export default function ProjectForm() {
     projectDispatch,
   } = useGlobalContext();
   const queryClient = useQueryClient();
+  const { data: user, isSuccess: userDetails } = useQuery(
+    isAuthenticated() && [
+      "users",
+      getUserDetailFromToken(localStorage.getItem("token")).Username,
+    ],
+    getUserDetail
+  );
+
+  let userId = user?.data.users_id;
   const { mutateAsync, isLoading } = useMutation(addProject);
 
   const handleProjectFormSubmit = async (e) => {
@@ -35,14 +47,16 @@ export default function ProjectForm() {
         type: "ADD_PROJECT",
         payload: projectState.project,
       });
+      projectState.project.user_id = userId;
       await mutateAsync(projectState.project);
       queryClient.invalidateQueries("project");
     }
 
-    handleCloseRightDrawer();
+    handleCloseRightDrawer(e);
     projectDispatch({
       type: "RESET_PROJECT_FORM",
     });
+    history.push("/projects");
   };
 
   return (
