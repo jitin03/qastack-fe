@@ -14,10 +14,19 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
+
+import { makeStyles } from "@mui/styles";
+import ProjectOverview from "./ProjectOverview";
+import { Link } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  divider: {
+    margin: `${theme.spacing.unit * 3}px 0`,
+  },
+}));
 export default function ProjectList(props) {
   const { projects } = props;
-
+  const classes = useStyles();
   const {
     module,
     projectState,
@@ -75,46 +84,47 @@ export default function ProjectList(props) {
               fontWeight: "1rem",
             }}
           >
-            {/* <Link to={`/project/${item.Name}`}> */}
             <Card style={{ minWidth: 275 }}>
-              <CardContent style={{ padding: "20px" }}>
-                <Grid
-                  container
-                  style={{
-                    fontWeight: "100",
-                    fontSize: "1.2rem",
-                  }}
-                >
-                  <Grid item>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {item.Name}
-                    </Typography>
-                    <Typography
-                      style={{
-                        fontSize: "12px",
-                        Opacity: "0.5",
-                      }}
-                    >
-                      Created on data:
-                    </Typography>
-                  </Grid>
+              <Link underline="none" href={`/project/${item.Name}`}>
+                <CardContent style={{ padding: "20px" }}>
                   <Grid
-                    item
                     container
-                    justifyContent="space-between"
                     style={{
-                      borderBottom: "2px solid #f3f6f5",
+                      fontWeight: "100",
+                      fontSize: "1.2rem",
                     }}
                   >
                     <Grid item>
-                      <Typography>Project Key</Typography>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {item.Name}
+                      </Typography>
+                      <Typography
+                        style={{
+                          fontSize: "12px",
+                          Opacity: "0.5",
+                        }}
+                      >
+                        Created on data:
+                      </Typography>
                     </Grid>
-                    <Grid item>
-                      <Typography>{item.Id}</Typography>
+                    <Grid
+                      item
+                      container
+                      justifyContent="space-between"
+                      style={{
+                        borderBottom: "2px solid #f3f6f5",
+                      }}
+                    >
+                      <Grid item>
+                        <Typography>Project Key</Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography>{item.Id}</Typography>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </CardContent>
+                </CardContent>
+              </Link>
               <CardActions
                 style={{
                   textAlign: "left",
@@ -156,7 +166,6 @@ export default function ProjectList(props) {
                 )}
               </CardActions>
             </Card>
-            {/* </Link> */}
           </Grid>
         ))}
 

@@ -3,6 +3,10 @@ import { makeStyles } from "@mui/styles";
 import Header from "../components/Header";
 import SideMenu from "../components/SideMenu";
 import "./App.css";
+import Project from "../components/Projects/Project";
+import ProjectOverview from "../components/Projects/ProjectOverview";
+import ComponentList from "../layouts/Component/List";
+import LoginContainer from "../components/Login";
 import Box from "@mui/material/Box";
 import React, { useState } from "react";
 import { Route, Switch } from "react-router-dom";
@@ -104,9 +108,6 @@ function App() {
                 <Route key={index} exact path={path} component={component} />
               );
             })}
-            {/* <Route path="*">
-              <Error />
-            </Route> */}
           </Switch>
         </Box>
       </Box>

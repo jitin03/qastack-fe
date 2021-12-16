@@ -23,7 +23,7 @@ export const menus = [
   },
   {
     id: 4,
-    url: "/project/:name/components",
+    url: "/components",
     text: "Components",
     icon: <ListAltIcon />,
   },

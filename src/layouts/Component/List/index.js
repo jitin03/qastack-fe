@@ -63,6 +63,8 @@ const ComponentList = () => {
   });
 
   let { id } = useParams();
+  let { name } = useParams();
+  console.log("name", name);
 
   setEditId(id);
   const headCells = [

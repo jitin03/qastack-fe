@@ -80,7 +80,7 @@ const AppProvider = ({ children }) => {
     } else if (configTitle === "Add TestCase") {
       history.push("/testcase/create");
     } else {
-      history.push("/component/create");
+      history.push(`${window.location.pathname}/create`);
     }
     setState(!state);
     setConfigTitle(configTitle);
@@ -132,6 +132,7 @@ const AppProvider = ({ children }) => {
   const handleCloseRightDrawer = (e) => {
     e.preventDefault();
     setState(!state);
+    history.goBack();
   };
   const toggleDrawer = () => (event) => {
     if (

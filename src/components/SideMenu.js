@@ -4,6 +4,7 @@ import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import { IconButton, Tooltip, Typography } from "@mui/material";
 import List from "@mui/material/List";
+import { useHistory, useParams, Link } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -14,7 +15,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { makeStyles } from "@mui/styles";
 import { menus } from "../data/data";
-import Link from "@material-ui/core/Link";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 const drawerWidth = 240;
 
@@ -97,7 +98,7 @@ export default function SideMenu(props) {
 
         <Divider />
         <List>
-          {menus.map((item, index) => {
+          {/* {menus.map((item, index) => {
             const { id, url, text, icon } = item;
             return (
               <Tooltip title={text} arrow disableInteractive>
@@ -107,7 +108,29 @@ export default function SideMenu(props) {
                 </ListItem>
               </Tooltip>
             );
-          })}
+          })} */}
+
+          <Tooltip title="Projects" arrow disableInteractive>
+            <ListItem button key="0" component={Link} to="/projects">
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Project" />
+            </ListItem>
+          </Tooltip>
+          <Tooltip title="Components" arrow disableInteractive>
+            <ListItem
+              button
+              key="1"
+              component={Link}
+              to={`${window.location.pathname}/components`}
+            >
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Components" />
+            </ListItem>
+          </Tooltip>
         </List>
       </Drawer>
     </>

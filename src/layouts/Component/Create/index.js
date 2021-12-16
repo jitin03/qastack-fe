@@ -32,25 +32,6 @@ export default function CreateComponent() {
     handleCloseToast,
   } = useGlobalContext();
   const history = useHistory();
-  // const validate = (fieldValues = values) => {
-  //   let temp = { ...errors };
-  //   //
-  //   temp.moduleName = /([A-Z])\w+/.test(fieldValues.moduleName)
-  //     ? ""
-  //     : "Module should be alphanumeric";
-
-  //   temp.subModuleName = /([A-Z])\w+/.test(fieldValues.subModules.subModuleName)
-  //     ? ""
-  //     : "Module should be alphanumeric";
-
-  //   // temp.subModules =
-  //   //   fieldValues.departmentId.length != 0 ? "" : "This field is required.";
-  //   // setErrors({
-  //   //   ...temp,
-  //   // });
-
-  //   if (fieldValues == values) return Object.values(temp).every((x) => x == "");
-  // };
 
   const [form, setForm] = useState({});
 
