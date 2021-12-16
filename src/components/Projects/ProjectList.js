@@ -1,41 +1,20 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import {
-  Divider,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  TableBody,
-  TableRow,
-  TableCell,
-  Tooltip,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useGlobalContext } from "../../context/provider/context";
-import Controls from "../controllers/Controls";
 import EditIcon from "@mui/icons-material/Edit";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Checkbox from "@mui/material/Checkbox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useTable from "../Shared/useTable";
-import { modules } from "../../data/modules";
 import { useMutation, useQueryClient } from "react-query";
-import {
-  deleteProject,
-  updateProject,
-} from "../../context/actions/project/api";
+import { deleteProject } from "../../context/actions/project/api";
 import projectInitialState from "../../context/initialStates/projectInitialState";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { Link } from "react-router-dom";
 export default function ProjectList(props) {
   const { projects } = props;
 
@@ -79,14 +58,16 @@ export default function ProjectList(props) {
       <Grid
         container
         justifyItems="center"
+        justify="space-around"
+        spacing={4}
         alignItems="center"
         style={{ flex: "1" }}
       >
         {projects.map((item, index) => (
           <Grid
-            key={index}
+            key={item.Id}
             item
-            md={2}
+            md={3}
             style={{
               textAlign: "left",
 
@@ -94,16 +75,45 @@ export default function ProjectList(props) {
               fontWeight: "1rem",
             }}
           >
-            <Card sx={{ maxWidth: 200 }}>
-              <CardContent>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="div"
-                  style={{ fontWeight: "100", fontSize: "1.2rem" }}
+            {/* <Link to={`/project/${item.Name}`}> */}
+            <Card style={{ minWidth: 275 }}>
+              <CardContent style={{ padding: "20px" }}>
+                <Grid
+                  container
+                  style={{
+                    fontWeight: "100",
+                    fontSize: "1.2rem",
+                  }}
                 >
-                  {item.Name}
-                </Typography>
+                  <Grid item>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {item.Name}
+                    </Typography>
+                    <Typography
+                      style={{
+                        fontSize: "12px",
+                        Opacity: "0.5",
+                      }}
+                    >
+                      Created on data:
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    container
+                    justifyContent="space-between"
+                    style={{
+                      borderBottom: "2px solid #f3f6f5",
+                    }}
+                  >
+                    <Grid item>
+                      <Typography>Project Key</Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography>{item.Id}</Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </CardContent>
               <CardActions
                 style={{
@@ -146,6 +156,7 @@ export default function ProjectList(props) {
                 )}
               </CardActions>
             </Card>
+            {/* </Link> */}
           </Grid>
         ))}
 

@@ -51,13 +51,15 @@ const Project = () => {
   );
 
   let userId = user?.data.users_id;
+  console.log("userId", userId);
   const {
     data: projects,
     error,
     isLoading,
     isError,
   } = useQuery(["project", userId], () => getAllProjects(userId), {
-    enabled: !!user,
+    enabled: !!userId,
+    cacheTime: 0,
   });
   console.log(projects);
   let { id } = useParams();

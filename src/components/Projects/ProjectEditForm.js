@@ -39,10 +39,10 @@ export default function ProjectEditForm() {
     }
 
     handleCloseRightDrawer(e);
+    history.push("/projects");
     projectDispatch({
       type: "RESET_PROJECT_FORM",
     });
-    history.push("/projects");
   };
 
   return (

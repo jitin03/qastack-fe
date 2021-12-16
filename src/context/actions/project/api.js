@@ -3,6 +3,8 @@ import axios from "axios";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_SERVER;
 export const getAllProjects = async (userid) => {
+  // const [_key, { userid }] = queryKey;
+  console.log("userid", userid);
   const response = await axiosAppInstance().get(
     `/api/projects?userid=${userid}`,
     {

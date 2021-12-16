@@ -75,13 +75,14 @@ export default function CreateComponent() {
     setForm({ ...form, [name]: value });
   };
   const queryClient = useQueryClient();
-  const handleComponentSubmit = async () => {
+  const handleComponentSubmit = async (e) => {
+    e.preventDefault();
     form.project_id = 57;
     try {
       await mutateAsync(form);
       queryClient.invalidateQueries("component");
       setForm({});
-      handleCloseRightDrawer();
+      handleCloseRightDrawer(e);
       history.push("/components");
     } catch (error) {
       componentDispatch({

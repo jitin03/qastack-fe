@@ -2,6 +2,7 @@ import { lazy } from "react";
 
 import LoginContainer from "../components/Login";
 import Project from "../components/Projects/Project";
+import ProjectOverview from "../components/Projects/ProjectOverview";
 import RegisterContainer from "../components/Register";
 import CreateComponent from "../layouts/Component/Create";
 import EditComponent from "../layouts/Component/Edit";
@@ -9,17 +10,6 @@ import ComponentList from "../layouts/Component/List";
 import CreateTestCase from "../layouts/TestCase/Create";
 import TestCaseList from "../layouts/TestCase/List";
 
-{
-  /* <Route exact path="/" exact component={Requirement} />
-            <Route exact path="/modules" component={Modules} />
-            <Route exact path="/projects" component={Project} />
-            <Route exact path="/project/create" component={Project} />
-            <Route exact path="/releases" component={Release} />
-            <Route exact path="/release/create" component={Release} />
-            <Route exact path="/module/create" component={Modules} />
-            <Route exact path="/project/edit/:id" component={Project} />
-            <Route path="*"></Route> */
-}
 const routes = [
   {
     path: "/auth/register",
@@ -41,7 +31,7 @@ const routes = [
     needsAuth: true,
   },
   {
-    path: "/component/edit/:id",
+    path: "/project/:name/component/edit/:id",
     component: ComponentList,
     title: "Edit Component",
     needsAuth: true,
@@ -60,26 +50,32 @@ const routes = [
     needsAuth: true,
   },
   {
-    path: "/components",
+    path: "/project/:name",
+    component: ProjectOverview,
+    title: "Project Overview",
+    needsAuth: true,
+  },
+  {
+    path: "/project/:name/components",
     component: ComponentList,
     title: "All Components",
     needsAuth: true,
   },
   {
-    path: "/component/create",
+    path: "/project/:name/component/create",
     component: ComponentList,
     title: "Create Component",
     needsAuth: true,
   },
 
   {
-    path: "/testcases",
+    path: "/project/:name/component/:componentName/testcases",
     component: TestCaseList,
     title: "TestCases",
     needsAuth: true,
   },
   {
-    path: "/testcase/create",
+    path: "/project/:name/component/:componentName/testcase/create",
     component: TestCaseList,
     title: "Create TestCase",
     needsAuth: true,
