@@ -16,7 +16,7 @@ import RightDrawer from "../components/RightDrawer";
 import { useGlobalContext } from "../context/provider/context";
 import { QueryClientProvider, QueryClient } from "react-query";
 import routes from "../routes";
-
+import { useParams, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { ReactQueryDevtools } from "react-query/devtools";
 import isAuthenticated from "../context/actions/auth/isAuthenticated";
@@ -77,7 +77,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 function App() {
   const [open, setOpen] = useState(false);
-  const { configTitle } = useGlobalContext();
+  const { configTitle, drawerParam } = useGlobalContext();
+
   const history = useHistory();
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -116,6 +117,7 @@ function App() {
         // width="1300px"
         configTitle={configTitle}
         handleDrawerClose={handleDrawerClose}
+        params={drawerParam}
       />
       <CssBaseline />
       <ReactQueryDevtools initialIsOpen={false} />

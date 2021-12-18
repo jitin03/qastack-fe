@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import projectInitialState from "../initialStates/projectInitialState";
 import componentInitialState from "../initialStates/componentInitialState";
 import component from "../reducers/component";
+import RightDrawer from "../../components/RightDrawer";
 const AppContext = React.createContext();
 
 const anchor = "right";
@@ -19,8 +20,9 @@ const AppProvider = ({ children }) => {
   };
 
   const history = useHistory();
-  // useState for Module
+  const [open, setOpen] = useState(false);
   const [configTitle, setConfigTitle] = useState("");
+  const [drawerParam, setDrawerParam] = useState("");
   const [passwordIsMasked, setPasswordIsMasked] = useState(true);
   const [registerPasswordIsMasked, setRegisterPasswordIsMasked] =
     useState(true);
@@ -50,6 +52,13 @@ const AppProvider = ({ children }) => {
     component,
     componentInitialState
   );
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
   const [projectState, projectDispatch] = useReducer(
     project,
@@ -78,12 +87,13 @@ const AppProvider = ({ children }) => {
     } else if (configTitle === "Edit Component") {
       history.push(`/component/edit/${param}`);
     } else if (configTitle === "Add TestCase") {
-      history.push("/testcase/create");
+      history.push(`${window.location.pathname}/create`);
     } else {
       history.push(`${window.location.pathname}/create`);
     }
-    setState(!state);
     setConfigTitle(configTitle);
+    setState(!state);
+    setDrawerParam(param);
   };
 
   const handleReleaseFormInput = (e) => {
@@ -208,6 +218,7 @@ const AppProvider = ({ children }) => {
         handleReleaseFormSubmit,
         handleProjectFormInput,
         projectDispatch,
+        drawerParam,
       }}
     >
       {children}

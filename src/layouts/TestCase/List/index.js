@@ -43,6 +43,7 @@ import {
 } from "../../../constants/actionTypes";
 import { getAllTestCases } from "../../../context/actions/testcase/api";
 import useTable from "../../../components/Shared/useTable";
+import { useParams } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -74,19 +75,19 @@ const TestCaseList = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const { handleRightDrawer, setOpenToast, componentDispatch } =
     useGlobalContext();
-
+  const { projectKey } = useParams();
   const pages = [5, 10, 25];
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
-  const [componentId, setComponentId] = useState(0);
+  const [componentId, setComponentId] = useState("");
   const {
     data: components,
     error,
     isLoading,
     isError,
-  } = useQuery("component", getAllComponents, {
+  } = useQuery(["component", projectKey, rowsPerPage], getAllComponents, {
     onError: (error) => {
       setOpenToast(true);
       componentDispatch({
@@ -111,7 +112,7 @@ const TestCaseList = () => {
   });
   const handleListItemClick = (event, index, id) => {
     setSelectedIndex(index);
-
+    console.log("id", id);
     setComponentId(id);
   };
   const headCells = [
@@ -250,7 +251,7 @@ const TestCaseList = () => {
             <Button
               variant="outlined"
               startIcon={<AddIcon />}
-              onClick={() => handleRightDrawer("Add TestCase")}
+              onClick={() => handleRightDrawer("Add TestCase", projectKey)}
               sx={{ m: 1 }}
             >
               Add Test Case

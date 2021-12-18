@@ -36,10 +36,11 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
-export default function RightDrawer({ configTitle, width = "550px" }) {
+export default function RightDrawer({ configTitle, width = "550px", params }) {
   const { state, toggleDrawer, module, anchor, handleCloseRightDrawer } =
     useGlobalContext();
-
+  console.log("params", params);
+  console.log("configTitle", configTitle);
   const list = (width) => (
     <Box sx={{ width: width }}>
       <DrawerHeader>
@@ -65,17 +66,17 @@ export default function RightDrawer({ configTitle, width = "550px" }) {
 
       {(function () {
         if (configTitle === "Add Component") {
-          return <CreateComponent />;
+          return <CreateComponent param={params} />;
         } else if (configTitle === "Add Project") {
           return <ProjectForm />;
         } else if (configTitle === "Add Release") {
-          return <ReleaseForm />;
+          return <ReleaseForm param={params} />;
         } else if (configTitle === "Edit Project") {
           return <ProjectEditForm />;
         } else if (configTitle === "Edit Component") {
           return <EditComponent />;
         } else if (configTitle === "Add TestCase") {
-          return <CreateTestCase />;
+          return <CreateTestCase param={params} />;
         }
       })()}
     </Box>

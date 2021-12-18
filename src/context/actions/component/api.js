@@ -2,12 +2,16 @@ import axiosAppInstance from "../../../helper/componentAppAxios";
 import axios from "axios";
 
 axios.defaults.baseURL = process.env.REACT_APP_COMPONENT_SERVER;
-export const getAllComponents = async () => {
-  const response = await axiosAppInstance().get(`/api/components`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+export const getAllComponents = async ({ queryKey }) => {
+  const [_key, componentId, pageId] = queryKey;
+  const response = await axiosAppInstance().get(
+    `/api/components?projectKey=${componentId}&page=${pageId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   return response.data;
 };

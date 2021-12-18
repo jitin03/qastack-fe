@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useGlobalContext } from "../../../context/provider/context";
 import Controls from "../../../components/controllers/Controls";
 import { Form } from "../../../components/useForm";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import {
   COMPONENT_CREATE_ERROR,
@@ -21,7 +21,8 @@ const useStyles = makeStyles({
     padding: "1rem 1.5rem 1.5rem",
   },
 });
-export default function CreateComponent() {
+export default function CreateComponent(props) {
+  const { param } = props;
   const classes = useStyles();
   const {
     componentState: { component },
@@ -32,7 +33,8 @@ export default function CreateComponent() {
     handleCloseToast,
   } = useGlobalContext();
   const history = useHistory();
-
+  const { projectKey } = useParams();
+  console.log("projectKey", param);
   const [form, setForm] = useState({});
 
   const [fieldErrors, setFieldErrors] = useState({});
@@ -58,7 +60,7 @@ export default function CreateComponent() {
   const queryClient = useQueryClient();
   const handleComponentSubmit = async (e) => {
     e.preventDefault();
-    form.project_id = 57;
+    form.project_id = param;
     try {
       await mutateAsync(form);
       queryClient.invalidateQueries("component");

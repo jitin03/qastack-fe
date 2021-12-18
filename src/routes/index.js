@@ -50,32 +50,32 @@ const routes = [
     needsAuth: true,
   },
   {
-    path: "/project/:name",
+    path: "/project/:projectKey",
     component: ProjectOverview,
     title: "Project Overview",
     needsAuth: true,
   },
   {
-    path: "/project/:name/components",
+    path: "/project/:projectKey/components",
     component: ComponentList,
     title: "All Components",
     needsAuth: true,
   },
   {
-    path: "/project/:name/component/create",
+    path: "/project/:projectKey/components/create",
     component: ComponentList,
     title: "Create Component",
     needsAuth: true,
   },
 
   {
-    path: "/project/:name/component/:componentName/testcases",
+    path: "/project/:projectKey/components/testcases",
     component: TestCaseList,
     title: "TestCases",
     needsAuth: true,
   },
   {
-    path: "/project/:name/component/:componentName/testcase/create",
+    path: "/project/:projectKey/component/:name/testcase/create",
     component: TestCaseList,
     title: "Create TestCase",
     needsAuth: true,

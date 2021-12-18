@@ -4,7 +4,7 @@ import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import { IconButton, Tooltip, Typography } from "@mui/material";
 import List from "@mui/material/List";
-import { useHistory, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -14,14 +14,9 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { makeStyles } from "@mui/styles";
-import { menus, submenus } from "../data/data";
+import { menus } from "../data/data";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useRouteMatch,
-} from "react-router-dom";
+
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -82,57 +77,48 @@ const useStyles = makeStyles({
   },
 });
 
-export default function SideMenu(props) {
-  const { open, handleDrawerClose } = props;
-  const classes = useStyles();
-  const theme = useTheme();
-  let { path, url } = useRouteMatch();
+export const Submenus = () => {
   const { projectKey } = useParams();
+
   console.log("projectKey", projectKey);
+
   return (
     <>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
+      <Tooltip title="Project Overview" arrow disableInteractive>
+        <ListItem button key="1" component={Link} to={`/project/${projectKey}`}>
+          <ListItemIcon>
+            <AssignmentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Project Overview" />
+        </ListItem>
+      </Tooltip>
+      <Tooltip title="Components" arrow disableInteractive>
+        <ListItem
+          button
+          key="2"
+          component={Link}
+          to={`/project/${projectKey}/components`}
+        >
+          <ListItemIcon>
+            <AssignmentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Components" />
+        </ListItem>
+      </Tooltip>
 
-        <Divider />
-
-        <List>
-          <Tooltip title="Projects" arrow disableInteractive>
-            <ListItem button key="0" component={Link} to={`/projects`}>
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Projects" />
-            </ListItem>
-          </Tooltip>
-
-          <Switch>
-            {submenus.map((route, index) => (
-              // You can render a <Route> in as many places
-              // as you want in your app. It will render along
-              // with any other <Route>s that also match the URL.
-              // So, a sidebar or breadcrumbs or anything else
-              // that requires you to render multiple things
-              // in multiple places at the same URL is nothing
-              // more than multiple <Route>s.
-              <Route
-                key={index}
-                path={route.url}
-                children={<route.sidebar />}
-              />
-            ))}
-          </Switch>
-        </List>
-      </Drawer>
+      <Tooltip title="Test Cases" arrow disableInteractive>
+        <ListItem
+          button
+          key="2"
+          component={Link}
+          to={`/project/${projectKey}/components/testcases`}
+        >
+          <ListItemIcon>
+            <AssignmentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Test Cases" />
+        </ListItem>
+      </Tooltip>
     </>
   );
-}
+};

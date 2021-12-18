@@ -40,7 +40,9 @@ const useStyles = makeStyles((theme) => ({
     // zIndex: 1202,
   },
 }));
-export default function CreateTestCase() {
+export default function CreateTestCase(props) {
+  const { param } = props;
+
   const [tabValue, setTabValue] = useState(0);
   const classes = useStyles();
   const { register, handleSubmit, control } = useForm({
@@ -55,7 +57,6 @@ export default function CreateTestCase() {
     }
   );
   const {
-    componentState: { component },
     componentDispatch,
     handleCloseRightDrawer,
     setOpenToast,
@@ -131,6 +132,7 @@ export default function CreateTestCase() {
               fields={fields}
               remove={remove}
               append={append}
+              param={param}
             />
           </TabPanel>
           <TabPanel value={tabValue} index={1}>

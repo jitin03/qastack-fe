@@ -61,10 +61,12 @@ const ComponentList = () => {
       return items;
     },
   });
+  const pages = [5, 10, 25];
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
 
   let { id } = useParams();
-  let { name } = useParams();
-  console.log("name", name);
+  let { projectKey } = useParams();
 
   setEditId(id);
   const headCells = [
@@ -73,7 +75,7 @@ const ComponentList = () => {
     { id: "action", label: "Action" },
   ];
   const { data, error, isLoading, isError } = useQuery(
-    "component",
+    ["component", projectKey, rowsPerPage],
     getAllComponents,
     {
       onError: (error) => {
@@ -185,7 +187,7 @@ const ComponentList = () => {
                 variant="outlined"
                 startIcon={<AddIcon />}
                 // onClick={() => setState(!state)}
-                onClick={() => handleRightDrawer("Add Component")}
+                onClick={() => handleRightDrawer("Add Component", projectKey)}
                 sx={{ m: 1 }}
               >
                 Add Component

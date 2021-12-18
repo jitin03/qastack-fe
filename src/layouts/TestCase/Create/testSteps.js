@@ -69,7 +69,9 @@ const BottomDrawer = styled("div")(({ theme }) => ({
 }));
 export default function TestSteps(props) {
   const classes = useStyles();
-  const { register, handleSubmit, control, fields, remove, append } = props;
+  const { register, handleSubmit, control, fields, remove, append, param } =
+    props;
+  console.log("param", param);
   const {
     componentState: { component },
     setOpenToast,
@@ -89,7 +91,7 @@ export default function TestSteps(props) {
     error: componentError,
     isLoading: isComponentLoading,
     isError: isComponentsError,
-  } = useQuery("component", getAllComponents, {
+  } = useQuery(["component", param, 20], getAllComponents, {
     onError: (error) => {
       setOpenToast(true);
       componentDispatch({

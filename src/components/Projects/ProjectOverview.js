@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 const ProjectOverview = () => {
-  const { name } = useParams();
+  const { projectKey } = useParams();
   const classes = useStyles();
 
   return (
@@ -36,7 +36,7 @@ const ProjectOverview = () => {
               padding: "20px",
             }}
           >
-            <Typography variant="h6">Project Overview:{name}</Typography>
+            <Typography variant="h6">Project Overview:{projectKey}</Typography>
           </Grid>
           <Grid item container style={{ padding: "20px" }} spacing={24}>
             <Grid item md={3}>

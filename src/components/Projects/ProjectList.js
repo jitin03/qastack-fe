@@ -85,7 +85,7 @@ export default function ProjectList(props) {
             }}
           >
             <Card style={{ minWidth: 275 }}>
-              <Link underline="none" href={`/project/${item.Name}`}>
+              <Link underline="none" href={`/project/${item.Id}`}>
                 <CardContent style={{ padding: "20px" }}>
                   <Grid
                     container
