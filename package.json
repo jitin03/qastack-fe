@@ -13,7 +13,7 @@
     "@mui/lab": "^5.0.0-alpha.55",
     "@mui/material": "^5.0.4",
     "@mui/styles": "^5.0.1",
-    "@mui/x-data-grid": "^5.0.1",
+    "@mui/x-data-grid": "^5.2.1",
     "@rebass/forms": "^4.0.6",
     "@rebass/preset": "^4.0.5",
     "@testing-library/jest-dom": "^5.11.4",

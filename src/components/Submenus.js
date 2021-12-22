@@ -119,6 +119,20 @@ export const Submenus = () => {
           <ListItemText primary="Test Cases" />
         </ListItem>
       </Tooltip>
+
+      <Tooltip title="Test Runs" arrow disableInteractive>
+        <ListItem
+          button
+          key="2"
+          component={Link}
+          to={`/project/${projectKey}/testruns`}
+        >
+          <ListItemIcon>
+            <AssignmentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Test Runs" />
+        </ListItem>
+      </Tooltip>
     </>
   );
 };

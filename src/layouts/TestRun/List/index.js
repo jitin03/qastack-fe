@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     width: "75%",
   },
 }));
-const ComponentList = () => {
+const TestRunList = () => {
   const classes = useStyles();
   const {
     handleCloseToast,
@@ -71,50 +71,13 @@ const ComponentList = () => {
 
   setEditId(id);
   const headCells = [
-    { id: "component_id", label: "Id" },
-    { id: "component_name", label: "Component Name" },
+    { id: "testrun_id", label: "TestRun ID" },
+    { id: "testrun_name", label: "TestRun Name" },
     { id: "action", label: "Action" },
   ];
-  const {
-    data: components,
-    error,
-    isLoading: waitForComponents,
-    isError,
-  } = useQuery(["component", projectKey, rowsPerPage], getAllComponents, {
-    onError: (error) => {
-      setOpenToast(true);
-      componentDispatch({
-        type: COMPONENT_CREATE_ERROR,
-        payload: error.message,
-      });
-    },
-    onSuccess: (components) => {
-      setData(components);
-    },
-  });
+
   const history = useHistory();
-  const { mutateAsync, isLoading: deleteComponentLoading } =
-    useMutation(deleteComponent);
 
-  const handleEditComponent = (name, id, projectKey) => {
-    componentDispatch({
-      type: EDIT_COMPONENT,
-      payload: name,
-    });
-    let params = [];
-    params.push(projectKey);
-    params.push(id);
-    handleRightDrawer("Edit Component", params);
-  };
-  const queryClient = useQueryClient();
-  const handleDeleteComponent = async (id) => {
-    await mutateAsync(id);
-    queryClient.invalidateQueries("component");
-  };
-
-  if (isError) {
-    console.log(error);
-  }
   const handleSearch = (e) => {
     let target = e.target;
     setFilterFn({
@@ -130,35 +93,35 @@ const ComponentList = () => {
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(data, headCells, filterFn);
 
-  if (waitForComponents) {
-    return (
-      <>
-        <Grid container>
-          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
-          <Grid
-            item
-            container
-            justifyContent="center"
-            style={{ padding: "50px 10px" }}
-          >
-            <Container sx={{ display: "flex" }}>
-              <Grid
-                container
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Grid item>
-                  <CircularProgress />
-                </Grid>
-              </Grid>
-            </Container>
-            <Grid item></Grid>
-          </Grid>
-        </Grid>
-      </>
-    );
-  }
+  //   if (waitForComponents) {
+  //     return (
+  //       <>
+  //         <Grid container>
+  //           <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
+  //           <Grid
+  //             item
+  //             container
+  //             justifyContent="center"
+  //             style={{ padding: "50px 10px" }}
+  //           >
+  //             <Container sx={{ display: "flex" }}>
+  //               <Grid
+  //                 container
+  //                 direction="column"
+  //                 justifyContent="center"
+  //                 alignItems="center"
+  //               >
+  //                 <Grid item>
+  //                   <CircularProgress />
+  //                 </Grid>
+  //               </Grid>
+  //             </Container>
+  //             <Grid item></Grid>
+  //           </Grid>
+  //         </Grid>
+  //       </>
+  //     );
+  //   }
   const handleChangePage = (event, newPage) => {
     console.log(newPage, "newPage");
     setPage(newPage);
@@ -184,7 +147,7 @@ const ComponentList = () => {
           <Grid item>
             <Toolbar>
               <Controls.Input
-                label="Search Component "
+                label="Search TestRun "
                 className={classes.searchInput}
                 InputProps={{
                   startAdornment: (
@@ -198,20 +161,20 @@ const ComponentList = () => {
             </Toolbar>
           </Grid>
           <Grid item>
-            <Tooltip title="Add new component" arrow disableInteractive>
+            <Tooltip title="Add TestRun" arrow disableInteractive>
               <Button
                 variant="outlined"
                 startIcon={<AddIcon />}
                 // onClick={() => setState(!state)}
-                onClick={() => handleRightDrawer("Add Component", projectKey)}
+                onClick={() => handleRightDrawer("Add TestRun", projectKey)}
                 sx={{ m: 1 }}
               >
-                Add Component
+                Add TestRun
               </Button>
             </Tooltip>
           </Grid>
         </Grid>
-        {data?.length ? (
+        {/* {data?.length ? (
           <Grid item container justifyContent="flex-end">
             <TblContainer>
               <TblHead />
@@ -265,8 +228,8 @@ const ComponentList = () => {
           >
             <Typography>No component avaiable</Typography>
           </Grid>
-        )}
-        {isError && (
+        )} */}
+        {/* {isError && (
           <>
             <Toast
               openToast={openToast}
@@ -274,11 +237,10 @@ const ComponentList = () => {
               handleCloseToast={handleCloseToast}
             ></Toast>
           </>
-        )}
-        <Grid item md={8}></Grid>
+        )} */}
       </Grid>
     </Box>
   );
 };
 
-export default ComponentList;
+export default TestRunList;

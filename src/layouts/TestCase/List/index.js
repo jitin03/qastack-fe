@@ -82,6 +82,7 @@ const TestCaseList = () => {
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
   const [componentId, setComponentId] = useState("");
+  const [chooseComponent, setChooseComponent] = useState("");
   const {
     data: components,
     error,
@@ -110,10 +111,11 @@ const TestCaseList = () => {
       });
     },
   });
-  const handleListItemClick = (event, index, id) => {
+  const handleListItemClick = (event, index, id, name) => {
     setSelectedIndex(index);
     console.log("id", id);
     setComponentId(id);
+    setChooseComponent(name);
   };
   const headCells = [
     { id: "testcaseId", label: "TestCase ID " },
@@ -226,36 +228,48 @@ const TestCaseList = () => {
         <Grid
           item
           container
-          justifyContent="flex-end"
-          alignItems="center"
+          justifyContent="center"
+          justifyItems="center"
           style={{
             backgroundColor: "rgb(248, 248, 248)",
           }}
         >
-          <Grid item>
-            <Toolbar>
-              <Controls.Input
-                label="Search By Title "
-                className={classes.searchInput}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Toolbar>
+          <Grid item md={4} style={{ padding: "15px" }}>
+            <Typography variant="h6">Test Cases</Typography>
           </Grid>
-          <Grid item>
-            <Button
-              variant="outlined"
-              startIcon={<AddIcon />}
-              onClick={() => handleRightDrawer("Add TestCase", projectKey)}
-              sx={{ m: 1 }}
-            >
-              Add Test Case
-            </Button>
+          <Grid
+            item
+            container
+            justifyContent="flex-end"
+            justifyItems="center"
+            justifySelf="center"
+            md={8}
+          >
+            <Grid item>
+              <Toolbar>
+                <Controls.Input
+                  label="Search By Title "
+                  className={classes.searchInput}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Toolbar>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                onClick={() => handleRightDrawer("Add TestCase", projectKey)}
+                sx={{ m: 1.5 }}
+              >
+                Add Test Case
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
 
@@ -275,6 +289,7 @@ const TestCaseList = () => {
               sx={{ p: 2, borderRadius: 2, m: 2 }}
               // md="auto"
               backgroundColor="#f9f9f9"
+
               // spacing={2}
             >
               <Grid item container justifyContent="space-between">
@@ -316,7 +331,12 @@ const TestCaseList = () => {
                         <ListItemButton
                           selected={selectedIndex === index}
                           onClick={(event) =>
-                            handleListItemClick(event, index, item.component_id)
+                            handleListItemClick(
+                              event,
+                              index,
+                              item.component_id,
+                              item.component_name
+                            )
                           }
                         >
                           <ListItemIcon>
@@ -341,23 +361,17 @@ const TestCaseList = () => {
               sx={{ p: 2, flex: 1, borderRadius: 2, m: 2 }}
               backgroundColor="#f9f9f9"
             >
+              <Grid item>
+                <Typography variant="p">{chooseComponent} : </Typography>
+                <Typography
+                  variant="p"
+                  sx={{ paddingLeft: 2, flex: 1, borderRadius: 2 }}
+                >
+                  {testcases?.length}{" "}
+                </Typography>
+              </Grid>
               <Grid item textAlign="right">
                 <Typography>Test Cases</Typography>
-              </Grid>
-              <Grid item>
-                <TextField
-                  label="Search by Summary"
-                  size="small"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment>
-                        <IconButton>
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
               </Grid>
               <Grid item container>
                 <Divider sx={{ width: "100%", paddingTop: 1 }} />
@@ -377,20 +391,20 @@ const TestCaseList = () => {
                             <TableCell>{item.priority}</TableCell>
                             <TableCell>
                               <Tooltip
-                                title="Edit component"
+                                title="Edit test"
                                 arrow
                                 disableInteractive
                               >
-                                <IconButton aria-label="Edit component">
+                                <IconButton aria-label="Edit test">
                                   <EditIcon />
                                 </IconButton>
                               </Tooltip>
                               <Tooltip
-                                title="Delete component"
+                                title="Delete test"
                                 arrow
                                 disableInteractive
                               >
-                                <IconButton aria-label="delete component">
+                                <IconButton aria-label="delete test">
                                   <DeleteIcon />
                                 </IconButton>
                               </Tooltip>

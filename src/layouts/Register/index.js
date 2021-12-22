@@ -46,7 +46,14 @@ const RegisterUI = ({
 }) => {
   const queryClient = useQueryClient();
   const history = useHistory();
-  const { handleCloseToast, openToast, setOpenToast } = useGlobalContext();
+  const {
+    handleCloseToast,
+    openToast,
+    setOpenToast,
+    togglePasswordMask,
+    passwordIsMasked,
+    handleMouseDownPassword,
+  } = useGlobalContext();
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
     useMutation(registerUser, {
       onError: (error) => {
@@ -122,27 +129,27 @@ const RegisterUI = ({
                   <TextField
                     name="password"
                     label="Password"
-                    type={true ? "password" : "text"}
+                    type={passwordIsMasked ? "password" : "text"}
                     value={form.password || ""}
                     style={{ width: "100%" }}
                     onChange={handleInputChange}
-                    // InputProps={{
-                    //   endAdornment: (
-                    //     <InputAdornment position="end">
-                    //       <IconButton
-                    //         onClick={toggleRegisterPasswordMask}
-                    //         onMouseDown={handleMouseDownPassword}
-                    //         edge="end"
-                    //       >
-                    //         {registerPasswordIsMasked ? (
-                    //           <VisibilityOffIcon />
-                    //         ) : (
-                    //           <VisibilityIcon />
-                    //         )}
-                    //       </IconButton>
-                    //     </InputAdornment>
-                    //   ),
-                    // }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={togglePasswordMask}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {passwordIsMasked ? (
+                              <VisibilityOffIcon />
+                            ) : (
+                              <VisibilityIcon />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                   <TextField
                     name="confirmpassword"

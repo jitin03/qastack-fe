@@ -16,11 +16,14 @@ import PropTypes from "prop-types";
 import { addComponent } from "../../../context/actions/component/api";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import TestSteps from "./testSteps";
+
 import { Box } from "@mui/system";
 import Controls from "../../../components/controllers/Controls";
-import LinkJiraIssue from "./linkJiraIssue";
+
 import { addTestcase } from "../../../context/actions/testcase/api";
+import TestRuns from "./testRun";
+import TestCaseRecords from "./testCaseRecords";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -40,22 +43,13 @@ const useStyles = makeStyles((theme) => ({
     // zIndex: 1202,
   },
 }));
-export default function CreateTestCase(props) {
+export default function CreateTestRun(props) {
   const { param } = props;
 
   const [tabValue, setTabValue] = useState(0);
   const classes = useStyles();
-  const { register, handleSubmit, control } = useForm({
-    defaultValues: {
-      Steps: [{ stepDescription: "", expectedResult: "" }],
-    },
-  });
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control,
-      name: "Steps",
-    }
-  );
+  const { register, handleSubmit, control } = useForm();
+
   const {
     componentDispatch,
     handleCloseRightDrawer,
@@ -65,36 +59,9 @@ export default function CreateTestCase(props) {
     state,
     handleCloseToast,
   } = useGlobalContext();
-  const history = useHistory();
 
-  const [form, setForm] = useState({});
-
-  const [fieldErrors, setFieldErrors] = useState({});
-
-  const { mutateAsync, isLoading, isError, error, data, isSuccess } =
-    useMutation(addTestcase, {
-      onError: (error) => {
-        setOpenToast(true);
-      },
-      onSuccess: (data) => {
-        componentDispatch({
-          type: COMPONENT_CREATE_SUCCESS,
-          payload: data,
-        });
-      },
-    });
-
-  const queryClient = useQueryClient();
-  const onSubmit = async (data, e) => {
-    try {
-      await mutateAsync(data);
-
-      handleCloseRightDrawer(e);
-      history.goBack();
-    } catch (error) {
-      history.goBack();
-      console.log(error.message);
-    }
+  const onSubmit = async (data) => {
+    console.log(data);
   };
 
   const handleChange = (event, newValue) => {
@@ -105,18 +72,15 @@ export default function CreateTestCase(props) {
       <Tabs
         value={tabValue}
         onChange={handleChange}
-        aria-label="basic tabs example"
+        aria-label="Test run configuration"
       >
-        <Tab label="Test Case Details" />
-        <Tab label="Link Requirement" />
-        <Tab label="Jira Requirement" />
+        <Tab label="Test Run Details" />
+        <Tab label="Specific test cases" />
       </Tabs>
       <FormProvider
         register={register}
         control={control}
         handleSubmit={handleSubmit}
-        remove={remove}
-        append={append}
       >
         <form
           className={classes.root}
@@ -126,24 +90,22 @@ export default function CreateTestCase(props) {
         >
           <TabPanel value={tabValue} index={0}>
             <Divider />
-            <TestSteps
+            <TestRuns
               register={register}
               control={control}
               handleSubmit={handleSubmit}
-              fields={fields}
-              remove={remove}
-              append={append}
               param={param}
             />
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
             <Divider />
-            Item Two
+            <TestCaseRecords
+              register={register}
+              control={control}
+              param={param}
+            />
           </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            <Divider />
-            <LinkJiraIssue />
-          </TabPanel>
+
           <Grid
             container
             className={classes.bottomDrawer}

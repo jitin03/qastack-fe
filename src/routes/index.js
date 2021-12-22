@@ -9,6 +9,7 @@ import EditComponent from "../layouts/Component/Edit";
 import ComponentList from "../layouts/Component/List";
 import CreateTestCase from "../layouts/TestCase/Create";
 import TestCaseList from "../layouts/TestCase/List";
+import TestRunList from "../layouts/TestRun/List";
 
 const routes = [
   {
@@ -67,6 +68,12 @@ const routes = [
     title: "Create Component",
     needsAuth: true,
   },
+  {
+    path: "/project/:projectKey/components/edit/:name",
+    component: ComponentList,
+    title: "Create Component",
+    needsAuth: true,
+  },
 
   {
     path: "/project/:projectKey/components/testcases",
@@ -77,6 +84,18 @@ const routes = [
   {
     path: "/project/:projectKey/component/:name/testcase/create",
     component: TestCaseList,
+    title: "Create TestCase",
+    needsAuth: true,
+  },
+  {
+    path: "/project/:projectKey/testruns",
+    component: TestRunList,
+    title: "Create TestCase",
+    needsAuth: true,
+  },
+  {
+    path: "/project/:projectKey/testrun/create",
+    component: TestRunList,
     title: "Create TestCase",
     needsAuth: true,
   },

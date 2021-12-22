@@ -67,10 +67,9 @@ const BottomDrawer = styled("div")(({ theme }) => ({
   backgroundColor: "rgb(255, 255, 255)",
   zIndex: 2,
 }));
-export default function TestSteps(props) {
+export default function TestRuns(props) {
   const classes = useStyles();
-  const { register, handleSubmit, control, fields, remove, append, param } =
-    props;
+  const { register, handleSubmit, control, param } = props;
   console.log("param", param);
   const {
     componentState: { component },
@@ -79,76 +78,27 @@ export default function TestSteps(props) {
   } = useGlobalContext();
   const history = useHistory();
 
-  const [form, setForm] = useState({});
-  const [inputStepFields, setInputStepFields] = useState([
-    { stepDescription: "", expectedResult: "" },
-    { stepDescription: "", expectedResult: "" },
-  ]);
-
-  const [fieldErrors, setFieldErrors] = useState({});
-  const {
-    data: components,
-    error: componentError,
-    isLoading: isComponentLoading,
-    isError: isComponentsError,
-  } = useQuery(["component", param, 30], getAllComponents, {
-    onError: (error) => {
-      setOpenToast(true);
-      componentDispatch({
-        type: COMPONENT_LIST_ERROR,
-        payload: error.message,
-      });
-    },
-  });
-
-  const handleAddStep = () => {
-    append({
-      stepDescription: "",
-      expectedResult: "",
-    });
-  };
-  const handleRemoveStep = (id) => {
-    const values = [...inputStepFields];
-    values.splice(id, 1);
-    setInputStepFields(values);
-  };
-
   const queryClient = useQueryClient();
   const onSubmit = (data) => console.log(data);
   return (
     <>
       <Container>
-        {/* <form
-          className={classes.root}
-          autoComplete="off"
-          style={{ height: "100%" }}
-        > */}
         <Grid
           container
-          spacing={3}
+          spacing={4}
           direction="row"
           justify="center"
           alignItems="stretch"
         >
-          {/* <Grid item xs={12}>
-              <Paper className={classes.paper}>xs=12</Paper>
-            </Grid> */}
-
-          <Grid item xs={9}>
-            <Grid style={{ height: "100vh" }}>
-              {/* <YourCard /> */}
-              <TestDetails
-                control={control}
-                handleAddStep={handleAddStep}
-                fields={fields}
-                remove={remove}
-              />
+          <Grid item container xs={8}>
+            <Grid item style={{ padding: "5px" }}>
+              <TestRunForm control={control} />
             </Grid>
           </Grid>
-          <Grid item xs={3}>
-            <Grid container spacing={3}>
+          <Grid item container xs={4}>
+            <Grid item container spacing={3}>
               <Grid item xs={12}>
-                <CustomeAttributes control={control} components={components} />
+                <CustomeAttributes control={control} />
               </Grid>
             </Grid>
           </Grid>
@@ -194,7 +144,7 @@ const YourCard = () => {
 };
 
 const CustomeAttributes = (props) => {
-  const { control, handleAddStep, remove, fields, components } = props;
+  const { control } = props;
 
   const classes = {};
   return (
@@ -211,14 +161,14 @@ const CustomeAttributes = (props) => {
       <CardContent>
         <Grid item>
           <Controller
-            name="Priority"
+            name="assignee"
             defaultValue=""
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-helper-label">
-                    Priority
+                    Assignee
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
@@ -238,14 +188,14 @@ const CustomeAttributes = (props) => {
         </Grid>
         <Grid item>
           <Controller
-            name="Type"
+            name="releaseId"
             defaultValue=""
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-helper-label">
-                    Type
+                    Release
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
@@ -265,45 +215,13 @@ const CustomeAttributes = (props) => {
             )}
           />
         </Grid>
-        <Grid item style={{ width: "100%" }}>
-          <Controller
-            name="componentId"
-            defaultValue=""
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-helper-label">
-                    Select Component
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={value}
-                    label="Select Component"
-                    onChange={onChange}
-                  >
-                    {components?.map((item, index) => (
-                      <MenuItem
-                        key={item.component_id}
-                        value={item.component_id}
-                      >
-                        {item.component_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </>
-            )}
-          />
-        </Grid>
       </CardContent>
     </Card>
   );
 };
 
-const TestDetails = (props) => {
-  const { control, handleAddStep, remove, fields } = props;
+const TestRunForm = (props) => {
+  const { control } = props;
   const classes = {};
   return (
     <Card
@@ -313,23 +231,20 @@ const TestDetails = (props) => {
         height: "100%",
         border: "none",
         boxShadow: "none",
-        // backgroundColor: "rgb(248, 248, 248)",
       }}
     >
       <CardContent sx={{ marginTop: "2px" }}>
         <Grid item style={{ minWidth: "250px" }}>
           <Controller
-            name="title"
+            name="name"
             control={control}
             render={({ field: { onChange, value } }) => (
               <TextField
-                id="title"
-                label="Enter title"
-                placeholder="Testcase title"
-                multiline
+                id="name"
+                label="Enter Name"
+                placeholder="TestRun Name"
                 size="small"
                 variant="outlined"
-                // inputProps={{ className: classes.textarea }}
                 onChange={onChange}
                 value={value}
                 style={{ width: "450px" }}
@@ -356,91 +271,6 @@ const TestDetails = (props) => {
             )}
           />
         </Grid>
-        <Grid item container alignItems="center">
-          <Grid item>
-            <Typography variant="subtitle1">Test steps</Typography>
-          </Grid>
-          <Grid item sx={{ marginLeft: 35 }}>
-            <Tooltip title="Add steps" arrow disableInteractive>
-              <Button
-                variant="outlined"
-                startIcon={<AddIcon />}
-                onClick={handleAddStep}
-                sx={{ m: 1 }}
-              >
-                Add
-              </Button>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        {fields.map((item, index) => (
-          <>
-            <Grid
-              item
-              container
-              justifyContent="center"
-              alignItems="center"
-              className={classes.inputGroup}
-              key={item.id}
-            >
-              <Grid item xs={2}>
-                <Typography variant="subtitle2">
-                  {`Step${index + 1}`}
-                </Typography>
-              </Grid>
-              <Grid item style={{ minWidth: "250px" }} xs={4}>
-                <Controller
-                  name={`Steps[${index}].stepDescription`}
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      label="Step description"
-                      multiline
-                      size="small"
-                      variant="outlined"
-                      // inputProps={{ className: classes.textarea }}
-                      onChange={onChange}
-                      // defaultValue={item.stepDescription}
-                      //   style={{ width: "350px" }}
-                      value={value}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <Controller
-                  name={`Steps[${index}].expectedResult`}
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      size="small"
-                      //   style={{ width: "150px" }}
-                      label="Expected result"
-                      multiline
-                      variant="outlined"
-                      onChange={onChange}
-                      // defaultValue={item.expectedResult}
-                      value={value}
-                      // inputProps={{ className: classes.textarea }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={1}>
-                <Tooltip title="Add steps" arrow disableInteractive>
-                  <AddIcon onClick={handleAddStep} />
-                </Tooltip>
-              </Grid>
-              <Grid item xs={1}>
-                {index !== 0 && (
-                  <Tooltip title="Remove steps" arrow disableInteractive>
-                    <DeleteIcon onClick={() => remove(index)} />
-                  </Tooltip>
-                )}
-              </Grid>
-            </Grid>
-          </>
-        ))}
       </CardContent>
     </Card>
   );

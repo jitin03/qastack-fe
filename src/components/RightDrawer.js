@@ -22,6 +22,7 @@ import ProjectEditForm from "./Projects/ProjectEditForm";
 import CreateComponent from "../layouts/Component/Create";
 import EditComponent from "../layouts/Component/Edit";
 import CreateTestCase from "../layouts/TestCase/Create";
+import CreateTestRun from "../layouts/TestRun/Create";
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -74,9 +75,11 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
         } else if (configTitle === "Edit Project") {
           return <ProjectEditForm />;
         } else if (configTitle === "Edit Component") {
-          return <EditComponent />;
+          return <EditComponent param={params} />;
         } else if (configTitle === "Add TestCase") {
           return <CreateTestCase param={params} />;
+        } else if (configTitle === "Add TestRun") {
+          return <CreateTestRun param={params} />;
         }
       })()}
     </Box>
@@ -91,7 +94,7 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
         // onClose={toggleDrawer("right", state)}
         style={{ zIndex: 1201 }}
       >
-        {configTitle === "Add TestCase"
+        {configTitle === "Add TestCase" || configTitle === "Add TestRun"
           ? list((width = "1300px"))
           : list(width)}
       </Drawer>

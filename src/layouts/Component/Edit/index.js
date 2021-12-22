@@ -26,7 +26,9 @@ const useStyles = makeStyles({
     padding: "1rem 1.5rem 1.5rem",
   },
 });
-export default function EditComponent() {
+export default function EditComponent(props) {
+  const { param } = props;
+  console.log("param", param);
   const classes = useStyles();
   const {
     componentState: { component },
@@ -64,8 +66,11 @@ export default function EditComponent() {
   };
   const queryClient = useQueryClient();
   const handleComponentSubmit = async (e) => {
-    component.data.project_id = 57;
+    e.preventDefault();
+    component.data.project_id = param[0];
+    component.data.editId = param[1];
     let editPayload = component.data;
+    console.log("editPayload", editPayload);
     try {
       await mutateAsync({ editId, editPayload });
       queryClient.invalidateQueries("component");

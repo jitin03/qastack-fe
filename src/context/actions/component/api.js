@@ -46,9 +46,10 @@ export const deleteComponent = async (id) => {
 
 export const updateComponent = async ({ ...data }) => {
   let payload = JSON.stringify(data.editPayload);
+  console.log("data.editPayload", data.editPayload);
 
   const response = await axiosAppInstance().put(
-    `/api/component/update/${data.editId}`,
+    `/api/component/update/${data?.editPayload.editId}`,
     payload,
     {
       headers: {
