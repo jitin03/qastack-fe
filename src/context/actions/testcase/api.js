@@ -15,6 +15,21 @@ export const addTestcase = async ({ ...data }) => {
   return response.data;
 };
 
+export const addTestrun = async ({ ...data }) => {
+  let payload = JSON.stringify(data);
+  const response = await axiosAppTestcaseInstance().post(
+    `/api/testrun/add`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export const getAllTestCases = async ({ queryKey }) => {
   const [_key, componentId, pageId] = queryKey;
 

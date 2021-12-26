@@ -97,7 +97,7 @@ export default function Header(props) {
   }, [projects, starProject]);
 
   return (
-    <AppBar position="fixed" open={open} style={{ background: "#2E3B55" }}>
+    <AppBar position="fixed" open={open} style={{ background: "#795cec" }}>
       <Toolbar>
         <Grid
           container
@@ -114,19 +114,6 @@ export default function Header(props) {
             justify="center"
             alignItems="center"
           >
-            <Grid item>
-              {isAuthenticated() && (
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                  edge="start"
-                  sx={{ mr: 2, ...(open && { display: "none" }) }}
-                >
-                  <Menu />
-                </IconButton>
-              )}
-            </Grid>
             <Grid item>
               <Typography variant="h5" style={{ marginLeft: "20px" }}>
                 QA-Stack

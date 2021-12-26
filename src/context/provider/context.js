@@ -79,7 +79,7 @@ const AppProvider = ({ children }) => {
 
   const handleRightDrawer = (configTitle, param) => {
     if (configTitle === "Add Release") {
-      history.push("/release/create");
+      history.push(`${window.location.pathname}/create`);
     } else if (configTitle === "Add Project") {
       history.push("/project/create");
     } else if (configTitle === "Edit Project") {

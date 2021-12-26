@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
-import { IconButton, Tooltip, Typography } from "@mui/material";
+import { Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import Divider from "@mui/material/Divider";
@@ -84,55 +84,161 @@ export const Submenus = () => {
 
   return (
     <>
-      <Tooltip title="Project Overview" arrow disableInteractive>
-        <ListItem button key="1" component={Link} to={`/project/${projectKey}`}>
-          <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary="Project Overview" />
-        </ListItem>
-      </Tooltip>
-      <Tooltip title="Components" arrow disableInteractive>
-        <ListItem
-          button
-          key="2"
-          component={Link}
-          to={`/project/${projectKey}/components`}
-        >
-          <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary="Components" />
-        </ListItem>
-      </Tooltip>
+      <Grid container justifyItems="center">
+        <Tooltip title="Project Overview" arrow disableInteractive>
+          <ListItem
+            button
+            key="1"
+            component={Link}
+            to={`/project/${projectKey}`}
+          >
+            <Grid
+              container
+              item
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={6}>
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  variant="span"
+                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+                  style={{ overflowWrap: "break-word" }}
+                >
+                  Project Overview
+                </Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title="Components" arrow disableInteractive>
+          <ListItem
+            button
+            key="2"
+            component={Link}
+            to={`/project/${projectKey}/components`}
+          >
+            <Grid
+              container
+              item
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={6}>
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  variant="span"
+                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+                >
+                  Components
+                </Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+        </Tooltip>
 
-      <Tooltip title="Test Cases" arrow disableInteractive>
-        <ListItem
-          button
-          key="2"
-          component={Link}
-          to={`/project/${projectKey}/components/testcases`}
-        >
-          <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary="Test Cases" />
-        </ListItem>
-      </Tooltip>
+        <Tooltip title="Releases" arrow disableInteractive>
+          <ListItem
+            button
+            key="2"
+            component={Link}
+            to={`/project/${projectKey}/releases`}
+          >
+            <Grid
+              container
+              item
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={6}>
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  variant="span"
+                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+                >
+                  Release
+                </Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+        </Tooltip>
 
-      <Tooltip title="Test Runs" arrow disableInteractive>
-        <ListItem
-          button
-          key="2"
-          component={Link}
-          to={`/project/${projectKey}/testruns`}
-        >
-          <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary="Test Runs" />
-        </ListItem>
-      </Tooltip>
+        <Tooltip title="Test Cases" arrow disableInteractive>
+          <ListItem
+            button
+            key="2"
+            component={Link}
+            to={`/project/${projectKey}/components/testcases`}
+          >
+            <Grid
+              container
+              item
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={6}>
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  variant="span"
+                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+                >
+                  Test Cases
+                </Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+        </Tooltip>
+
+        <Tooltip title="Test Runs" arrow disableInteractive>
+          <ListItem
+            button
+            key="2"
+            component={Link}
+            to={`/project/${projectKey}/testruns`}
+          >
+            <Grid
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={6}>
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  variant="span"
+                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+                >
+                  Test Runs
+                </Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+        </Tooltip>
+      </Grid>
     </>
   );
 };

@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
-import { IconButton, Tooltip, Typography } from "@mui/material";
+import { Grid, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import { useHistory, useParams, Link } from "react-router-dom";
 import Divider from "@mui/material/Divider";
@@ -39,9 +39,9 @@ const closedMixin = (theme) => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
+  width: `calc(${theme.spacing(12)} + 1px)`,
   [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(9)} + 1px)`,
+    width: `calc(${theme.spacing(12)} + 1px)`,
   },
 });
 
@@ -91,47 +91,54 @@ export default function SideMenu(props) {
   console.log("projectKey", projectKey);
   return (
     <>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
+      <Drawer variant="permanent">
+        <Toolbar />
+        <Box sx={{ overflow: "auto" }}>
+          <List>
+            <Tooltip title="Projects" arrow disableInteractive>
+              <ListItem button key="0" component={Link} to={`/projects`}>
+                <Grid
+                  item
+                  container
+                  direction="column"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={6}>
+                    <ListItemIcon sx={{ p: 2 }}>
+                      <AssignmentIcon />
+                    </ListItemIcon>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography
+                      variant="span"
+                      sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+                    >
+                      Projects
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </ListItem>
+            </Tooltip>
 
-        <Divider />
-
-        <List>
-          <Tooltip title="Projects" arrow disableInteractive>
-            <ListItem button key="0" component={Link} to={`/projects`}>
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Projects" />
-            </ListItem>
-          </Tooltip>
-
-          <Switch>
-            {submenus.map((route, index) => (
-              // You can render a <Route> in as many places
-              // as you want in your app. It will render along
-              // with any other <Route>s that also match the URL.
-              // So, a sidebar or breadcrumbs or anything else
-              // that requires you to render multiple things
-              // in multiple places at the same URL is nothing
-              // more than multiple <Route>s.
-              <Route
-                key={index}
-                path={route.url}
-                children={<route.sidebar />}
-              />
-            ))}
-          </Switch>
-        </List>
+            <Switch>
+              {submenus.map((route, index) => (
+                // You can render a <Route> in as many places
+                // as you want in your app. It will render along
+                // with any other <Route>s that also match the URL.
+                // So, a sidebar or breadcrumbs or anything else
+                // that requires you to render multiple things
+                // in multiple places at the same URL is nothing
+                // more than multiple <Route>s.
+                <Route
+                  key={index}
+                  path={route.url}
+                  children={<route.sidebar />}
+                />
+              ))}
+            </Switch>
+          </List>
+        </Box>
       </Drawer>
     </>
   );

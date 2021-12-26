@@ -20,7 +20,7 @@ import Tab from "@mui/material/Tab";
 import { Box } from "@mui/system";
 import Controls from "../../../components/controllers/Controls";
 
-import { addTestcase } from "../../../context/actions/testcase/api";
+import { addTestcase, addTestrun } from "../../../context/actions/testcase/api";
 import TestRuns from "./testRun";
 import TestCaseRecords from "./testCaseRecords";
 
@@ -36,16 +36,15 @@ const useStyles = makeStyles((theme) => ({
   },
   bottomDrawer: {
     position: "absolute",
-    bottom: "0",
+
     right: "0px",
     padding: "1rem 1.5rem 1.5rem",
     backgroundColor: "rgb(255, 255, 255)",
-    // zIndex: 1202,
   },
 }));
 export default function CreateTestRun(props) {
   const { param } = props;
-
+  console.log("param", param);
   const [tabValue, setTabValue] = useState(0);
   const classes = useStyles();
   const { register, handleSubmit, control } = useForm();
@@ -59,9 +58,31 @@ export default function CreateTestRun(props) {
     state,
     handleCloseToast,
   } = useGlobalContext();
+  const history = useHistory();
+  const { mutateAsync, isLoading, isError, error, data, isSuccess } =
+    useMutation(addTestrun, {
+      onError: (error) => {
+        setOpenToast(true);
+      },
+      onSuccess: (data) => {
+        componentDispatch({
+          type: COMPONENT_CREATE_SUCCESS,
+          payload: data,
+        });
+      },
+    });
 
-  const onSubmit = async (data) => {
-    console.log(data);
+  const queryClient = useQueryClient();
+  const onSubmit = async (data, e) => {
+    try {
+      await mutateAsync(data);
+
+      handleCloseRightDrawer(e);
+      history.goBack();
+    } catch (error) {
+      history.goBack();
+      console.log(error.message);
+    }
   };
 
   const handleChange = (event, newValue) => {
@@ -75,7 +96,7 @@ export default function CreateTestRun(props) {
         aria-label="Test run configuration"
       >
         <Tab label="Test Run Details" />
-        <Tab label="Specific test cases" />
+        {/* <Tab label="Specific test cases" /> */}
       </Tabs>
       <FormProvider
         register={register}
@@ -96,15 +117,15 @@ export default function CreateTestRun(props) {
               handleSubmit={handleSubmit}
               param={param}
             />
-          </TabPanel>
-          <TabPanel value={tabValue} index={1}>
-            <Divider />
             <TestCaseRecords
               register={register}
               control={control}
               param={param}
             />
           </TabPanel>
+          {/* <TabPanel value={tabValue} index={1}>
+            <Divider />
+          </TabPanel> */}
 
           <Grid
             container
