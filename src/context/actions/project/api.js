@@ -17,6 +17,19 @@ export const getAllProjects = async (userid) => {
   return response.data;
 };
 
+export const getAllRelease = async (projectId) => {
+  const response = await axiosAppInstance().get(
+    `${process.env.REACT_APP_API_SERVER}/api/releases?projectId=${projectId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return await response.data;
+};
+
 export const deleteProject = async (id) => {
   const response = await axiosAppInstance().delete(
     `${process.env.REACT_APP_API_SERVER}/api/project/delete/${id}`,

@@ -16,11 +16,14 @@ const getStarProject = () => {
 };
 const ProjectProvider = ({ children }) => {
   const [starProject, setStarProject] = useState(getStarProject());
+  const [selectTestCases, setSelectTestCases] = useState([]);
   return (
     <ProjectContext.Provider
       value={{
         starProject,
         setStarProject,
+        selectTestCases,
+        setSelectTestCases,
       }}
     >
       {children}

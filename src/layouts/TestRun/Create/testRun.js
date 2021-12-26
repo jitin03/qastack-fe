@@ -37,6 +37,7 @@ import Toast from "../../../components/controllers/Toast";
 import { styled, useTheme } from "@mui/material/styles";
 import { Box } from "@mui/system";
 import { useQuery } from "react-query";
+import { getAllRelease } from "../../../context/actions/project/api";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -69,8 +70,16 @@ const BottomDrawer = styled("div")(({ theme }) => ({
 }));
 export default function TestRuns(props) {
   const classes = useStyles();
-  const { register, handleSubmit, control, param } = props;
-  console.log("param", param);
+  const { register, handleSubmit, control, param: projectId } = props;
+  console.log("param", projectId);
+  const {
+    data: releases,
+    error,
+    isLoading,
+    isError,
+  } = useQuery(["release", projectId], () => getAllRelease(projectId), {
+    enabled: !!projectId,
+  });
   const {
     componentState: { component },
     setOpenToast,
@@ -98,7 +107,7 @@ export default function TestRuns(props) {
           <Grid item container xs={4}>
             <Grid item container spacing={3}>
               <Grid item xs={12}>
-                <CustomeAttributes control={control} />
+                <CustomeAttributes control={control} releases={releases} />
               </Grid>
             </Grid>
           </Grid>
@@ -144,7 +153,7 @@ const YourCard = () => {
 };
 
 const CustomeAttributes = (props) => {
-  const { control } = props;
+  const { control, releases } = props;
 
   const classes = {};
   return (
@@ -188,7 +197,7 @@ const CustomeAttributes = (props) => {
         </Grid>
         <Grid item>
           <Controller
-            name="releaseId"
+            name="release_id"
             defaultValue=""
             control={control}
             render={({ field: { onChange, value } }) => (
@@ -204,11 +213,11 @@ const CustomeAttributes = (props) => {
                     label="Type"
                     onChange={onChange}
                   >
-                    <MenuItem value="accessiblity">Accessiblity</MenuItem>
-                    <MenuItem value="smoke">Smoke</MenuItem>
-                    <MenuItem value="performance">Performance</MenuItem>
-                    <MenuItem value="functional">Functional</MenuItem>
-                    <MenuItem value="other">Other</MenuItem>
+                    {releases.map((item, index) => (
+                      <MenuItem key={item.Id} value={item.ReleaseName}>
+                        {item.ReleaseName}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </>

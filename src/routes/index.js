@@ -4,6 +4,7 @@ import LoginContainer from "../components/Login";
 import Project from "../components/Projects/Project";
 import ProjectOverview from "../components/Projects/ProjectOverview";
 import RegisterContainer from "../components/Register";
+import Release from "../components/Releases/Release";
 import CreateComponent from "../layouts/Component/Create";
 import EditComponent from "../layouts/Component/Edit";
 import ComponentList from "../layouts/Component/List";
@@ -79,6 +80,19 @@ const routes = [
     path: "/project/:projectKey/components/testcases",
     component: TestCaseList,
     title: "TestCases",
+    needsAuth: true,
+  },
+
+  {
+    path: "/project/:projectKey/releases",
+    component: Release,
+    title: "Release",
+    needsAuth: true,
+  },
+  {
+    path: "/project/:projectKey/release/create",
+    component: Release,
+    title: "Release",
     needsAuth: true,
   },
   {
