@@ -1,3 +1,8 @@
+import {
+  EDIT_RELEASE,
+  RELEASE_CREATE_SUCCESS,
+} from "../../constants/actionTypes";
+
 const release = (state, { type, field, payload }) => {
   switch (type) {
     case "HANDLE_INPUT_TEXT":
@@ -8,12 +13,25 @@ const release = (state, { type, field, payload }) => {
           [field]: payload,
         },
       };
-    case "ADD_RELEASE":
-      const newRelease = [...state.releases, payload];
-
+    case RELEASE_CREATE_SUCCESS:
       return {
         ...state,
-        releases: newRelease,
+        release: {
+          ...state.release,
+          loading: false,
+          data: payload,
+        },
+      };
+    case EDIT_RELEASE:
+      return {
+        ...state,
+        release: {
+          ...state.release,
+          data: {
+            ...state.data,
+            ReleaseName: payload,
+          },
+        },
       };
 
     default:

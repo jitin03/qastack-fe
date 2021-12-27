@@ -58,6 +58,21 @@ export const addProject = async ({ ...data }) => {
   return response.data;
 };
 
+export const addRelease = async ({ ...data }) => {
+  let payload = JSON.stringify(data);
+  const response = await axiosAppInstance().post(
+    `/api/release/create`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export const updateProject = async ({ ...data }) => {
   let payload = JSON.stringify(data.projectState.project);
 

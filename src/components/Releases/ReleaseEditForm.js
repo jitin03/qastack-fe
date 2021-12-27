@@ -1,10 +1,6 @@
-import { Divider, Grid, TextField } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import React, { useState } from "react";
+import React from "react";
 import { useGlobalContext } from "../../context/provider/context";
-import Controls from "../controllers/Controls";
-import DateFnsUtils from "@date-io/date-fns";
-import * as moment from "moment";
+import { makeStyles } from "@mui/styles";
 import {
   useForm,
   useFieldArray,
@@ -12,13 +8,13 @@ import {
   useFormContext,
   Controller,
 } from "react-hook-form";
+import DateFnsUtils from "@date-io/date-fns";
+import { Divider, Grid, TextField } from "@mui/material";
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
-import { addRelease } from "../../context/actions/project/api";
-import { useMutation, useQueryClient } from "react-query";
-import { RELEASE_CREATE_SUCCESS } from "../../constants/actionTypes";
+import Controls from "../controllers/Controls";
 const useStyles = makeStyles({
   bottomDrawer: {
     position: "absolute",
@@ -27,43 +23,22 @@ const useStyles = makeStyles({
     padding: "1rem 1.5rem 1.5rem",
   },
 });
-export default function ReleaseForm(props) {
+export const ReleaseEditForm = (props) => {
   const { param } = props;
   const classes = useStyles();
-  const [form, setForm] = useState({});
   const {
+    releaseState: release,
+
     handleCloseRightDrawer,
-
-    releaseDispatch,
   } = useGlobalContext();
-  const queryClient = useQueryClient();
-  const { mutateAsync, isLoading } = useMutation(addRelease, {
-    onSuccess: (data) => {
-      releaseDispatch({
-        type: RELEASE_CREATE_SUCCESS,
-        payload: data,
-      });
-    },
+  console.log("releaseState", release.release?.data.ReleaseName);
+  const { register, handleSubmit, control, setValue } = useForm({
+    defaultValues: release.release?.data.ReleaseName,
   });
+
   const onSubmit = async (data, e) => {
-    data.ProjectID = param;
-
-    // data.startDate = moment(data.startDate).format("YYYY-MM-DD");
-    // data.endDate = moment(data.endDate).format("YYYY-MM-DD");
-
     console.log(data);
-    e.preventDefault();
-    await mutateAsync(data);
-    queryClient.invalidateQueries("releases");
-
-    handleCloseRightDrawer(e);
-    // projectDispatch({
-    //   type: "RESET_PROJECT_FORM",
-    // });
-    // history.push("/projects");
   };
-  const { register, handleSubmit, control, setValue } = useForm();
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Divider />
@@ -158,4 +133,4 @@ export default function ReleaseForm(props) {
       </Grid>
     </form>
   );
-}
+};

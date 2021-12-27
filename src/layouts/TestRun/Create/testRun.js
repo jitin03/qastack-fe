@@ -3,6 +3,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  CircularProgress,
   Container,
   Divider,
   FormControl,
@@ -89,6 +90,35 @@ export default function TestRuns(props) {
 
   const queryClient = useQueryClient();
   const onSubmit = (data) => console.log(data);
+  if (isLoading) {
+    return (
+      <>
+        <Grid container>
+          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ padding: "50px 10px" }}
+          >
+            <Container sx={{ display: "flex" }}>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+            </Container>
+            <Grid item></Grid>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
   return (
     <>
       <Container>

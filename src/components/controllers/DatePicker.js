@@ -26,11 +26,11 @@ export default function DatePicker(props) {
         variant="inline"
         inputVariant="outlined"
         label={label}
-        format="mm/dd/yyyy"
+        format="dd/MM/yyyy"
         name={name}
         value={value}
         autoOk
-        onChange={onChange1}
+        onChange={onChange}
       />
     </MuiPickersUtilsProvider>
   );

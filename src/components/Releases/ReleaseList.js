@@ -26,6 +26,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { modules } from "../../data/modules";
 import { useMutation, useQueryClient } from "react-query";
 import { deleteProject } from "../../context/actions/project/api";
+import { EDIT_RELEASE } from "../../constants/actionTypes";
+import release from "../../context/reducers/release";
 export default function ReleaseList(props) {
   const { releases, projectId } = props;
   const {
@@ -35,51 +37,27 @@ export default function ReleaseList(props) {
     setValues,
     setModule,
     handleRightDrawer,
-    handleEditProject,
+    releaseDispatch,
     setState,
     state,
   } = useGlobalContext();
   const [checked, setChecked] = useState([]);
   const queryClient = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(deleteProject);
-  const handleEditModule = (moduleName) => {
-    const specificModule = module.find(
-      (item) => item.moduleName === moduleName
-    );
-    setValues({
-      ...values,
 
-      moduleName: specificModule.moduleName,
-      isEditing: true,
+  const handleEditRelease = (id, name, StartDate, EndDate, projectKey) => {
+    let releaseData = {};
+    releaseData.ReleaseName = name;
+    releaseData.EndDate = EndDate;
+    releaseData.StartDate = StartDate;
+    releaseDispatch({
+      type: EDIT_RELEASE,
+      payload: releaseData,
     });
-
-    setModule(
-      module.map((item) => {
-        if (item.moduleName === moduleName) {
-          return { ...item, isEditing: true };
-        } else {
-          return item;
-        }
-      })
-    );
-
-    setState(!state);
-  };
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-
-    let newCheckModule = {
-      moduleName: value,
-    };
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
+    let params = [];
+    params.push(projectKey);
+    params.push(id);
+    handleRightDrawer("Edit Release", params);
   };
   return (
     <>
@@ -98,7 +76,6 @@ export default function ReleaseList(props) {
           style={{
             textAlign: "left",
 
-            height: "100%",
             fontWeight: "1rem",
           }}
         >
@@ -137,7 +114,6 @@ export default function ReleaseList(props) {
             style={{
               textAlign: "left",
 
-              height: "100%",
               fontWeight: "1rem",
             }}
           >
@@ -160,7 +136,15 @@ export default function ReleaseList(props) {
                         Opacity: "0.5",
                       }}
                     >
-                      Created on data:
+                      Start date:{item.StartDate}
+                    </Typography>
+                    <Typography
+                      style={{
+                        fontSize: "12px",
+                        Opacity: "0.5",
+                      }}
+                    >
+                      End date:{item.EndDate}
                     </Typography>
                   </Grid>
                   <Grid
@@ -186,15 +170,21 @@ export default function ReleaseList(props) {
                   textAlign: "left",
                   display: "flex",
                   justifyContent: "flex-end",
-
-                  height: "100%",
                 }}
               >
                 <Tooltip title="Edit project" arrow disableInteractive>
                   <IconButton
                     edge="start"
                     aria-label="edit"
-                    onClick={() => handleEditProject(item.Id, item.Name)}
+                    onClick={() =>
+                      handleEditRelease(
+                        item.Id,
+                        item.ReleaseName,
+                        item.StartDate,
+                        item.EndDate,
+                        projectId
+                      )
+                    }
                   >
                     <EditIcon />
                   </IconButton>

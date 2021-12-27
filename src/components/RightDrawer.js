@@ -23,6 +23,7 @@ import CreateComponent from "../layouts/Component/Create";
 import EditComponent from "../layouts/Component/Edit";
 import CreateTestCase from "../layouts/TestCase/Create";
 import CreateTestRun from "../layouts/TestRun/Create";
+import { ReleaseEditForm } from "./Releases/ReleaseEditForm";
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -72,6 +73,8 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
           return <ProjectForm />;
         } else if (configTitle === "Add Release") {
           return <ReleaseForm param={params} />;
+        } else if (configTitle === "Edit Release") {
+          return <ReleaseEditForm param={params} />;
         } else if (configTitle === "Edit Project") {
           return <ProjectEditForm />;
         } else if (configTitle === "Edit Component") {

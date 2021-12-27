@@ -223,7 +223,7 @@ const Records = (props) => {
               rowsPerPageOptions={[5, 10, 20]}
               loading={waitForComponents}
               onSelectionModelChange={(newSelectionModel) => {
-                console.log(newSelectionModel);
+                console.log("newSelectionModel", newSelectionModel);
                 setSelectionModel(newSelectionModel);
               }}
             />
@@ -288,7 +288,7 @@ const TestCaseList = (props) => {
       //   payload: error.message,
       // });
     },
-    enabled: !componentId,
+    enabled: !!componentId,
   });
 
   //   description: "test"

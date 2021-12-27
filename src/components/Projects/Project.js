@@ -158,7 +158,7 @@ const Project = () => {
             {isError && (
               <>
                 <Toast
-                  openToast={openToast}
+                  openToast
                   message={JSON.stringify(error.message)}
                   handleCloseToast={handleCloseToast}
                 ></Toast>
