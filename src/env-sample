@@ -1,0 +1,5 @@
+# add .env file with following fields
+REACT_APP_API_SERVER=<fill here>
+REACT_APP_AUTH_SERVER=<fill here>
+REACT_APP_COMPONENT_SERVER=<fill here>
+REACT_APP_TEST_CASE_SERVER=<fill here>
