@@ -141,6 +141,7 @@ export default function Create() {
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
         onSubmitAddStep={onSubmitAddStep}
+        workFlowState={workFlowState}
       />
     </Grid>
   );
