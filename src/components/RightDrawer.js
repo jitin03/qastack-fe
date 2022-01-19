@@ -23,6 +23,8 @@ import CreateComponent from "../layouts/Component/Create";
 import EditComponent from "../layouts/Component/Edit";
 import CreateTestCase from "../layouts/TestCase/Create";
 import CreateTestRun from "../layouts/TestRun/Create";
+// import AddStep from "../layouts/CIFlow/Create/AddStep";
+
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -81,6 +83,9 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
         } else if (configTitle === "Add TestRun") {
           return <CreateTestRun param={params} />;
         }
+        // else if (configTitle === "Add step") {
+        //   return <AddStep param={params} />;
+        // }
       })()}
     </Box>
   );

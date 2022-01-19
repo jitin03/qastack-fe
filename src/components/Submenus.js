@@ -238,6 +238,37 @@ export const Submenus = () => {
             </Grid>
           </ListItem>
         </Tooltip>
+
+        <Tooltip title="CI Flow" arrow disableInteractive>
+          <ListItem
+            button
+            key="2"
+            component={Link}
+            to={`/project/${projectKey}/components/ciFlow`}
+          >
+            <Grid
+              container
+              item
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={6}>
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  variant="span"
+                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+                >
+                  CI FLow
+                </Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+        </Tooltip>
       </Grid>
     </>
   );
