@@ -5,8 +5,9 @@ import Controls from "../../../components/controllers/Controls";
 import { makeStyles } from "@mui/styles";
 import { Search } from "@material-ui/icons";
 import AddIcon from "@mui/icons-material/Add";
-import { useGlobalContext } from "../../../context/provider/context";
 import AddStep from "./AddStep";
+import { useMutation } from "react-query";
+import { addWorkFlow } from "../../../context/actions/workflow/api";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -62,6 +63,12 @@ export default function Create() {
     }
   };
 
+  const { mutateAsync, isLoading, isHasError, err, output, isSuccess } =
+    useMutation(addWorkFlow, {
+      onError: (error) => {},
+      onSuccess: (data) => {},
+    });
+
   return (
     <Grid Container>
       <Grid
@@ -114,7 +121,51 @@ export default function Create() {
                   variant="outlined"
                   // onClick={() => setState(!state)}
                   onClick={
-                    () => {}
+                    async () => {
+                      await mutateAsync({
+                        project_Id: "PR937",
+                        user_Id: 3,
+                        name: "Sample test 1",
+                        config: [
+                          {
+                            name: "y",
+                            repository: "b",
+                            branch: "test",
+                            token: "123",
+                            docker_image: "Cypress/include:latest",
+                            entrypath: ["Cypress"],
+                            input_command: "cypress run",
+                            dependencies: ["step1", "steps2"],
+                            parameters: [
+                              {
+                                name: "Param1",
+                                value: "ParamValue1",
+                              },
+                            ],
+                          },
+                          {
+                            name: "x",
+                            repository: "b",
+                            branch: "test",
+                            token: "123",
+                            docker_image: "Cypress/include:latest",
+                            entrypath: ["Cypress"],
+                            input_command: "cypress run",
+                            dependencies: ["step1", "steps2"],
+                            parameters: [
+                              {
+                                name: "Param1",
+                                value: "ParamValue1",
+                              },
+                              {
+                                name: "Param2",
+                                value: "ParamValue2",
+                              },
+                            ],
+                          },
+                        ],
+                      });
+                    }
                     // history.push(`/project/${projectKey}/components/ciFlow/create`)
                   }
                   sx={{ m: 1 }}

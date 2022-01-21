@@ -1,6 +1,6 @@
 import axiosAppTestcaseInstance from "../../../helper/testcasAppAxios";
 
-export const addWorkFlow = async (...data) => {
+export const addWorkFlow = async (data) => {
   let payload = JSON.stringify(data);
   const response = await axiosAppTestcaseInstance().post(
     `http://54.243.246.111:8094/api/workflow/add`,

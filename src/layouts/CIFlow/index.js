@@ -30,7 +30,6 @@ import {
 } from "../../context/actions/component/api";
 import Controls from "../../components/controllers/Controls";
 import Toast from "../../components/controllers/Toast";
-import { useMutation, useQueryClient } from "react-query";
 import {
   COMPONENT_CREATE_ERROR,
   EDIT_COMPONENT,
@@ -94,8 +93,6 @@ const CIFlow = () => {
       setData(components);
     },
   });
-  const { mutateAsync, isLoading: deleteComponentLoading } =
-    useMutation(deleteComponent);
 
   if (isError) {
     console.log(error);
@@ -229,7 +226,6 @@ const CIFlow = () => {
                               // handleDeleteComponent(item.component_id)
                             }
                           />
-                          {deleteComponentLoading && <CircularProgress />}
                         </IconButton>
                       </Tooltip>
                     </TableCell>
