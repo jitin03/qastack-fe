@@ -6,8 +6,12 @@ import { makeStyles } from "@mui/styles";
 import { Search } from "@material-ui/icons";
 import AddIcon from "@mui/icons-material/Add";
 import AddStep from "./AddStep";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { addWorkFlow } from "../../../context/actions/workflow/api";
+import { useParams, useHistory } from 'react-router-dom';
+import isAuthenticated from "../../../context/actions/auth/isAuthenticated";
+import { getUserDetail } from "../../../context/actions/auth/api";
+import { getUserDetailFromToken } from "../../../helper/token";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -33,6 +37,17 @@ export default function Create() {
   const [openDialog, setOpenDialog] = useState(false);
   const [workFlowName, setWorkFlowName] = useState("");
   const [workFlowState, setworkFlowState] = useState([]);
+
+  let { projectKey } = useParams();
+  const history = useHistory();
+
+  const { data: user, isSuccess: userDetails } = useQuery(
+    isAuthenticated() && [
+      "users",
+      getUserDetailFromToken(localStorage.getItem("token")).Username,
+    ],
+    getUserDetail
+  );
 
   const onSubmitAddStep = (workFlowDetail) => {
     switch (elements.length) {
@@ -66,7 +81,9 @@ export default function Create() {
   const { mutateAsync, isLoading, isHasError, err, output, isSuccess } =
     useMutation(addWorkFlow, {
       onError: (error) => {},
-      onSuccess: (data) => {},
+      onSuccess: (data) => {
+        history.push(`/project/projectKey/components/ciFlow`);
+      },
     });
 
   return (
@@ -123,50 +140,12 @@ export default function Create() {
                   onClick={
                     async () => {
                       await mutateAsync({
-                        project_Id: "PR937",
-                        user_Id: 3,
-                        name: "Sample test 1",
-                        config: [
-                          {
-                            name: "y",
-                            repository: "b",
-                            branch: "test",
-                            token: "123",
-                            docker_image: "Cypress/include:latest",
-                            entrypath: ["Cypress"],
-                            input_command: "cypress run",
-                            dependencies: ["step1", "steps2"],
-                            parameters: [
-                              {
-                                name: "Param1",
-                                value: "ParamValue1",
-                              },
-                            ],
-                          },
-                          {
-                            name: "x",
-                            repository: "b",
-                            branch: "test",
-                            token: "123",
-                            docker_image: "Cypress/include:latest",
-                            entrypath: ["Cypress"],
-                            input_command: "cypress run",
-                            dependencies: ["step1", "steps2"],
-                            parameters: [
-                              {
-                                name: "Param1",
-                                value: "ParamValue1",
-                              },
-                              {
-                                name: "Param2",
-                                value: "ParamValue2",
-                              },
-                            ],
-                          },
-                        ],
+                        project_Id: projectKey,
+                        user_Id: user?.data.users_id,
+                        name: workFlowName,
+                        config: workFlowState,
                       });
                     }
-                    // history.push(`/project/${projectKey}/components/ciFlow/create`)
                   }
                   sx={{ m: 1 }}
                 >

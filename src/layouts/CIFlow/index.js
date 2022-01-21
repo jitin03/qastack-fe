@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import PlayArrow from "@mui/icons-material/PlayArrow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
@@ -35,6 +35,8 @@ import {
   EDIT_COMPONENT,
 } from "../../constants/actionTypes";
 import { getAllWorkFlows } from "../../context/actions/workflow/api";
+import {SSE} from 'sse.js';
+
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -112,6 +114,29 @@ const CIFlow = () => {
 
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(data, headCells, filterFn);
+
+  React.useEffect(() => {
+    const url = 'http://54.243.246.111:8094/api/workflow/event-stream/?workflowName=Demo5'
+    const source = new SSE(url, {headers: {'Authorization': `Bearer ${localStorage.token}`}, method: 'GET'});
+
+    source.addEventListener('message', (e) => {
+      console.log(e.data);
+    });
+
+    source.addEventListener('error', (e) => {
+      console.log(e);
+    });
+
+    source.stream();
+
+  return () => {
+    // source.close();
+  };
+  })
+
+  function getRealtimeData(data) {
+    console.log("data aaya", data);
+  }
 
   if (waitForComponents) {
     return (
@@ -200,16 +225,11 @@ const CIFlow = () => {
                     <TableCell>{item.Id}</TableCell>
                     <TableCell>{item.workflow_name}</TableCell>
                     <TableCell>
-                      <Tooltip title="Edit component" arrow disableInteractive>
-                        <IconButton aria-label="Edit component">
-                          <EditIcon
+                      <Tooltip title="Run" arrow disableInteractive>
+                        <IconButton aria-label="Run">
+                          <PlayArrow
                             onClick={
                               () => {}
-                              // handleEditComponent(
-                              //   item.component_name,
-                              //   item.component_id,
-                              //   projectKey
-                              // )
                             }
                           />
                         </IconButton>
