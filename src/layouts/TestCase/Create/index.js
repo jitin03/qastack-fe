@@ -33,11 +33,10 @@ const useStyles = makeStyles((theme) => ({
   },
   bottomDrawer: {
     position: "absolute",
-    bottom: "0",
+
     right: "0px",
     padding: "1rem 1.5rem 1.5rem",
     backgroundColor: "rgb(255, 255, 255)",
-    // zIndex: 1202,
   },
 }));
 export default function CreateTestCase(props) {
@@ -121,7 +120,7 @@ export default function CreateTestCase(props) {
         <form
           className={classes.root}
           autoComplete="off"
-          style={{ height: "100%" }}
+          style={{ height: "100vh" }}
           onSubmit={handleSubmit(onSubmit)}
         >
           <TabPanel value={tabValue} index={0}>

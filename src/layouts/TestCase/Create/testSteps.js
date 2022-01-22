@@ -117,7 +117,7 @@ export default function TestSteps(props) {
   const onSubmit = (data) => console.log(data);
   return (
     <>
-      <Container>
+      <div style={{ height: 400, width: "100%" }}>
         {/* <form
           className={classes.root}
           autoComplete="off"
@@ -129,6 +129,7 @@ export default function TestSteps(props) {
           direction="row"
           justify="center"
           alignItems="stretch"
+          style={{ height: 200, width: "100%" }}
         >
           {/* <Grid item xs={12}>
               <Paper className={classes.paper}>xs=12</Paper>
@@ -153,45 +154,10 @@ export default function TestSteps(props) {
             </Grid>
           </Grid>
         </Grid>
-      </Container>
+      </div>
     </>
   );
 }
-
-const YourCard = () => {
-  const classes = {};
-  return (
-    <Card
-      className={classes.root}
-      variant="outlined"
-      style={{ height: "100%" }}
-    >
-      <CardContent>
-        <Typography
-          className={classes.title}
-          color="textSecondary"
-          gutterBottom
-        >
-          Customer Profile
-        </Typography>
-        <Typography variant="h5" component="h2">
-          Sarah Doria
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          Position
-        </Typography>
-        <Typography variant="body2" component="p">
-          Company
-          <br />
-          {'"a benevolent smile"'}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
-  );
-};
 
 const CustomeAttributes = (props) => {
   const { control, handleAddStep, remove, fields, components } = props;

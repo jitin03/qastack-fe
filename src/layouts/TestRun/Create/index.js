@@ -1,4 +1,10 @@
-import { Divider, Grid, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  Container,
+  Divider,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { useGlobalContext } from "../../../context/provider/context";
@@ -23,6 +29,7 @@ import Controls from "../../../components/controllers/Controls";
 import { addTestcase, addTestrun } from "../../../context/actions/testcase/api";
 import TestRuns from "./testRun";
 import TestCaseRecords from "./testCaseRecords";
+import { useProjectContext } from "../../../context/provider/projectContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,7 +65,7 @@ export default function CreateTestRun(props) {
     state,
     handleCloseToast,
   } = useGlobalContext();
-  const history = useHistory();
+  const { selectionModel, setSelectionModel } = useProjectContext();
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
     useMutation(addTestrun, {
       onError: (error) => {
@@ -71,9 +78,12 @@ export default function CreateTestRun(props) {
         });
       },
     });
+  const history = useHistory();
 
   const queryClient = useQueryClient();
   const onSubmit = async (data, e) => {
+    console.log(data);
+    data.testcases = selectionModel;
     try {
       await mutateAsync(data);
 
@@ -82,12 +92,14 @@ export default function CreateTestRun(props) {
     } catch (error) {
       history.goBack();
       console.log(error.message);
+      setSelectionModel([]);
     }
   };
 
   const handleChange = (event, newValue) => {
     setTabValue(newValue);
   };
+
   return (
     <>
       <Tabs

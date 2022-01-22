@@ -43,11 +43,11 @@ const Project = () => {
   const { starProject } = useProjectContext();
 
   const { data: user, isSuccess: userDetails } = useQuery(
-    isAuthenticated() && [
-      "users",
-      getUserDetailFromToken(localStorage.getItem("token")).Username,
-    ],
-    getUserDetail
+    ["users", getUserDetailFromToken(localStorage.getItem("token")).Username],
+    getUserDetail,
+    {
+      enabled: isAuthenticated(),
+    }
   );
 
   let userId = user?.data.users_id;
@@ -158,7 +158,7 @@ const Project = () => {
             {isError && (
               <>
                 <Toast
-                  openToast={openToast}
+                  openToast
                   message={JSON.stringify(error.message)}
                   handleCloseToast={handleCloseToast}
                 ></Toast>

@@ -34,7 +34,7 @@ const Release = () => {
     error,
     isLoading,
     isError,
-  } = useQuery(["release", projectId], () => getAllRelease(projectId), {
+  } = useQuery(["releases", projectId], () => getAllRelease(projectId), {
     enabled: !!projectId,
   });
   const classes = useStyle();

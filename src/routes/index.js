@@ -96,6 +96,12 @@ const routes = [
     needsAuth: true,
   },
   {
+    path: "/project/:projectKey/releases/edit/:id",
+    component: Release,
+    title: "Release",
+    needsAuth: true,
+  },
+  {
     path: "/project/:projectKey/component/:name/testcase/create",
     component: TestCaseList,
     title: "Create TestCase",
