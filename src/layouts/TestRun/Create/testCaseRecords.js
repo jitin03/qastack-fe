@@ -11,7 +11,6 @@ import {
 import { makeStyles } from "@mui/styles";
 import React, { useState, useEffect, useRef } from "react";
 
-// import { useDemoData } from "@mui/x-data-grid-generator";
 import { useGlobalContext } from "../../../context/provider/context";
 import { useQuery } from "react-query";
 import { COMPONENT_CREATE_ERROR } from "../../../constants/actionTypes";
@@ -41,8 +40,6 @@ const useStyles = makeStyles((theme) => ({
     bottom: "0px",
     right: "0px",
     padding: "1rem 1.5rem 1.5rem",
-    // backgroundColor: "rgb(255, 255, 255)",
-    // zIndex: 1202,
   },
 }));
 const BottomDrawer = styled("div")(({ theme }) => ({
@@ -50,14 +47,15 @@ const BottomDrawer = styled("div")(({ theme }) => ({
   bottom: "0px",
   right: "0px",
   padding: "1rem 1.5rem 1.5rem",
-  // backgroundColor: "rgb(255, 255, 255)",
+
   zIndex: 2,
 }));
 export default function TestCaseRecords(props) {
   const { register, control, param: projectId } = props;
   const classes = useStyles();
-  const [selectionModel, setSelectionModel] = useState([]);
+  const [selectedComponent, setSelectedComponent] = useState("");
   console.log("projectId", projectId);
+
   const {
     componentState: { component },
     componentDispatch,
@@ -67,17 +65,10 @@ export default function TestCaseRecords(props) {
     handleCloseToast,
   } = useGlobalContext();
 
-  // console.log("selectTestCases", selectTestCases);
   return (
     <>
       <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
-        <Grid
-          container
-          //   sx={{ p: 10 }}
-          direction="row"
-          justify="center"
-          alignItems="stretch"
-        >
+        <Grid container direction="row" justify="center" alignItems="stretch">
           <Grid
             item
             container
@@ -92,8 +83,7 @@ export default function TestCaseRecords(props) {
             <Grid item container>
               <Records
                 control={control}
-                selectionModel={selectionModel}
-                setSelectionModel={setSelectionModel}
+                setSelectedComponent={setSelectedComponent}
                 projectId={projectId}
               />
             </Grid>
@@ -107,10 +97,8 @@ export default function TestCaseRecords(props) {
           >
             <TestCaseList
               control={control}
-              selectionModel={selectionModel}
-              setSelectionModel={setSelectionModel}
-              // selectTestCases={selectTestCases}
-              // setSelectTestCases={setSelectTestCases}
+              component={selectedComponent}
+              projectId={projectId}
             />
           </Grid>
         </Grid>
@@ -120,21 +108,12 @@ export default function TestCaseRecords(props) {
 }
 
 const Records = (props) => {
-  //   console.log("components", components);
-  const { control, selectionModel, setSelectionModel, projectId } = props;
+  const { control, projectId, setSelectedComponent } = props;
   const classes = {};
+  const [selectionModel, setSelectionModel] = useState([]);
 
-  const pagesNextCursor = useRef({});
-
-  const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
-  const [loading, setLoading] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  //   const { data } = useDemoData({
-  //     dataSet: "Commodity",
-  //     rowLength: 100,
-  //     maxColumns: 6,
-  //   });
+
   const [rowsState, setRowsState] = useState({
     page: 0,
     pageSize: 5,
@@ -149,18 +128,12 @@ const Records = (props) => {
     isError,
     refetch,
   } = useQuery(["component", projectId, pageSize], getAllComponents, {
-    onError: (error) => {
-      //   setOpenToast(true);
-      //   componentDispatch({
-      //     type: COMPONENT_CREATE_ERROR,
-      //     payload: error.message,
-      //   });
-    },
+    onError: (error) => {},
     onSuccess: (components) => {
       setRowsState((prev) => ({ ...prev, rows: components }));
     },
   });
-  let data = components;
+
   const baselineProps = {
     rows: components || [],
     columns: [
@@ -169,30 +142,6 @@ const Records = (props) => {
       { field: "project_id", headerName: "Project Name", hide: true },
     ],
   };
-
-  useEffect(() => {
-    let active = true;
-
-    (async () => {
-      setRowsState((prev) => ({ ...prev, loading: true }));
-      refetch();
-      //   const newRows = await loadServerRows(
-      //     rowsState.page,
-      //     rowsState.pageSize,
-      //     components
-      //   );
-
-      if (!active) {
-        return;
-      }
-
-      setRowsState((prev) => ({ ...prev, loading: false, rows: components }));
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [rowsState.page, rowsState.pageSize]);
 
   const getRowId = (row) => `${row?.component_id}`;
   return (
@@ -212,7 +161,7 @@ const Records = (props) => {
               pagination
               rowCount={baselineProps.rows?.length}
               getRowId={getRowId}
-              {...rowsState}
+              // {...rowsState}
               {...baselineProps}
               paginationMode="server"
               onPageChange={(page) =>
@@ -225,7 +174,9 @@ const Records = (props) => {
               onSelectionModelChange={(newSelectionModel) => {
                 console.log("newSelectionModel", newSelectionModel);
                 setSelectionModel(newSelectionModel);
+                setSelectedComponent(newSelectionModel);
               }}
+              selectionModel={selectionModel}
             />
           </div>
         </Grid>
@@ -235,21 +186,15 @@ const Records = (props) => {
 };
 
 const TestCaseList = (props) => {
-  const { control, selectionModel: componentId } = props;
-  const { selectTestCases, setSelectTestCases } = useProjectContext();
-  const classes = {};
+  const { control, component: componentId, projectId: projectId } = props;
 
-  const pagesNextCursor = useRef({});
+  const { selectionModel, setSelectionModel } = useProjectContext();
+  const classes = {};
 
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [loading, setLoading] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  //   const { data } = useDemoData({
-  //     dataSet: "Commodity",
-  //     rowLength: 100,
-  //     maxColumns: 6,
-  //   });
+
   const [rowsState, setRowsState] = useState({
     page: 0,
     pageSize: 5,
@@ -263,14 +208,8 @@ const TestCaseList = (props) => {
     isLoading: waitForComponents,
     isError,
     refetch,
-  } = useQuery(["component", "PR931", pageSize], getAllComponents, {
-    onError: (error) => {
-      //   setOpenToast(true);
-      //   componentDispatch({
-      //     type: COMPONENT_CREATE_ERROR,
-      //     payload: error.message,
-      //   });
-    },
+  } = useQuery(["component", projectId, pageSize], getAllComponents, {
+    onError: (error) => {},
     onSuccess: (components) => {
       setRowsState((prev) => ({ ...prev, rows: components }));
     },
@@ -281,22 +220,9 @@ const TestCaseList = (props) => {
     error: testcaseErrors,
     loading: waitForTests,
   } = useQuery(["testcases", componentId, pageSize], getAllTestCases, {
-    onError: (error) => {
-      // setOpenToast(true);
-      // componentDispatch({
-      //   type: COMPONENT_LIST_ERROR,
-      //   payload: error.message,
-      // });
-    },
+    onError: (error) => {},
     enabled: !!componentId,
   });
-
-  //   description: "test"
-  // priority: "high"
-  // testStepCounts: 1
-  // testcaseId: "TC902"
-  // title: "tste"
-  // type: "accessiblity"
 
   const baselineProps = {
     rows: testcases || [],
@@ -308,73 +234,17 @@ const TestCaseList = (props) => {
     ],
   };
 
+  const prevSelectionModel = useRef(selectionModel);
+
   useEffect(() => {
-    let active = true;
+    setSelectionModel(prevSelectionModel.current);
+  }, [componentId]);
 
-    (async () => {
-      setRowsState((prev) => ({ ...prev, loading: true }));
-      refetch();
-      //   const newRows = await loadServerRows(
-      //     rowsState.page,
-      //     rowsState.pageSize,
-      //     components
-      //   );
-
-      if (!active) {
-        return;
-      }
-
-      setRowsState((prev) => ({ ...prev, loading: false, rows: components }));
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [rowsState.page, rowsState.pageSize]);
-  const [selectedRows, setSelectedRows] = React.useState([]);
-  console.log("selectedRows", selectedRows);
+  console.log("selectionModel", selectionModel);
   const getRowId = (row) => `${row?.testcaseId}`;
   return (
     <Grid item container style={{ padding: "16px" }}>
-      <Controller
-        name="testcases"
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <DataGrid
-            style={{ height: 400, width: "100%" }}
-            columns={baselineProps.columns}
-            pagination
-            rowCount={baselineProps.rows?.length}
-            getRowId={getRowId}
-            {...rowsState}
-            {...baselineProps}
-            //   rows={baselineProps.rows}
-            paginationMode="server"
-            onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
-            pageSize={pageSize}
-            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-            rowsPerPageOptions={[5, 10, 20]}
-            loading={waitForComponents}
-            checkboxSelection
-            onSelectionModelChange={onChange}
-            // onSelectionModelChange={(newTestCase) => {
-            //   console.log("newTestCase", newTestCase);
-            //   // setSelectionModel(e);
-            //   const selectedIDs = new Set(newTestCase);
-            //   const selectedRows = baselineProps.rows?.filter((r) =>
-            //     selectedIDs.has(r.testcaseId)
-            //   );
-            //   setSelectedRows(selectedRows);
-            //   console.log(newTestCase);
-            //   setSelectTestCases(newTestCase);
-            // }}
-            // selectionModel={selectTestCases}
-            selectedRows={value}
-          />
-        )}
-      />
-
-      {/* <DataGrid
+      <DataGrid
         style={{ height: 400, width: "100%" }}
         columns={baselineProps.columns}
         pagination
@@ -382,19 +252,22 @@ const TestCaseList = (props) => {
         getRowId={getRowId}
         {...rowsState}
         {...baselineProps}
-        //   rows={baselineProps.rows}
         paginationMode="server"
-        onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
+        onPageChange={(newPage) => {
+          prevSelectionModel.current = selectionModel;
+          setPage(newPage);
+        }}
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         rowsPerPageOptions={[5, 10, 20]}
         loading={waitForComponents}
         checkboxSelection
-        onSelectionModelChange={(newTestCase) => {
-          console.log(newTestCase);
-          setSelectTestCases(newTestCase);
+        selectionModel={selectionModel}
+        onSelectionModelChange={(newSelectionModel) => {
+          prevSelectionModel.current = selectionModel;
+          setSelectionModel(newSelectionModel);
         }}
-      /> */}
+      />
     </Grid>
   );
 };

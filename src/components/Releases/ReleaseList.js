@@ -25,7 +25,10 @@ import Checkbox from "@mui/material/Checkbox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { modules } from "../../data/modules";
 import { useMutation, useQueryClient } from "react-query";
-import { deleteProject } from "../../context/actions/project/api";
+import {
+  deleteProject,
+  deleteRelease,
+} from "../../context/actions/project/api";
 import { EDIT_RELEASE } from "../../constants/actionTypes";
 import release from "../../context/reducers/release";
 export default function ReleaseList(props) {
@@ -43,7 +46,7 @@ export default function ReleaseList(props) {
   } = useGlobalContext();
   const [checked, setChecked] = useState([]);
   const queryClient = useQueryClient();
-  const { mutateAsync, isLoading } = useMutation(deleteProject);
+  const { mutateAsync, isLoading } = useMutation(deleteRelease);
 
   const handleEditRelease = (id, name, StartDate, EndDate, projectKey) => {
     let releaseData = {};
@@ -198,7 +201,7 @@ export default function ReleaseList(props) {
                       aria-label="delete"
                       onClick={async () => {
                         await mutateAsync(item.Id);
-                        queryClient.invalidateQueries("project");
+                        queryClient.invalidateQueries("releases");
                       }}
                     >
                       <DeleteIcon />

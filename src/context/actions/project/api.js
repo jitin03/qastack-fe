@@ -43,6 +43,19 @@ export const deleteProject = async (id) => {
   return await response.data;
 };
 
+export const getProjectDetail = async (id) => {
+  const response = await axiosAppInstance().get(
+    `${process.env.REACT_APP_API_SERVER}/api/project/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return await response.data;
+};
+
 export const addProject = async ({ ...data }) => {
   let payload = JSON.stringify(data);
   const response = await axiosAppInstance().post(
@@ -62,6 +75,36 @@ export const addRelease = async ({ ...data }) => {
   let payload = JSON.stringify(data);
   const response = await axiosAppInstance().post(
     `/api/release/create`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const deleteRelease = async (id) => {
+  const response = await axiosAppInstance().delete(
+    `${process.env.REACT_APP_API_SERVER}/api/release/delete/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return await response.data;
+};
+
+export const updateRelease = async ({ ...data }) => {
+  console.log(data);
+  let payload = JSON.stringify(data);
+
+  const response = await axiosAppInstance().put(
+    `/api/release/update/${data.editId}`,
     payload,
     {
       headers: {

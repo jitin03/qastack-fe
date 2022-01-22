@@ -244,7 +244,7 @@ const CustomeAttributes = (props) => {
                     onChange={onChange}
                   >
                     {releases.map((item, index) => (
-                      <MenuItem key={item.Id} value={item.ReleaseName}>
+                      <MenuItem key={item.Id} value={item.Id}>
                         {item.ReleaseName}
                       </MenuItem>
                     ))}

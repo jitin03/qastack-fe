@@ -15,6 +15,8 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import Controls from "../controllers/Controls";
+import { updateRelease } from "../../context/actions/project/api";
+import { useMutation, useQueryClient } from "react-query";
 const useStyles = makeStyles({
   bottomDrawer: {
     position: "absolute",
@@ -25,10 +27,11 @@ const useStyles = makeStyles({
 });
 export const ReleaseEditForm = (props) => {
   const { param } = props;
+  console.log("param", param);
   const classes = useStyles();
   const {
     releaseState: release,
-
+    editId,
     handleCloseRightDrawer,
   } = useGlobalContext();
   console.log("releaseState", release.release?.data.ReleaseName);
@@ -36,8 +39,15 @@ export const ReleaseEditForm = (props) => {
     defaultValues: release.release?.data.ReleaseName,
   });
 
+  const queryClient = useQueryClient();
+  const { mutateAsync, isLoading } = useMutation(updateRelease);
   const onSubmit = async (data, e) => {
     console.log(data);
+    e.preventDefault();
+    data.editId = param[1];
+    await mutateAsync(data);
+    queryClient.invalidateQueries("releases");
+    handleCloseRightDrawer(e);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

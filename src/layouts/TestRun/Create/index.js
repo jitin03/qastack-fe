@@ -29,6 +29,7 @@ import Controls from "../../../components/controllers/Controls";
 import { addTestcase, addTestrun } from "../../../context/actions/testcase/api";
 import TestRuns from "./testRun";
 import TestCaseRecords from "./testCaseRecords";
+import { useProjectContext } from "../../../context/provider/projectContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,6 +65,7 @@ export default function CreateTestRun(props) {
     state,
     handleCloseToast,
   } = useGlobalContext();
+  const { selectionModel, setSelectionModel } = useProjectContext();
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
     useMutation(addTestrun, {
       onError: (error) => {
@@ -80,6 +82,8 @@ export default function CreateTestRun(props) {
 
   const queryClient = useQueryClient();
   const onSubmit = async (data, e) => {
+    console.log(data);
+    data.testcases = selectionModel;
     try {
       await mutateAsync(data);
 
@@ -88,6 +92,7 @@ export default function CreateTestRun(props) {
     } catch (error) {
       history.goBack();
       console.log(error.message);
+      setSelectionModel([]);
     }
   };
 

@@ -9,6 +9,8 @@ import {
 import React from "react";
 import { makeStyles } from "@mui/styles";
 import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import { getProjectDetail } from "../../context/actions/project/api";
 const useStyles = makeStyles({
   projectCards: {
     textAlign: "center",
@@ -22,6 +24,13 @@ const ProjectOverview = () => {
   const { projectKey } = useParams();
   const classes = useStyles();
 
+  const {
+    data: project,
+    isError,
+    isLoading,
+  } = useQuery(["project", projectKey], () => getProjectDetail(projectKey));
+
+  console.log("project", project);
   return (
     <>
       <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
@@ -36,7 +45,9 @@ const ProjectOverview = () => {
               padding: "20px",
             }}
           >
-            <Typography variant="h6">Project Overview:{projectKey}</Typography>
+            <Typography variant="h6">
+              Project Overview: {project?.Name}
+            </Typography>
           </Grid>
           <Grid item container style={{ padding: "20px" }} spacing={24}>
             <Grid item md={3}>
