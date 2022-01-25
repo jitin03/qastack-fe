@@ -18,6 +18,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { makeStyles } from "@mui/styles";
 import ProjectOverview from "./ProjectOverview";
 import { Link } from "@material-ui/core";
+import Toast from "../controllers/Toast";
 
 const useStyles = makeStyles((theme) => ({
   divider: {
@@ -34,8 +35,8 @@ export default function ProjectList(props) {
     setValues,
     setModule,
     projectDispatch,
-    setState,
-    state,
+    openToast,
+    handleCloseToast,
     handleRightDrawer,
   } = useGlobalContext();
   const history = useHistory();
@@ -50,7 +51,7 @@ export default function ProjectList(props) {
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(projects, headCells);
   const queryClient = useQueryClient();
-  const { mutateAsync, isLoading } = useMutation(deleteProject);
+  const { mutateAsync, isLoading, isError, error } = useMutation(deleteProject);
 
   const handleEditProject = (id, name) => {
     projectDispatch({
@@ -62,8 +63,6 @@ export default function ProjectList(props) {
   };
   return (
     <>
-      <Grid container justifyItems="center" alignItems="center"></Grid>
-
       <Grid
         container
         justifyItems="center"
@@ -72,14 +71,12 @@ export default function ProjectList(props) {
         alignItems="center"
         style={{ flex: "1" }}
       >
-        {" "}
         <Grid
           item
           md={3}
           style={{
             textAlign: "left",
 
-            height: "100%",
             fontWeight: "1rem",
           }}
         >
@@ -116,7 +113,6 @@ export default function ProjectList(props) {
             style={{
               textAlign: "left",
 
-              height: "100%",
               fontWeight: "1rem",
             }}
           >
@@ -166,8 +162,6 @@ export default function ProjectList(props) {
                   textAlign: "left",
                   display: "flex",
                   justifyContent: "flex-end",
-
-                  height: "100%",
                 }}
               >
                 <Tooltip title="Bookmark project" arrow disableInteractive>
@@ -187,23 +181,32 @@ export default function ProjectList(props) {
                 {isLoading ? (
                   <CircularProgress />
                 ) : (
-                  <Tooltip title="Delete project" arrow disableInteractive>
-                    <IconButton
-                      edge="start"
-                      aria-label="delete"
-                      onClick={async () => {
-                        await mutateAsync(item.Id);
-                        queryClient.invalidateQueries("project");
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
+                  <IconButton
+                    edge="start"
+                    aria-label="delete"
+                    onClick={async () => {
+                      await mutateAsync(item.Id);
+                      queryClient.invalidateQueries("project");
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 )}
               </CardActions>
             </Card>
           </Grid>
         ))}
+        <Grid item>
+          {isError && (
+            <>
+              <Toast
+                openToast={openToast}
+                message={JSON.stringify(error.message)}
+                handleCloseToast={handleCloseToast}
+              ></Toast>
+            </>
+          )}
+        </Grid>
       </Grid>
     </>
   );

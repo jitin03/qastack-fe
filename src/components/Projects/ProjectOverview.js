@@ -3,12 +3,27 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   Grid,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Typography,
 } from "@mui/material";
 import React from "react";
 import { makeStyles } from "@mui/styles";
 import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import FolderIcon from "@mui/icons-material/Folder";
+import {
+  getAllRelease,
+  getProjectDetail,
+} from "../../context/actions/project/api";
+import {
+  getAllProjectTestCases,
+  getAllProjectTestRuns,
+} from "../../context/actions/testcase/api";
 const useStyles = makeStyles({
   projectCards: {
     textAlign: "center",
@@ -21,6 +36,51 @@ const useStyles = makeStyles({
 const ProjectOverview = () => {
   const { projectKey } = useParams();
   const classes = useStyles();
+
+  const {
+    data: project,
+    isError,
+    isLoading,
+  } = useQuery(["project", projectKey], () => getProjectDetail(projectKey));
+
+  console.log("project", project);
+
+  const {
+    data: releases,
+    error: releaseError,
+    isLoading: waitForReleases,
+    isError: isErrorFromRelease,
+  } = useQuery(["releases", projectKey], () => getAllRelease(projectKey), {
+    enabled: !!projectKey,
+  });
+
+  const {
+    data: projectTestCases,
+    error: projectTestCasesError,
+    isLoading: waitForProjectTestCases,
+    isError: isErrorFromProjectTestCases,
+  } = useQuery(
+    ["projectTestcases", projectKey],
+    getAllProjectTestCases,
+
+    {
+      enabled: !!projectKey,
+    }
+  );
+
+  const {
+    data: projectTestRuns,
+    error: projectTestRunsError,
+    isLoading: waitForProjectTestRuns,
+    isError: isErrorFromProjectTestRuns,
+  } = useQuery(
+    ["projectTestruns", projectKey],
+    getAllProjectTestRuns,
+
+    {
+      enabled: !!projectKey,
+    }
+  );
 
   return (
     <>
@@ -36,7 +96,9 @@ const ProjectOverview = () => {
               padding: "20px",
             }}
           >
-            <Typography variant="h6">Project Overview:{projectKey}</Typography>
+            <Typography variant="h6">
+              Project Overview: {project?.Name}
+            </Typography>
           </Grid>
           <Grid item container style={{ padding: "20px" }} spacing={24}>
             <Grid item md={3}>
@@ -44,21 +106,32 @@ const ProjectOverview = () => {
                 <CardHeader
                   title={`Releases`}
                   style={{ textAlign: "center" }}
-                  subheader={`1000`}
+                  subheader={
+                    waitForReleases ? <CircularProgress /> : releases?.length
+                  }
                   className={classes.headers}
                 />
-                <CardContent className={classes.projectCards}>
-                  <Typography color="textSecondary">Word of the Day</Typography>
-                  <Typography variant="headline" component="h2">
-                    benevolent
-                  </Typography>
-                  <Typography color="textSecondary">adjective</Typography>
-                  <Typography component="p">
-                    well meaning and kindly.
-                    <br />
-                    {'"a benevolent smile"'}
-                  </Typography>
+                <CardContent
+                  className={classes.projectCards}
+                  style={{ minHeight: 280, maxHeight: 280, overflow: "auto" }}
+                >
+                  {releases?.slice(0, 10)?.map((item, index) => (
+                    <>
+                      <List dense="true" key={item.index}>
+                        <ListItemButton>
+                          <ListItemIcon></ListItemIcon>
+                          <ListItemText primary={item.ReleaseName} />
+                        </ListItemButton>
+                      </List>
+                    </>
+                  ))}
                 </CardContent>
+                <Typography
+                  style={{ textAlign: "center" }}
+                  color="textSecondary"
+                >
+                  View more...
+                </Typography>
               </Card>
             </Grid>
             <Grid item md={3}>
@@ -66,21 +139,36 @@ const ProjectOverview = () => {
                 <CardHeader
                   title={`Test Cases`}
                   style={{ textAlign: "center" }}
-                  subheader={`1000`}
+                  subheader={
+                    waitForProjectTestCases ? (
+                      <CircularProgress />
+                    ) : (
+                      projectTestCases?.length
+                    )
+                  }
                   className={classes.headers}
                 />
-                <CardContent className={classes.projectCards}>
-                  <Typography color="textSecondary">Word of the Day</Typography>
-                  <Typography variant="headline" component="h2">
-                    benevolent
-                  </Typography>
-                  <Typography color="textSecondary">adjective</Typography>
-                  <Typography component="p">
-                    well meaning and kindly.
-                    <br />
-                    {'"a benevolent smile"'}
-                  </Typography>
+                <CardContent
+                  className={classes.projectCards}
+                  style={{ minHeight: 280, maxHeight: 280, overflow: "auto" }}
+                >
+                  {projectTestCases?.slice(1, 10)?.map((item, index) => (
+                    <>
+                      <List dense="true" key={item.index}>
+                        <ListItemButton>
+                          <ListItemIcon></ListItemIcon>
+                          <ListItemText primary={item.title} />
+                        </ListItemButton>
+                      </List>
+                    </>
+                  ))}
                 </CardContent>
+                <Typography
+                  style={{ textAlign: "center" }}
+                  color="textSecondary"
+                >
+                  View more...
+                </Typography>
               </Card>
             </Grid>
             <Grid item md={3}>
@@ -88,21 +176,36 @@ const ProjectOverview = () => {
                 <CardHeader
                   title={`Test Runs`}
                   style={{ textAlign: "center" }}
-                  subheader={`1000`}
+                  subheader={
+                    waitForProjectTestRuns ? (
+                      <CircularProgress />
+                    ) : (
+                      projectTestRuns?.length
+                    )
+                  }
                   className={classes.headers}
                 />
-                <CardContent className={classes.projectCards}>
-                  <Typography color="textSecondary">Word of the Day</Typography>
-                  <Typography variant="headline" component="h2">
-                    benevolent
-                  </Typography>
-                  <Typography color="textSecondary">adjective</Typography>
-                  <Typography component="p">
-                    well meaning and kindly.
-                    <br />
-                    {'"a benevolent smile"'}
-                  </Typography>
+                <CardContent
+                  className={classes.projectCards}
+                  style={{ minHeight: 280, maxHeight: 280, overflow: "auto" }}
+                >
+                  {projectTestRuns?.slice(1, 10)?.map((item, index) => (
+                    <>
+                      <List dense="true" key={item.index}>
+                        <ListItemButton>
+                          <ListItemIcon></ListItemIcon>
+                          <ListItemText primary={item.name} />
+                        </ListItemButton>
+                      </List>
+                    </>
+                  ))}
                 </CardContent>
+                <Typography
+                  style={{ textAlign: "center" }}
+                  color="textSecondary"
+                >
+                  View more...
+                </Typography>
               </Card>
             </Grid>
           </Grid>

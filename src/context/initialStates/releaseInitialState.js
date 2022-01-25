@@ -1,9 +1,7 @@
 export default {
   release: {
-    isEditing: false,
-    name: "",
-    startDate: "",
-    endDate: "",
+    loading: false,
+    data: null,
+    error: null,
   },
-  releases: [],
 };

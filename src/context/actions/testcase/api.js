@@ -44,3 +44,33 @@ export const getAllTestCases = async ({ queryKey }) => {
 
   return response.data;
 };
+
+export const getAllProjectTestCases = async ({ queryKey }) => {
+  const [_key, projectId] = queryKey;
+
+  const response = await axiosAppTestcaseInstance().get(
+    `/api/testcases/project?projectId=${projectId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const getAllProjectTestRuns = async ({ queryKey }) => {
+  const [_key, projectId] = queryKey;
+
+  const response = await axiosAppTestcaseInstance().get(
+    `/api/testruns/project?projectId=${projectId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
