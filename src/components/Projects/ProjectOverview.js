@@ -5,6 +5,7 @@ import {
   CardHeader,
   CircularProgress,
   Grid,
+  Link,
   List,
   ListItemButton,
   ListItemIcon,
@@ -126,12 +127,14 @@ const ProjectOverview = () => {
                     </>
                   ))}
                 </CardContent>
-                <Typography
-                  style={{ textAlign: "center" }}
-                  color="textSecondary"
-                >
-                  View more...
-                </Typography>
+                <Link underline="none" href={`/project/${projectKey}/releases`}>
+                  <Typography
+                    style={{ textAlign: "center" }}
+                    color="textSecondary"
+                  >
+                    View more...
+                  </Typography>
+                </Link>
               </Card>
             </Grid>
             <Grid item md={3}>
@@ -163,12 +166,17 @@ const ProjectOverview = () => {
                     </>
                   ))}
                 </CardContent>
-                <Typography
-                  style={{ textAlign: "center" }}
-                  color="textSecondary"
+                <Link
+                  underline="none"
+                  href={`/project/${projectKey}/components/testcases`}
                 >
-                  View more...
-                </Typography>
+                  <Typography
+                    style={{ textAlign: "center" }}
+                    color="textSecondary"
+                  >
+                    View more...
+                  </Typography>
+                </Link>
               </Card>
             </Grid>
             <Grid item md={3}>
@@ -200,12 +208,14 @@ const ProjectOverview = () => {
                     </>
                   ))}
                 </CardContent>
-                <Typography
-                  style={{ textAlign: "center" }}
-                  color="textSecondary"
-                >
-                  View more...
-                </Typography>
+                <Link underline="none" href={`/project/${projectKey}/testruns`}>
+                  <Typography
+                    style={{ textAlign: "center" }}
+                    color="textSecondary"
+                  >
+                    View more...
+                  </Typography>
+                </Link>
               </Card>
             </Grid>
           </Grid>

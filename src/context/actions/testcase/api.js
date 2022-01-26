@@ -15,6 +15,21 @@ export const addTestcase = async ({ ...data }) => {
   return response.data;
 };
 
+export const updateTestCase = async ({ ...data }) => {
+  let payload = JSON.stringify(data);
+  const response = await axiosAppTestcaseInstance().put(
+    `/api/testcase/update/${data?.id}`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export const addTestrun = async ({ ...data }) => {
   let payload = JSON.stringify(data);
   const response = await axiosAppTestcaseInstance().post(
@@ -35,6 +50,21 @@ export const getAllTestCases = async ({ queryKey }) => {
 
   const response = await axiosAppTestcaseInstance().get(
     `/api/testcases?componentId=${componentId}&page=${pageId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const getTestCase = async ({ queryKey }) => {
+  const [_key, testCaseId, pageId] = queryKey;
+
+  const response = await axiosAppTestcaseInstance().get(
+    `/api/testcase?testCaseId=${testCaseId}`,
     {
       headers: {
         "Content-Type": "application/json",
