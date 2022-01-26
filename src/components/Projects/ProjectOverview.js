@@ -82,7 +82,7 @@ const ProjectOverview = () => {
       enabled: !!projectKey,
     }
   );
-
+  console.log("projectTestRuns", projectTestRuns);
   return (
     <>
       <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
@@ -155,7 +155,7 @@ const ProjectOverview = () => {
                   className={classes.projectCards}
                   style={{ minHeight: 280, maxHeight: 280, overflow: "auto" }}
                 >
-                  {projectTestCases?.slice(1, 10)?.map((item, index) => (
+                  {projectTestCases?.slice(0, 10)?.map((item, index) => (
                     <>
                       <List dense="true" key={item.index}>
                         <ListItemButton>
@@ -197,7 +197,7 @@ const ProjectOverview = () => {
                   className={classes.projectCards}
                   style={{ minHeight: 280, maxHeight: 280, overflow: "auto" }}
                 >
-                  {projectTestRuns?.slice(1, 10)?.map((item, index) => (
+                  {projectTestRuns?.slice(0, 10)?.map((item, index) => (
                     <>
                       <List dense="true" key={item.index}>
                         <ListItemButton>

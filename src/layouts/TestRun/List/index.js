@@ -29,12 +29,20 @@ import {
   getAllComponents,
 } from "../../../context/actions/component/api";
 import Controls from "../../../components/controllers/Controls";
+import { FormControlLabel } from "@material-ui/core";
 import Toast from "../../../components/controllers/Toast";
 import { useMutation, useQueryClient } from "react-query";
 import {
   COMPONENT_CREATE_ERROR,
   EDIT_COMPONENT,
 } from "../../../constants/actionTypes";
+import { useProjectContext } from "../../../context/provider/projectContext";
+import {
+  getAllProjectTestCases,
+  getAllProjectTestRuns,
+} from "../../../context/actions/testcase/api";
+import { blue, grey } from "@mui/material/colors";
+import { DataGrid } from "@mui/x-data-grid";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -44,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     width: "75%",
   },
 }));
-const TestRunList = () => {
+export default function TestRunList() {
   const classes = useStyles();
   const {
     handleCloseToast,
@@ -62,9 +70,7 @@ const TestRunList = () => {
       return items;
     },
   });
-  const pages = [5, 10, 25];
-  const [page, setPage] = useState(2);
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
+
   const [data, setData] = useState([]);
   let { id } = useParams();
   let { projectKey } = useParams();
@@ -78,59 +84,19 @@ const TestRunList = () => {
 
   const history = useHistory();
 
-  const handleSearch = (e) => {
-    let target = e.target;
-    setFilterFn({
-      fn: (items) => {
-        if (target.value == "") return items;
-        else
-          return items.filter((x) =>
-            x.component_name.toLowerCase().includes(target.value.toLowerCase())
-          );
-      },
-    });
-  };
-  const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(data, headCells, filterFn);
+  const {
+    data: projectTestRuns,
+    error: projectTestRunsError,
+    isLoading: waitForProjectTestRuns,
+    isError: isErrorFromProjectTestRuns,
+  } = useQuery(
+    ["projectTestruns", projectKey],
+    getAllProjectTestRuns,
 
-  //   if (waitForComponents) {
-  //     return (
-  //       <>
-  //         <Grid container>
-  //           <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
-  //           <Grid
-  //             item
-  //             container
-  //             justifyContent="center"
-  //             style={{ padding: "50px 10px" }}
-  //           >
-  //             <Container sx={{ display: "flex" }}>
-  //               <Grid
-  //                 container
-  //                 direction="column"
-  //                 justifyContent="center"
-  //                 alignItems="center"
-  //               >
-  //                 <Grid item>
-  //                   <CircularProgress />
-  //                 </Grid>
-  //               </Grid>
-  //             </Container>
-  //             <Grid item></Grid>
-  //           </Grid>
-  //         </Grid>
-  //       </>
-  //     );
-  //   }
-  const handleChangePage = (event, newPage) => {
-    console.log(newPage, "newPage");
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+    {
+      enabled: !!projectKey,
+    }
+  );
 
   return (
     <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
@@ -156,7 +122,7 @@ const TestRunList = () => {
                     </InputAdornment>
                   ),
                 }}
-                onChange={handleSearch}
+                // onChange={handleSearch}
               />
             </Toolbar>
           </Grid>
@@ -174,73 +140,187 @@ const TestRunList = () => {
             </Tooltip>
           </Grid>
         </Grid>
-        {/* {data?.length ? (
-          <Grid item container justifyContent="flex-end">
-            <TblContainer>
-              <TblHead />
-              <TableBody>
-                {recordsAfterPagingAndSorting().map((item, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{item.component_id}</TableCell>
-                    <TableCell>{item.component_name}</TableCell>
-                    <TableCell>
-                      <Tooltip title="Edit component" arrow disableInteractive>
-                        <IconButton aria-label="Edit component">
-                          <EditIcon
-                            onClick={() =>
-                              handleEditComponent(
-                                item.component_name,
-                                item.component_id,
-                                projectKey
-                              )
-                            }
-                          />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip
-                        title="Delete component"
-                        arrow
-                        disableInteractive
-                      >
-                        <IconButton aria-label="delete component">
-                          <DeleteIcon
-                            onClick={() =>
-                              handleDeleteComponent(item.component_id)
-                            }
-                          />
-                          {deleteComponentLoading && <CircularProgress />}
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </TblContainer>
-            <TblPagination />
-          </Grid>
-        ) : (
-          <Grid
-            item
-            container
-            justifyContent="center"
-            alignItems="center"
-            sx={{ m: 5 }}
-          >
-            <Typography>No component avaiable</Typography>
-          </Grid>
-        )} */}
-        {/* {isError && (
-          <>
-            <Toast
-              openToast={openToast}
-              message={component.error}
-              handleCloseToast={handleCloseToast}
-            ></Toast>
-          </>
-        )} */}
+        <Grid
+          item
+          container
+          justifyContent="center"
+          justifyItems="center"
+          xs={12}
+        >
+          <Tests
+            preloadedData={projectTestRuns}
+            projectKey={projectKey}
+            waitForProjectTestRuns={waitForProjectTestRuns}
+          />
+        </Grid>
       </Grid>
     </Box>
   );
-};
+}
 
-export default TestRunList;
+const Tests = (props) => {
+  const { preloadedData, projectKey, waitForProjectTestRuns } = props;
+  const { handleRightDrawer } = useGlobalContext();
+  const { selectionModel, setSelectionModel } = useProjectContext();
+  const classes = {};
+
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(20);
+  const [loading, setLoading] = useState(false);
+
+  const [rowsState, setRowsState] = useState({
+    page: 0,
+    pageSize: 5,
+
+    loading: false,
+  });
+
+  const handleEditTestRun = (id, projectKey) => {
+    let params = [];
+    params.push(projectKey);
+    params.push(id);
+    handleRightDrawer("Edit TestRun", params);
+  };
+
+  const handleDeleteTestRun = (id, projectKey) => {
+    let params = [];
+    params.push(projectKey);
+    params.push(id);
+    // handleRightDrawer("Edit TestCase", params);
+  };
+  const baselineProps = {
+    rows: preloadedData || [],
+    columns: [
+      {
+        field: "assignee",
+        headerName: "Assignee",
+        width: 150,
+      },
+      {
+        field: "name",
+        headerName: "Title",
+        width: 450,
+      },
+      {
+        field: "testcase_count",
+        headerName: "Test Cases",
+        width: 150,
+      },
+      {
+        field: "status",
+        headerName: "Status",
+        width: 150,
+      },
+      {
+        field: "actions",
+        headerName: "Actions",
+        sortable: false,
+        width: 350,
+        headerAlign: "center",
+        disableClickEventBubbling: true,
+        renderCell: (params) => {
+          return (
+            <div
+              className="d-flex justify-content-between align-items-center"
+              style={{ cursor: "pointer" }}
+            >
+              {/* <MatEdit index={params.id} /> */}
+              <FormControlLabel
+                control={
+                  <>
+                    <div style={{ padding: "50px" }}>
+                      <IconButton
+                        color="secondary"
+                        aria-label="edit the test run"
+                        onClick={() => handleEditTestRun(params.id, projectKey)}
+                        style={{ padding: "20px" }}
+                      >
+                        <EditIcon style={{ color: blue[500] }} />
+                      </IconButton>
+                      <IconButton
+                        color="secondary"
+                        aria-label="delete the test run"
+                        style={{ padding: "20px" }}
+                        onClick={() =>
+                          handleDeleteTestRun(params.id, projectKey)
+                        }
+                      >
+                        <DeleteIcon style={{ color: blue[500] }} />
+                      </IconButton>
+                    </div>
+                  </>
+                }
+              />
+            </div>
+          );
+        },
+      },
+    ],
+  };
+  const MatEdit = ({ index }) => {
+    const handleEditClick = (index) => {
+      // some action
+
+      console.log(index);
+    };
+    const handleEditTestRun = (id, projectKey) => {
+      let params = [];
+      params.push(projectKey);
+      params.push(id);
+      handleRightDrawer("Edit TestCase", params);
+    };
+
+    return (
+      <FormControlLabel
+        control={
+          <IconButton
+            color="secondary"
+            aria-label="edit the test case"
+            onClick={() => handleEditTestRun(index, projectKey)}
+          >
+            <EditIcon style={{ color: blue[500] }} />
+          </IconButton>
+        }
+      />
+    );
+  };
+
+  // useEffect(() => {
+  //   setSelectionModel(prevSelectionModel.current);
+  // }, [componentId]);
+
+  console.log("selectionModel", selectionModel);
+  console.log("preloadedData", preloadedData);
+  const getRowId = (row) => `${row?.id}`;
+  return (
+    <Grid
+      item
+      container
+      style={{ padding: "16px", flexGrow: 1, display: "flex" }}
+    >
+      <DataGrid
+        style={{ height: 400, width: "100%" }}
+        columns={baselineProps.columns}
+        pagination
+        rowCount={baselineProps.rows?.length}
+        getRowId={getRowId}
+        {...rowsState}
+        {...baselineProps}
+        // paginationMode="server"
+        onPageChange={(newPage) => {
+          // prevSelectionModel.current = selectionModel;
+          setPage(newPage);
+        }}
+        pageSize={pageSize}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+        rowsPerPageOptions={[20, 50, 100, 150]}
+        loading={waitForProjectTestRuns}
+        selectionModel={selectionModel}
+        onSelectionModelChange={(newSelectionModel) => {
+          // prevSelectionModel.current = selectionModel;
+          setSelectionModel(newSelectionModel);
+        }}
+      />
+    </Grid>
+  );
+};

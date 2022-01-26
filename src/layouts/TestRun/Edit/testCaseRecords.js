@@ -51,10 +51,10 @@ const BottomDrawer = styled("div")(({ theme }) => ({
   zIndex: 2,
 }));
 export default function TestCaseRecords(props) {
-  const { register, control, param: projectId } = props;
+  const { register, control, param, testRunDetails } = props;
   const classes = useStyles();
   const [selectedComponent, setSelectedComponent] = useState("");
-  console.log("projectId", projectId);
+  console.log("projectId", param[0]);
 
   const {
     componentState: { component },
@@ -84,7 +84,7 @@ export default function TestCaseRecords(props) {
               <Records
                 control={control}
                 setSelectedComponent={setSelectedComponent}
-                projectId={projectId}
+                projectId={param[0]}
               />
             </Grid>
           </Grid>
@@ -98,7 +98,8 @@ export default function TestCaseRecords(props) {
             <TestCaseList
               control={control}
               component={selectedComponent}
-              projectId={projectId}
+              projectId={param[0]}
+              testRunDetails={testRunDetails}
             />
           </Grid>
         </Grid>
@@ -186,8 +187,17 @@ const Records = (props) => {
 };
 
 const TestCaseList = (props) => {
-  const { control, component: componentId, projectId: projectId } = props;
+  const {
+    control,
+    component: componentId,
+    projectId: projectId,
+    testRunDetails,
+  } = props;
 
+  console.log("testRunDetails", testRunDetails?.testcases);
+  // const [selectionModel, setSelectionModel] = useState(
+  //   testRunDetails?.testcases
+  // );
   const { selectionModel, setSelectionModel } = useProjectContext();
   const classes = {};
 
@@ -214,12 +224,15 @@ const TestCaseList = (props) => {
       setRowsState((prev) => ({ ...prev, rows: components }));
     },
   });
-
+  console.log("selectionModel", selectionModel);
   const {
     data: testcases,
     error: testcaseErrors,
-    loading: waitForTests,
+    isLoading: waitForTests,
   } = useQuery(["testcases", componentId, pageSize], getAllTestCases, {
+    onSuccess: (testcases) => {
+      // setSelectionModel(testRunDetails?.testcases);
+    },
     onError: (error) => {},
     enabled: !!componentId,
   });
@@ -235,6 +248,10 @@ const TestCaseList = (props) => {
   };
 
   const prevSelectionModel = useRef(selectionModel);
+
+  useEffect(() => {
+    setSelectionModel(testRunDetails?.testcases);
+  }, []);
 
   useEffect(() => {
     setSelectionModel(prevSelectionModel.current);
@@ -260,7 +277,7 @@ const TestCaseList = (props) => {
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         rowsPerPageOptions={[5, 10, 20]}
-        loading={waitForComponents}
+        loading={waitForTests}
         checkboxSelection
         disableSelectionOnClick
         selectionModel={selectionModel}

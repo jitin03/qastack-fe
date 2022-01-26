@@ -97,6 +97,8 @@ const AppProvider = ({ children }) => {
       history.push(`${window.location.pathname}/create`);
     } else if (configTitle === "Edit TestCase") {
       history.push(`${window.location.pathname}/edit/${param[1]}`);
+    } else if (configTitle === "Edit TestRun") {
+      history.push(`${window.location.pathname}/edit/${param[1]}`);
     } else {
       history.push(`${window.location.pathname}/create`);
     }

@@ -6,24 +6,36 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useGlobalContext } from "../../../context/provider/context";
 import { useHistory } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useForm, useFieldArray, FormProvider } from "react-hook-form";
+import {
+  useForm,
+  useFieldArray,
+  FormProvider,
+  useFormContext,
+} from "react-hook-form";
 
 import { COMPONENT_CREATE_SUCCESS } from "../../../constants/actionTypes";
 import PropTypes from "prop-types";
+import { addComponent } from "../../../context/actions/component/api";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import TestSteps from "./testSteps";
+
+import { Box } from "@mui/system";
 import Controls from "../../../components/controllers/Controls";
-import LinkJiraIssue from "./linkJiraIssue";
+
 import {
   addTestcase,
-  getTestCase,
-  updateTestCase,
+  addTestrun,
+  getProjectTestRun,
+  updateTestRun,
 } from "../../../context/actions/testcase/api";
+import TestRuns from "./testRun";
+import TestCaseRecords from "./testCaseRecords";
+import { useProjectContext } from "../../../context/provider/projectContext";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -42,56 +54,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgb(255, 255, 255)",
   },
 }));
-export default function EditTestCase(props) {
+export default function EditTestRun(props) {
   const { param } = props;
-
-  let testCaseSteps = [];
-  const {
-    data: testCase,
-    error: testCaseError,
-    isLoading: waitForTestCase,
-    isError: isTestCaseError,
-  } = useQuery(["testcase", param[1]], getTestCase, {
-    onSuccess: (testCase) => {},
-    onError: (error) => {
-      //   setOpenToast(true);
-      //   componentDispatch({
-      //     type: COMPONENT_LIST_ERROR,
-      //     payload: error.message,
-      //   });
-    },
-  });
-
-  // for (const key in testCase?.steps) {
-  //   let step = {};
-  //   step.stepDescription = testCase.steps[key].stepDescription;
-  //   step.expectedResult = testCase.steps[key].expectedResult;
-  //   testCaseSteps.push(step);
-  // }
-
-  console.log("testCaseSteps", testCase);
+  console.log("param", param);
   const [tabValue, setTabValue] = useState(0);
   const classes = useStyles();
-  const { register, handleSubmit, control, reset, setValue } = useForm({
-    // defaultValues: {
-    //   Steps: testCaseSteps || { stepDescription: "", expectedResult: "" },
-    // },
-    mode: "onBlur",
-  });
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control,
-      name: "Steps",
-    }
-  );
-  useEffect(() => {
-    if (Array.isArray(testCase?.steps)) {
-      setValue(
-        "Steps",
-        testCase?.steps || [{ stepDescription: "", expectedResult: "" }]
-      );
-    }
-  }, [testCase]);
+  const { register, handleSubmit, control } = useForm();
+
   const {
     componentDispatch,
     handleCloseRightDrawer,
@@ -101,14 +70,9 @@ export default function EditTestCase(props) {
     state,
     handleCloseToast,
   } = useGlobalContext();
-  const history = useHistory();
-
-  const [form, setForm] = useState({});
-
-  const [fieldErrors, setFieldErrors] = useState({});
-
+  const { selectionModel, setSelectionModel } = useProjectContext();
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
-    useMutation(updateTestCase, {
+    useMutation(updateTestRun, {
       onError: (error) => {
         setOpenToast(true);
       },
@@ -119,9 +83,12 @@ export default function EditTestCase(props) {
         });
       },
     });
+  const history = useHistory();
 
   const queryClient = useQueryClient();
   const onSubmit = async (data, e) => {
+    console.log(data);
+    data.testcases = selectionModel;
     data.id = param[1];
     try {
       await mutateAsync(data);
@@ -130,6 +97,7 @@ export default function EditTestCase(props) {
     } catch (error) {
       history.goBack();
       console.log(error.message);
+      setSelectionModel([]);
     }
   };
 
@@ -137,79 +105,58 @@ export default function EditTestCase(props) {
     setTabValue(newValue);
   };
 
-  if (waitForTestCase) {
-    return (
-      <>
-        <Grid container>
-          <Grid
-            item
-            container
-            justifyContent="center"
-            style={{ padding: "50px 10px" }}
-          >
-            <Container sx={{ display: "flex" }}>
-              <Grid
-                container
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Grid item>
-                  <CircularProgress />
-                </Grid>
-              </Grid>
-            </Container>
-            <Grid item></Grid>
-          </Grid>
-        </Grid>
-      </>
-    );
-  }
+  const {
+    data: testRunDetails,
+    error: testRunError,
+    isLoading: waitForTestRunDetails,
+    isError: isTestRunError,
+  } = useQuery(["testRunDetails", param[0], param[1]], getProjectTestRun, {
+    enabled: !!param[1],
+    onSuccess: (testRunDetails) => {},
+  });
+
   return (
     <>
       <Tabs
         value={tabValue}
         onChange={handleChange}
-        aria-label="basic tabs example"
+        aria-label="Test run configuration"
       >
-        <Tab label="Test Case Details" />
-        <Tab label="Link Requirement" />
-        <Tab label="Jira Requirement" />
+        <Tab label="Test Run Details" />
+        {/* <Tab label="Specific test cases" /> */}
       </Tabs>
       <FormProvider
         register={register}
         control={control}
         handleSubmit={handleSubmit}
-        remove={remove}
-        append={append}
       >
         <form
           className={classes.root}
           autoComplete="off"
-          style={{ height: "100vh" }}
+          style={{ height: "100%" }}
           onSubmit={handleSubmit(onSubmit)}
         >
           <TabPanel value={tabValue} index={0}>
             <Divider />
-            <TestSteps
+            <TestRuns
               register={register}
               control={control}
               handleSubmit={handleSubmit}
-              fields={fields}
-              remove={remove}
-              append={append}
               param={param}
-              preloadedData={testCase}
+              testRunDetails={testRunDetails}
+              waitForTestRunDetails={waitForTestRunDetails}
+            />
+            <TestCaseRecords
+              register={register}
+              control={control}
+              param={param}
+              testRunDetails={testRunDetails}
             />
           </TabPanel>
-          <TabPanel value={tabValue} index={1}>
+          {/* <TabPanel value={tabValue} index={1}>
             <Divider />
-            Item Two
-          </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            <Divider />
-            <LinkJiraIssue />
-          </TabPanel>
+          </TabPanel> */}
+
           <Grid
             container
             className={classes.bottomDrawer}
