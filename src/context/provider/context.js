@@ -52,6 +52,11 @@ const AppProvider = ({ children }) => {
     component,
     componentInitialState
   );
+
+  const [testCaseState, testCaseDispatch] = useReducer(
+    component,
+    componentInitialState
+  );
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -90,6 +95,8 @@ const AppProvider = ({ children }) => {
       history.push(`${window.location.pathname}/edit/${param[1]}`);
     } else if (configTitle === "Add TestCase") {
       history.push(`${window.location.pathname}/create`);
+    } else if (configTitle === "Edit TestCase") {
+      history.push(`${window.location.pathname}/edit/${param[1]}`);
     } else {
       history.push(`${window.location.pathname}/create`);
     }
