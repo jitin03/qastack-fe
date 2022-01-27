@@ -1,49 +1,36 @@
+import { Search } from "@material-ui/icons";
 import {
+  Box,
   Button,
-  CircularProgress,
-  Container,
   Grid,
-  IconButton,
   InputAdornment,
-  Link,
-  TableBody,
-  TableCell,
-  TablePagination,
-  TableRow,
   Toolbar,
   Tooltip,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import AddIcon from "@mui/icons-material/Add";
-import { useGlobalContext } from "../../../context/provider/context";
-import useTable from "../../../components/Shared/useTable";
-import { Search } from "@material-ui/icons";
 import { makeStyles } from "@mui/styles";
+import {
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  NativeSelect,
+  Select,
+} from "@material-ui/core";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
-import { useHistory, useParams } from "react-router-dom";
-import {
-  deleteComponent,
-  getAllComponents,
-} from "../../../context/actions/component/api";
+import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Controls from "../../../components/controllers/Controls";
-import { FormControlLabel } from "@material-ui/core";
-import Toast from "../../../components/controllers/Toast";
-import { useMutation, useQueryClient } from "react-query";
+import AddIcon from "@mui/icons-material/Add";
 import {
-  COMPONENT_CREATE_ERROR,
-  EDIT_COMPONENT,
-} from "../../../constants/actionTypes";
-import { useProjectContext } from "../../../context/provider/projectContext";
-import {
-  getAllProjectTestCases,
   getAllProjectTestRuns,
+  getAllTestsTitleTestRuns,
 } from "../../../context/actions/testcase/api";
-import { blue, grey } from "@mui/material/colors";
+import { useGlobalContext } from "../../../context/provider/context";
+import { useProjectContext } from "../../../context/provider/projectContext";
 import { DataGrid } from "@mui/x-data-grid";
+
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -53,7 +40,9 @@ const useStyles = makeStyles((theme) => ({
     width: "75%",
   },
 }));
-export default function TestRunList() {
+export const TestExecution = (props) => {
+  const { id: testRunId } = useParams();
+
   const classes = useStyles();
   const {
     handleCloseToast,
@@ -86,16 +75,16 @@ export default function TestRunList() {
   const history = useHistory();
 
   const {
-    data: projectTestRuns,
+    data: testCasesTitle,
     error: projectTestRunsError,
-    isLoading: waitForProjectTestRuns,
+    isLoading: waitForTestsTitle,
     isError: isErrorFromProjectTestRuns,
   } = useQuery(
-    ["projectTestruns", projectKey],
-    getAllProjectTestRuns,
+    ["testcaseTitles", testRunId],
+    getAllTestsTitleTestRuns,
 
     {
-      enabled: !!projectKey,
+      enabled: !!testRunId,
     }
   );
 
@@ -117,7 +106,7 @@ export default function TestRunList() {
           <Grid
             item
             container
-            justifyContent="flex-end"
+            justifyContent="center"
             justifyItems="center"
             justifySelf="center"
             md={8}
@@ -125,7 +114,7 @@ export default function TestRunList() {
             <Grid item>
               <Toolbar>
                 <Controls.Input
-                  label="Search TestRun "
+                  label="Search Test by title "
                   className={classes.searchInput}
                   InputProps={{
                     startAdornment: (
@@ -138,19 +127,6 @@ export default function TestRunList() {
                 />
               </Toolbar>
             </Grid>
-            <Grid item>
-              <Tooltip title="Add TestRun" arrow disableInteractive>
-                <Button
-                  variant="outlined"
-                  startIcon={<AddIcon />}
-                  // onClick={() => setState(!state)}
-                  onClick={() => handleRightDrawer("Add TestRun", projectKey)}
-                  sx={{ m: 1.5 }}
-                >
-                  Add TestRun
-                </Button>
-              </Tooltip>
-            </Grid>
           </Grid>
         </Grid>
         <Grid
@@ -161,18 +137,18 @@ export default function TestRunList() {
           xs={12}
         >
           <Tests
-            preloadedData={projectTestRuns}
-            projectKey={projectKey}
-            waitForProjectTestRuns={waitForProjectTestRuns}
+            preloadedData={testCasesTitle}
+            testRunId={testRunId}
+            waitForProjectTestRuns={waitForTestsTitle}
           />
         </Grid>
       </Grid>
     </Box>
   );
-}
+};
 
 const Tests = (props) => {
-  const { preloadedData, projectKey, waitForProjectTestRuns } = props;
+  const { preloadedData, testRunId, waitForProjectTestRuns } = props;
   const { handleRightDrawer } = useGlobalContext();
   const { selectionModel, setSelectionModel } = useProjectContext();
   const classes = {};
@@ -206,104 +182,79 @@ const Tests = (props) => {
     rows: preloadedData || [],
     columns: [
       {
-        field: "assignee",
-        headerName: "Assignee",
+        field: "testcase_run_id",
+        headerName: "Case Code",
         width: 150,
       },
       {
-        field: "name",
-        headerName: "Title",
+        field: "testcase_title",
+        headerName: "Test Case Title",
         width: 450,
-        renderCell: (params) => {
-          return (
-            <Link href={`/project/${projectKey}/testrun/${params?.id}`}>
-              {params.value}
-            </Link>
-          );
-        },
       },
-      {
-        field: "testcase_count",
-        headerName: "Test Cases",
-        width: 150,
-      },
+
       {
         field: "status",
         headerName: "Status",
         width: 150,
-      },
-      {
-        field: "actions",
-        headerName: "Actions",
-        sortable: false,
-        width: 350,
-        headerAlign: "center",
         disableClickEventBubbling: true,
         renderCell: (params) => {
           return (
             <div
               className="d-flex justify-content-between align-items-center"
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", width: "100%" }}
             >
               {/* <MatEdit index={params.id} /> */}
-              <FormControlLabel
-                control={
-                  <>
-                    <div style={{ padding: "50px" }}>
-                      <IconButton
-                        color="secondary"
-                        aria-label="edit the test run"
-                        onClick={() => handleEditTestRun(params.id, projectKey)}
-                        style={{ padding: "20px" }}
-                      >
-                        <EditIcon style={{ color: blue[500] }} />
-                      </IconButton>
-                      <IconButton
-                        color="secondary"
-                        aria-label="delete the test run"
-                        style={{ padding: "20px" }}
-                        onClick={() =>
-                          handleDeleteTestRun(params.id, projectKey)
-                        }
-                      >
-                        <DeleteIcon style={{ color: blue[500] }} />
-                      </IconButton>
-                    </div>
-                  </>
-                }
-              />
+
+              <FormControl fullWidth>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value="-1"
+                  label="Type"
+                  //   onChange={onChange}
+                >
+                  <MenuItem value="-1">Unexecuted</MenuItem>
+                  <MenuItem value="0">Passed</MenuItem>
+                  <MenuItem value="1">Failed</MenuItem>
+                  <MenuItem value="2">Blocked</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+          );
+        },
+      },
+      {
+        field: "assignee",
+        headerName: "Assignee",
+        width: 350,
+        disableClickEventBubbling: true,
+        renderCell: (params) => {
+          return (
+            <div
+              className="d-flex justify-content-between align-items-center"
+              style={{ cursor: "pointer", width: "100%" }}
+            >
+              {/* <MatEdit index={params.id} /> */}
+
+              <FormControl fullWidth>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value="2"
+                  label="Type"
+                  //   onChange={onChange}
+                >
+                  <MenuItem value="-1">Jitin</MenuItem>
+                  <MenuItem value="0">Client</MenuItem>
+                  <MenuItem value="1">Doriya</MenuItem>
+                  <MenuItem value="2">Mehul</MenuItem>
+                </Select>
+              </FormControl>
             </div>
           );
         },
       },
     ],
-  };
-  const MatEdit = ({ index }) => {
-    const handleEditClick = (index) => {
-      // some action
-
-      console.log(index);
-    };
-    const handleEditTestRun = (id, projectKey) => {
-      let params = [];
-      params.push(projectKey);
-      params.push(id);
-      handleRightDrawer("Edit TestCase", params);
-    };
-
-    return (
-      <FormControlLabel
-        control={
-          <IconButton
-            color="secondary"
-            aria-label="edit the test case"
-            onClick={() => handleEditTestRun(index, projectKey)}
-          >
-            <EditIcon style={{ color: blue[500] }} />
-          </IconButton>
-        }
-      />
-    );
   };
 
   // useEffect(() => {
@@ -312,7 +263,7 @@ const Tests = (props) => {
 
   console.log("selectionModel", selectionModel);
   console.log("preloadedData", preloadedData);
-  const getRowId = (row) => `${row?.id}`;
+  const getRowId = (row) => `${row?.testcase_run_id}`;
   return (
     <Grid
       item
@@ -320,7 +271,7 @@ const Tests = (props) => {
       style={{ padding: "16px", flexGrow: 1, display: "flex" }}
     >
       <DataGrid
-        style={{ height: 400, width: "100%" }}
+        style={{ height: 600, width: "100%" }}
         columns={baselineProps.columns}
         pagination
         rowCount={baselineProps.rows?.length}

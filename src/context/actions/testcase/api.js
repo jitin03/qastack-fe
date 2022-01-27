@@ -119,6 +119,22 @@ export const getAllProjectTestRuns = async ({ queryKey }) => {
 
   return response.data;
 };
+
+export const getAllTestsTitleTestRuns = async ({ queryKey }) => {
+  const [_key, id] = queryKey;
+
+  const response = await axiosAppTestcaseInstance().get(
+    `/api/testrun/testcases?id=${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export const getProjectTestRun = async ({ queryKey }) => {
   const [_key, projectId, id] = queryKey;
 

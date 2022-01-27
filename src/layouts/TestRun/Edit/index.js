@@ -70,7 +70,7 @@ export default function EditTestRun(props) {
     state,
     handleCloseToast,
   } = useGlobalContext();
-  const { selectionModel, setSelectionModel } = useProjectContext();
+  const { selectedModel, setSelectedModel } = useProjectContext();
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
     useMutation(updateTestRun, {
       onError: (error) => {
@@ -86,25 +86,6 @@ export default function EditTestRun(props) {
   const history = useHistory();
 
   const queryClient = useQueryClient();
-  const onSubmit = async (data, e) => {
-    console.log(data);
-    data.testcases = selectionModel;
-    data.id = param[1];
-    try {
-      await mutateAsync(data);
-
-      handleCloseRightDrawer(e);
-    } catch (error) {
-      history.goBack();
-      console.log(error.message);
-      setSelectionModel([]);
-    }
-  };
-
-  const handleChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-
   const {
     data: testRunDetails,
     error: testRunError,
@@ -114,6 +95,32 @@ export default function EditTestRun(props) {
     enabled: !!param[1],
     onSuccess: (testRunDetails) => {},
   });
+
+  const onSubmit = async (data, e) => {
+    console.log(data);
+
+    console.log(...new Set([...testRunDetails?.testcases, ...selectedModel]));
+    data.testcases = [
+      ...new Set([...testRunDetails?.testcases, ...selectedModel]),
+    ];
+    // [...new Set(selectedModel)];
+
+    data.id = param[1];
+    try {
+      await mutateAsync(data);
+
+      handleCloseRightDrawer(e);
+      // setSelectedModel([]);
+    } catch (error) {
+      history.goBack();
+      console.log(error.message);
+      setSelectedModel([]);
+    }
+  };
+
+  const handleChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   return (
     <>

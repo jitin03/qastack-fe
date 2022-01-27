@@ -88,6 +88,7 @@ export default function CreateTestRun(props) {
       await mutateAsync(data);
 
       handleCloseRightDrawer(e);
+      setSelectionModel([]);
       history.goBack();
     } catch (error) {
       history.goBack();

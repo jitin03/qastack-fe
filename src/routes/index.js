@@ -10,6 +10,7 @@ import EditComponent from "../layouts/Component/Edit";
 import ComponentList from "../layouts/Component/List";
 import CreateTestCase from "../layouts/TestCase/Create";
 import TestCaseList from "../layouts/TestCase/List";
+import { TestExecution } from "../layouts/TestRun/Execution";
 import TestRunList from "../layouts/TestRun/List";
 
 const routes = [
@@ -111,6 +112,12 @@ const routes = [
     path: "/project/:projectKey/testruns",
     component: TestRunList,
     title: "Create TestCase",
+    needsAuth: true,
+  },
+  {
+    path: "/project/:projectKey/testrun/:id",
+    component: TestExecution,
+    title: "TestRun Status",
     needsAuth: true,
   },
   {
