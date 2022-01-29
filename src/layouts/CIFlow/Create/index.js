@@ -8,7 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import AddStep from "./AddStep";
 import { useMutation, useQuery } from "react-query";
 import { addWorkFlow } from "../../../context/actions/workflow/api";
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from "react-router-dom";
 import isAuthenticated from "../../../context/actions/auth/isAuthenticated";
 import { getUserDetail } from "../../../context/actions/auth/api";
 import { getUserDetailFromToken } from "../../../helper/token";
@@ -137,16 +137,14 @@ export default function Create() {
                 <Button
                   variant="outlined"
                   // onClick={() => setState(!state)}
-                  onClick={
-                    async () => {
-                      await mutateAsync({
-                        project_Id: projectKey,
-                        user_Id: user?.data.users_id,
-                        name: workFlowName,
-                        config: workFlowState,
-                      });
-                    }
-                  }
+                  onClick={async () => {
+                    await mutateAsync({
+                      project_Id: projectKey,
+                      user_Id: user?.data.users_id,
+                      name: workFlowName,
+                      config: workFlowState,
+                    });
+                  }}
                   sx={{ m: 1 }}
                 >
                   Publish

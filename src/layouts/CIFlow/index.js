@@ -245,7 +245,14 @@ const CIFlow = () => {
               <TblHead />
               <TableBody>
                 {data.map((item, index) => (
-                  <TableRow key={index}>
+                  <TableRow
+                    key={index}
+                    onClick={() => {
+                      history.push(
+                        `/project/${projectKey}/components/ciFlow/${item.workflow_name}`
+                      );
+                    }}
+                  >
                     <TableCell>{item.Id}</TableCell>
                     <TableCell>{item.workflow_name}</TableCell>
                     <TableCell>

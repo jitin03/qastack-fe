@@ -7,6 +7,7 @@ import RegisterContainer from "../components/Register";
 import Release from "../components/Releases/Release";
 import CIFlow from "../layouts/CIFlow";
 import OverviewFlow from "../layouts/CIFlow/Create";
+import WorkflowInfo from "../layouts/CIFlow/Info";
 import CreateComponent from "../layouts/Component/Create";
 import EditComponent from "../layouts/Component/Edit";
 import ComponentList from "../layouts/Component/List";
@@ -131,6 +132,12 @@ const routes = [
     path: "/project/:projectKey/components/ciFlow/create",
     component: OverviewFlow,
     title: "Create CI Flow",
+    needsAuth: true,
+  },
+  {
+    path: "/project/:projectKey/components/ciFlow/:workflowName",
+    component: WorkflowInfo,
+    title: "CI Flow Logs",
     needsAuth: true,
   },
 ];
