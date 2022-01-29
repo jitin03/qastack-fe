@@ -17,13 +17,20 @@ import ReactFlow, {
 const flowKey = "example-flow";
 
 const getNodeId = () => `randomnode_${+new Date()}`;
-const initialElements = [
-  { id: "1", data: { label: "Node 1" }, position: { x: 300, y: 100 } },
-  { id: "2", data: { label: "Node 2" }, position: { x: 300, y: 200 } },
-  { id: "e1-2", source: "1", target: "2" },
-];
 
-const WorkFlowLogs = () => {
+const WorkFlowLogs = (props) => {
+  const {workflowDetailData} = props;
+
+  const initialElements = [];
+  React.useEffect(() => {
+    const ele = workflowDetailData && [
+      { id: "1", data: { label: workflowDetailData.Config[0].name }, position: { x: 300, y: 100 } },
+      { id: "2", data: { label: workflowDetailData.Config[1].name }, position: { x: 300, y: 200 } },
+      { id: "e1-2", source: "1", target: "2" },
+    ]
+    setElements(ele);
+  }, [workflowDetailData])
+
   const [rfInstance, setRfInstance] = useState(null);
   const [elements, setElements] = useState(initialElements);
   const onElementsRemove = (elementsToRemove) =>

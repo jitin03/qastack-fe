@@ -43,3 +43,17 @@ export const runWorkflowByName = async (data) => {
 
   return response.data;
 };
+
+export const getWorkflowDetail = async (data) => {
+
+  const response = await axiosAppTestcaseInstance().get(
+    `http://34.201.1.56:8094/api/workflow/${data.queryKey[1]}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
