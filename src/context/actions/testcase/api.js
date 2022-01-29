@@ -60,6 +60,21 @@ export const addTestrun = async ({ ...data }) => {
   return response.data;
 };
 
+export const updateTestStatus = async ({ ...data }) => {
+  let payload = JSON.stringify(data);
+  const response = await axiosAppTestcaseInstance().post(
+    `/api/testrun/${data?.projectId}/test/update/status`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export const getAllTestCases = async ({ queryKey }) => {
   const [_key, componentId, pageId] = queryKey;
 

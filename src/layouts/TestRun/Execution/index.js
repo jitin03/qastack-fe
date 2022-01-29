@@ -16,20 +16,26 @@ import {
   MenuItem,
   NativeSelect,
   Select,
+  TextField,
 } from "@material-ui/core";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import Chip from "@mui/material/Chip";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Controls from "../../../components/controllers/Controls";
 import AddIcon from "@mui/icons-material/Add";
 import {
   getAllProjectTestRuns,
   getAllTestsTitleTestRuns,
+  updateTestStatus,
 } from "../../../context/actions/testcase/api";
 import { useGlobalContext } from "../../../context/provider/context";
 import { useProjectContext } from "../../../context/provider/projectContext";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
+import { Controller, useForm } from "react-hook-form";
+import StatusChip from "../../../components/controllers/StatusChip";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -41,8 +47,68 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export const TestExecution = (props) => {
-  const { id: testRunId } = useParams();
+  const { id: testRunId, projectKey: projectId } = useParams();
+  const [data, setData] = useState({});
 
+  const {
+    mutateAsync,
+    isLoading,
+    isError,
+    error,
+    data: updateTestStatusForm,
+    isSuccess,
+  } = useMutation(updateTestStatus, {
+    onError: (error) => {
+      // setOpenToast(true);
+    },
+    onSuccess: (data) => {
+      // componentDispatch({
+      //   type: COMPONENT_CREATE_SUCCESS,
+      //   payload: data,
+      // });
+    },
+  });
+
+  const handleChange = async (e, id) => {
+    console.log(id);
+    // console.log(e.target.value);
+    // setValue(e.target.value);
+    // id.api.updateRows([{ id: id.row?.id, status: e.target.value }]);
+    id.api.updateRows([{ ...id.row, status: e.target.value }]);
+    console.log("Status has changed");
+    // console.log([{ ...id.row, status: e.target.value }]);
+
+    console.log(id.api.getRow(id?.id));
+
+    setData(id.api.getRow(id?.id));
+
+    try {
+      data.projectId = projectId;
+      console.log(data);
+      await mutateAsync(id.api.getRow(id?.id));
+    } catch (error) {
+      console.log(error.message);
+    }
+
+    // let x;
+    // console.log(id.api.getRowModels());
+    // x = id.api.getRowModels();
+    // console.log(x.keys());
+    // let data = null;
+    // x.forEach((element) => {
+    //   console.log(element);
+    //   if (element?.testcase_run_id === "TRC985") {
+    //     data = element;
+    //   }
+    // });
+    // console.log(data);
+
+    // setStatus(e.target.value);
+
+    // apiRef.current.updateRows([{ id: rowId, status: "Passed" }]);
+
+    // setValue(event.target.value);
+  };
   const classes = useStyles();
   const {
     handleCloseToast,
@@ -60,8 +126,8 @@ export const TestExecution = (props) => {
       return items;
     },
   });
-
-  const [data, setData] = useState([]);
+  const { register, handleSubmit, control } = useForm();
+  // const [data, setData] = useState([]);
   let { id } = useParams();
   let { projectKey } = useParams();
 
@@ -137,9 +203,12 @@ export const TestExecution = (props) => {
           xs={12}
         >
           <Tests
+            control={control}
             preloadedData={testCasesTitle}
             testRunId={testRunId}
             waitForProjectTestRuns={waitForTestsTitle}
+            setData={setData}
+            handleChange={handleChange}
           />
         </Grid>
       </Grid>
@@ -147,8 +216,26 @@ export const TestExecution = (props) => {
   );
 };
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 const Tests = (props) => {
-  const { preloadedData, testRunId, waitForProjectTestRuns } = props;
+  const apiRef = useGridApiRef();
+  const {
+    control,
+    preloadedData,
+    testRunId,
+    waitForProjectTestRuns,
+    setData,
+    handleChange,
+  } = props;
   const { handleRightDrawer } = useGlobalContext();
   const { selectionModel, setSelectionModel } = useProjectContext();
   const classes = {};
@@ -163,6 +250,13 @@ const Tests = (props) => {
 
     loading: false,
   });
+  const [status, setStatus] = useState("Unexecuted");
+
+  const handleDateChange = (e, params) => {
+    console.log(params);
+    console.log(e.target.value);
+    params.api.updateRows([{ ...params.row, Col2: e.target.value }]);
+  };
 
   const handleEditTestRun = (id, projectKey) => {
     let params = [];
@@ -178,6 +272,17 @@ const Tests = (props) => {
     params.push(id);
     // handleRightDrawer("Edit TestCase", params);
   };
+
+  const updateRows = (value, id, field) => {
+    console.log(field);
+    console.log(id);
+    console.log(value);
+    // const rowIds = apiRef.current.getAllRowIds();
+    const rowId = id;
+    apiRef.current.updateRows([{ id: id, status: "Passed" }]);
+    // apiRef.current.updateRows([{ id: rowId, status: randomUserName() }]);
+  };
+
   const baselineProps = {
     rows: preloadedData || [],
     columns: [
@@ -191,75 +296,105 @@ const Tests = (props) => {
         headerName: "Test Case Title",
         width: 450,
       },
-
       {
         field: "status",
         headerName: "Status",
         width: 150,
-        disableClickEventBubbling: true,
+
         renderCell: (params) => {
           return (
-            <div
-              className="d-flex justify-content-between align-items-center"
-              style={{ cursor: "pointer", width: "100%" }}
-            >
-              {/* <MatEdit index={params.id} /> */}
+            <FormControl>
+              <Select
+                labelId="demo-simple-select-label"
+                id={params?.id}
+                // value={status}
+                disableUnderline
+                defaultValue={params?.row.status}
+                label="Unexecuted"
+                onChange={(e) => {
+                  handleChange(e, params);
 
-              <FormControl fullWidth>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value="-1"
-                  label="Type"
-                  //   onChange={onChange}
-                >
-                  <MenuItem value="-1">Unexecuted</MenuItem>
-                  <MenuItem value="0">Passed</MenuItem>
-                  <MenuItem value="1">Failed</MenuItem>
-                  <MenuItem value="2">Blocked</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
+                  // updateRows(e.target.value, params?.id, params?.id);
+                }}
+                // onChange={(e) => setValue("name", e.target.value, true)}
+                style={{ width: "100%" }}
+                // MenuProps={MenuProps}
+                renderValue={(selected) => (
+                  // console.log("selected", selected)
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.2 }}>
+                    <StatusChip key={selected} label={selected} />
+                  </Box>
+                )}
+              >
+                <MenuItem value="Unexecuted">Unexecuted</MenuItem>
+                <MenuItem value="Passed">Passed</MenuItem>
+                <MenuItem value="Failed">Failed</MenuItem>
+                <MenuItem value="Blocked">Blocked</MenuItem>
+              </Select>
+            </FormControl>
           );
         },
       },
+      // {
+      //   field: "Col2",
+      //   headerName: "Col2",
+      //   flex: 1.0,
+      //   disableClickEventBubbling: true,
+      //   sortable: false,
+      //   disableColumnMenu: true,
+      //   renderCell: (params) => {
+      //     return (
+      //       <TextField
+      //         type="date"
+      //         defaultValue={moment(Date.parse(params.row.Col2)).format(
+      //           "YYYY-MM-DD"
+      //         )}
+      //         InputLabelProps={{ shrink: true }}
+      //         onChange={(e) => handleDateChange(e, params)}
+      //       />
+      //     );
+      //   },
+      // },
+
       {
         field: "assignee",
         headerName: "Assignee",
-        width: 350,
+        width: 150,
         disableClickEventBubbling: true,
         renderCell: (params) => {
           return (
-            <div
-              className="d-flex justify-content-between align-items-center"
-              style={{ cursor: "pointer", width: "100%" }}
-            >
-              {/* <MatEdit index={params.id} /> */}
+            <FormControl>
+              <Select
+                labelId="demo-simple-select-label"
+                id={params?.id}
+                disableUnderline
+                // value={status}
+                defaultValue={params?.row.assignee}
+                label="Unexecuted"
+                onChange={(e) => {
+                  handleChange(e, params);
 
-              <FormControl fullWidth>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value="2"
-                  label="Type"
-                  //   onChange={onChange}
-                >
-                  <MenuItem value="-1">Jitin</MenuItem>
-                  <MenuItem value="0">Client</MenuItem>
-                  <MenuItem value="1">Doriya</MenuItem>
-                  <MenuItem value="2">Mehul</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
+                  // updateRows(e.target.value, params?.id, params?.id);
+                }}
+                // onChange={(e) => setValue("name", e.target.value, true)}
+                style={{ width: "100%" }}
+                // MenuProps={MenuProps}
+                renderValue={(selected) => (
+                  // console.log("selected", selected)
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.2 }}>
+                    <StatusChip key={selected} label={selected} />
+                  </Box>
+                )}
+              >
+                <MenuItem value="Jitin">Jitin</MenuItem>
+                <MenuItem value="Client">Client</MenuItem>
+              </Select>
+            </FormControl>
           );
         },
       },
     ],
   };
-
-  // useEffect(() => {
-  //   setSelectionModel(prevSelectionModel.current);
-  // }, [componentId]);
 
   console.log("selectionModel", selectionModel);
   console.log("preloadedData", preloadedData);
@@ -271,9 +406,11 @@ const Tests = (props) => {
       style={{ padding: "16px", flexGrow: 1, display: "flex" }}
     >
       <DataGrid
+        // density="compact"
         style={{ height: 600, width: "100%" }}
         columns={baselineProps.columns}
         pagination
+        apiRef={apiRef}
         rowCount={baselineProps.rows?.length}
         getRowId={getRowId}
         {...rowsState}
