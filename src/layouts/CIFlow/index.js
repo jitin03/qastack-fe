@@ -35,9 +35,12 @@ import {
   EDIT_COMPONENT,
   WORKFLOW_RUN_STARTED,
 } from "../../constants/actionTypes";
-import { getAllWorkFlows, runWorkflowByName } from "../../context/actions/workflow/api";
+import {
+  getAllWorkFlows,
+  runWorkflowByName,
+} from "../../context/actions/workflow/api";
 // import {SSE} from 'sse.js';
-import { EventSourcePolyfill } from 'event-source-polyfill';
+// import { EventSourcePolyfill } from "event-source-polyfill";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -70,6 +73,7 @@ const CIFlow = () => {
   const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
   const [data, setData] = useState([]);
+  const [showToaster, setShowToaster] = useState({ state: false, message: "" });
   let { id } = useParams();
   let { projectKey } = useParams();
   const history = useHistory();
@@ -248,18 +252,17 @@ const CIFlow = () => {
                       <Tooltip title="Run" arrow disableInteractive>
                         <IconButton aria-label="Run">
                           <PlayArrow
-                            onClick={
-                              async () => {
-                                const response = await runWorkflowByName({workflowName: item.workflow_name});
-                                if(response.status === 200) {
-                                  setOpenToast(true);
-                                  componentDispatch({
-                                    type: WORKFLOW_RUN_STARTED,
-                                    payload: "Workflow started successfully",
-                                  });
-                                }
+                            onClick={async () => {
+                              const response = await runWorkflowByName({
+                                workflowName: item.workflow_name,
+                              });
+                              if (response) {
+                                setShowToaster({
+                                  state: true,
+                                  message: "CI Flow triggered Successfully",
+                                });
                               }
-                            }
+                            }}
                           />
                         </IconButton>
                       </Tooltip>
@@ -294,6 +297,15 @@ const CIFlow = () => {
           >
             <Typography>No component avaiable</Typography>
           </Grid>
+        )}
+        {showToaster.state && (
+          <Toast
+            openToast={showToaster.state}
+            message={showToaster.message}
+            handleCloseToast={() => {
+              setShowToaster({ state: false, message: "" });
+            }}
+          ></Toast>
         )}
 
         {isError && (
