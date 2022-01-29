@@ -33,9 +33,11 @@ import Toast from "../../components/controllers/Toast";
 import {
   COMPONENT_CREATE_ERROR,
   EDIT_COMPONENT,
+  WORKFLOW_RUN_STARTED,
 } from "../../constants/actionTypes";
-import { getAllWorkFlows } from "../../context/actions/workflow/api";
-import {SSE} from 'sse.js';
+import { getAllWorkFlows, runWorkflowByName } from "../../context/actions/workflow/api";
+// import {SSE} from 'sse.js';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -115,24 +117,42 @@ const CIFlow = () => {
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(data, headCells, filterFn);
 
-  React.useEffect(() => {
-    const url = 'http://54.243.246.111:8094/api/workflow/event-stream/?workflowName=Demo5'
-    const source = new SSE(url, {headers: {'Authorization': `Bearer ${localStorage.token}`}, method: 'GET'});
+  // React.useEffect(() => {
+  //   const url = 'http://34.201.1.56:8094/api/event/workflow?workflowName=a3'
+  //   const source = new SSE(url, {headers: {'Authorization': `Bearer ${localStorage.token}`}, method: 'GET'});
 
-    source.addEventListener('message', (e) => {
-      console.log(e.data);
-    });
+  //   source.addEventListener('message', (e) => {
+  //     console.log(e.data);
+  //   });
 
-    source.addEventListener('error', (e) => {
-      console.log(e);
-    });
+  //   source.addEventListener('error', (e) => {
+  //     console.log(e);
+  //   });
 
-    source.stream();
+  //   source.addEventListener('MODIFIED', (e) => {
+  //     console.log(e);
+  //   });
 
-  return () => {
-    // source.close();
-  };
-  })
+  //   source.addEventListener('ADDED', (e) => {
+  //     console.log(e);
+  //   });
+
+  //   source.stream();
+
+  // return () => {
+  //   // source.close();
+  // };
+  // }, [])
+
+  // React.useEffect(() => {
+  //   // const url = 'http://34.201.1.56:8094/api/event/workflow?workflowName=a3'
+  //   // var eventSourceInitDict = {headers: {'Authorization': `Bearer ${localStorage.token}`}};
+
+  //   var es = new EventSource("http://localhost:5555/stream");
+  //   es.onmessage = function(e) {
+  //     console.log(e);
+  //   }
+  // }, [])
 
   function getRealtimeData(data) {
     console.log("data aaya", data);
@@ -229,7 +249,16 @@ const CIFlow = () => {
                         <IconButton aria-label="Run">
                           <PlayArrow
                             onClick={
-                              () => {}
+                              async () => {
+                                const response = await runWorkflowByName({workflowName: item.workflow_name});
+                                if(response.status === 200) {
+                                  setOpenToast(true);
+                                  componentDispatch({
+                                    type: WORKFLOW_RUN_STARTED,
+                                    payload: "Workflow started successfully",
+                                  });
+                                }
+                              }
                             }
                           />
                         </IconButton>

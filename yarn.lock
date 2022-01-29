@@ -5887,6 +5887,11 @@ etag@~1.8.1:
   resolved "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
+event-source-polyfill@^1.0.25:
+  version "1.0.25"
+  resolved "https://registry.yarnpkg.com/event-source-polyfill/-/event-source-polyfill-1.0.25.tgz#d8bb7f99cb6f8119c2baf086d9f6ee0514b6d9c8"
+  integrity sha512-hQxu6sN1Eq4JjoI7ITdQeGGUN193A2ra83qC0Ltm9I2UJVAten3OFVN6k5RX4YWeCS0BoC8xg/5czOCIHVosQg==
+
 eventemitter3@^4.0.0:
   version "4.0.7"
   resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.7.tgz"
@@ -11734,10 +11739,10 @@ sprintf-js@~1.0.2:
   resolved "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-sse.js@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/sse.js/-/sse.js-0.5.0.tgz#5508f4c266f912c479777033d4cb27fdfaa7e6e7"
-  integrity sha512-/PqBVEmMICHlpl/8M767G2o6gjN1oWbbZlJ3wxm6BQUO3PRwfL3Ko+Hua+B0KG5VgBIzalOXtezEddIN5svXPA==
+sse-fake-server@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/sse-fake-server/-/sse-fake-server-1.0.4.tgz#5b00d4e63ce190e7ee0fa5915be0eb2498b43359"
+  integrity sha512-8frYtwuR39QQJGRmUNzz9hIt0XZr4uSRPFymi8JTUo4EAf2wRWoaNmrbz/EaIOJLisENhu9ZLKX4Lq/UgckP+A==
 
 sshpk@^1.7.0:
   version "1.16.1"

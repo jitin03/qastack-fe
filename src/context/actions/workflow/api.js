@@ -3,7 +3,7 @@ import axiosAppTestcaseInstance from "../../../helper/testcasAppAxios";
 export const addWorkFlow = async (data) => {
   let payload = JSON.stringify(data);
   const response = await axiosAppTestcaseInstance().post(
-    `http://54.243.246.111:8094/api/workflow/add`,
+    `http://34.201.1.56:8094/api/workflow/add`,
     payload,
     {
       headers: {
@@ -19,7 +19,21 @@ export const getAllWorkFlows = async ({ queryKey }) => {
   const [_key, componentId, pageId] = queryKey;
 
   const response = await axiosAppTestcaseInstance().get(
-    `http://54.243.246.111:8094/api/workflows?projectKey=PR937&page=10`,
+    `http://34.201.1.56:8094/api/workflows?projectKey=PR937&page=10`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const runWorkflowByName = async (data) => {
+
+  const response = await axiosAppTestcaseInstance().post(
+    `http://34.201.1.56:8094/api/workflow/run?workflowName=${data.workflowName}`,
     {
       headers: {
         "Content-Type": "application/json",
