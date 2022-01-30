@@ -1,9 +1,9 @@
-import axiosAppTestcaseInstance from "../../../helper/testcasAppAxios";
+import axiosAppWorkflowInstance from "../../../helper/workflowAppAxios";
 
 export const addWorkFlow = async (data) => {
   let payload = JSON.stringify(data);
-  const response = await axiosAppTestcaseInstance().post(
-    `http://34.201.1.56:8094/api/workflow/add`,
+  const response = await axiosAppWorkflowInstance().post(
+    `/api/workflow/add`,
     payload,
     {
       headers: {
@@ -18,8 +18,8 @@ export const addWorkFlow = async (data) => {
 export const getAllWorkFlows = async ({ queryKey }) => {
   const [_key, componentId, pageId] = queryKey;
 
-  const response = await axiosAppTestcaseInstance().get(
-    `http://34.201.1.56:8094/api/workflows?projectKey=PR937&page=10`,
+  const response = await axiosAppWorkflowInstance().get(
+    `/api/workflows?projectKey=PR937&page=10`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -31,9 +31,8 @@ export const getAllWorkFlows = async ({ queryKey }) => {
 };
 
 export const runWorkflowByName = async (data) => {
-
-  const response = await axiosAppTestcaseInstance().post(
-    `http://34.201.1.56:8094/api/workflow/run?workflowName=${data.workflowName}`,
+  const response = await axiosAppWorkflowInstance().post(
+    `/api/workflow/run?workflowName=${data.workflowName}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -45,9 +44,8 @@ export const runWorkflowByName = async (data) => {
 };
 
 export const getWorkflowDetail = async (data) => {
-
-  const response = await axiosAppTestcaseInstance().get(
-    `http://34.201.1.56:8094/api/workflow/${data.queryKey[1]}`,
+  const response = await axiosAppWorkflowInstance().get(
+    `http://localhost:8094/api/workflow/${data.queryKey[1]}`,
     {
       headers: {
         "Content-Type": "application/json",

@@ -244,7 +244,7 @@ export const Submenus = () => {
             button
             key="2"
             component={Link}
-            to={`/project/${projectKey}/components/ciFlow`}
+            to={`/project/${projectKey}/ciFlow`}
           >
             <Grid
               container

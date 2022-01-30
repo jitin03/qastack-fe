@@ -4,6 +4,8 @@ import ReactFlow, {
   removeElements,
   addEdge,
   useZoomPanHelper,
+  Controls,
+  Background,
 } from "react-flow-renderer";
 // import localforage from "localforage";
 
@@ -66,7 +68,12 @@ const WorkFlow = ({ elements, setElements }) => {
         onElementsRemove={onElementsRemove}
         onConnect={onConnect}
         onLoad={setRfInstance}
-      ></ReactFlow>
+        snapToGrid={true}
+        snapGrid={[15, 15]}
+      >
+        <Controls />
+        <Background variant="dots" color="#aaa" gap={16} size={0.8} />
+      </ReactFlow>
     </ReactFlowProvider>
   );
 };

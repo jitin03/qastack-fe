@@ -6,6 +6,7 @@ import ProjectOverview from "../components/Projects/ProjectOverview";
 import RegisterContainer from "../components/Register";
 import Release from "../components/Releases/Release";
 import CIFlow from "../layouts/CIFlow";
+import WorkflowList from "../layouts/Workflow/List";
 import OverviewFlow from "../layouts/CIFlow/Create";
 import WorkflowInfo from "../layouts/CIFlow/Info";
 import CreateComponent from "../layouts/Component/Create";
@@ -13,7 +14,9 @@ import EditComponent from "../layouts/Component/Edit";
 import ComponentList from "../layouts/Component/List";
 import CreateTestCase from "../layouts/TestCase/Create";
 import TestCaseList from "../layouts/TestCase/List";
+import { TestExecution } from "../layouts/TestRun/Execution";
 import TestRunList from "../layouts/TestRun/List";
+import CreateWorkflow from "../layouts/Workflow/Create";
 
 const routes = [
   {
@@ -117,25 +120,31 @@ const routes = [
     needsAuth: true,
   },
   {
+    path: "/project/:projectKey/testrun/:id",
+    component: TestExecution,
+    title: "TestRun Status",
+    needsAuth: true,
+  },
+  {
     path: "/project/:projectKey/testrun/create",
     component: TestRunList,
     title: "Create TestCase",
     needsAuth: true,
   },
   {
-    path: "/project/:projectKey/components/ciFlow",
-    component: CIFlow,
+    path: "/project/:projectKey/ciFlow",
+    component: WorkflowList,
     title: "CI Flow",
     needsAuth: true,
   },
   {
-    path: "/project/:projectKey/components/ciFlow/create",
-    component: OverviewFlow,
+    path: "/project/:projectKey/ciFlow/create",
+    component: CreateWorkflow,
     title: "Create CI Flow",
     needsAuth: true,
   },
   {
-    path: "/project/:projectKey/components/ciFlow/:workflowName",
+    path: "/project/:projectKey/ciFlow/:workflowName",
     component: WorkflowInfo,
     title: "CI Flow Logs",
     needsAuth: true,

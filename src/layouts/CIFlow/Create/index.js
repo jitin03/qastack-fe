@@ -82,7 +82,7 @@ export default function Create() {
     useMutation(addWorkFlow, {
       onError: (error) => {},
       onSuccess: (data) => {
-        history.push(`/project/projectKey/components/ciFlow`);
+        history.push(`/project/${projectKey}/components/ciFlow`);
       },
     });
 
@@ -161,8 +161,17 @@ export default function Create() {
           width: "100%",
           height: "85vh",
         }}
+        style={{
+          backgroundColor: "rgb(248, 248, 248)",
+        }}
       >
-        <WorkFlow elements={elements} setElements={setElements} />
+        <WorkFlow
+          elements={elements}
+          setElements={setElements}
+          style={{
+            backgroundColor: "rgb(248, 248, 248)",
+          }}
+        />
       </Grid>
 
       <AddStep

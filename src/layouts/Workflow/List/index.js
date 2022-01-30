@@ -1,49 +1,31 @@
+import { Search } from "@material-ui/icons";
 import {
+  Box,
   Button,
   CircularProgress,
   Container,
   Grid,
-  IconButton,
   InputAdornment,
-  Link,
-  TableBody,
-  TableCell,
-  TablePagination,
-  TableRow,
   Toolbar,
+  IconButton,
   Tooltip,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useState } from "react";
-import Box from "@mui/material/Box";
+import { FormControlLabel } from "@material-ui/core";
+import EditIcon from "@mui/icons-material/Edit";
+import { useForm } from "react-hook-form";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import { makeStyles } from "@mui/styles";
+import Controls from "../../../components/controllers/Controls";
+import { getAllWorkFlows } from "../../../context/actions/workflow/api";
 import AddIcon from "@mui/icons-material/Add";
 import { useGlobalContext } from "../../../context/provider/context";
-import useTable from "../../../components/Shared/useTable";
-import { Search } from "@material-ui/icons";
-import { makeStyles } from "@mui/styles";
-import { useQuery } from "react-query";
-import { useHistory, useParams } from "react-router-dom";
-import {
-  deleteComponent,
-  getAllComponents,
-} from "../../../context/actions/component/api";
-import Controls from "../../../components/controllers/Controls";
-import { FormControlLabel } from "@material-ui/core";
-import Toast from "../../../components/controllers/Toast";
-import { useMutation, useQueryClient } from "react-query";
-import {
-  COMPONENT_CREATE_ERROR,
-  EDIT_COMPONENT,
-} from "../../../constants/actionTypes";
-import { useProjectContext } from "../../../context/provider/projectContext";
-import {
-  getAllProjectTestCases,
-  getAllProjectTestRuns,
-} from "../../../context/actions/testcase/api";
-import { blue, grey } from "@mui/material/colors";
 import { DataGrid } from "@mui/x-data-grid";
+import { grey } from "@mui/material/colors";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -53,52 +35,66 @@ const useStyles = makeStyles((theme) => ({
     width: "75%",
   },
 }));
-export default function TestRunList() {
+export default function WorfklowCreate() {
   const classes = useStyles();
-  const {
-    handleCloseToast,
-    openToast,
-    setOpenToast,
-    setState,
-    state,
-    handleRightDrawer,
-    componentDispatch,
-    componentState: { component },
-    setEditId,
-  } = useGlobalContext();
-  const [filterFn, setFilterFn] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
+  const { projectKey: projectId } = useParams();
 
-  const [data, setData] = useState([]);
-  let { id } = useParams();
-  let { projectKey } = useParams();
-
-  setEditId(id);
-  const headCells = [
-    { id: "testrun_id", label: "TestRun ID" },
-    { id: "testrun_name", label: "TestRun Name" },
-    { id: "action", label: "Action" },
-  ];
+  const pages = [5, 10, 25];
+  const [page, setPage] = useState(2);
+  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
 
   const history = useHistory();
-
   const {
-    data: projectTestRuns,
-    error: projectTestRunsError,
-    isLoading: waitForProjectTestRuns,
-    isError: isErrorFromProjectTestRuns,
-  } = useQuery(
-    ["projectTestruns", projectKey],
-    getAllProjectTestRuns,
+    data: workflows,
+    error,
+    isLoading: waitForAllWorkflows,
+    isError,
+  } = useQuery(["workflows", projectId, rowsPerPage], getAllWorkFlows, {
+    onError: (error) => {
+      // setOpenToast(true);
+      // componentDispatch({
+      //   type: COMPONENT_CREATE_ERROR,
+      //   payload: error.message,
+      // });
+    },
+    onSuccess: (components) => {
+      // setData(components);
+    },
+  });
+  const handleAddNewFlow = (projectId) => {
+    console.log(projectId);
+    history.push(`/project/${projectId}/ciFlow/create`);
+  };
 
-    {
-      enabled: !!projectKey,
-    }
-  );
-
+  if (waitForAllWorkflows) {
+    return (
+      <>
+        <Grid container>
+          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ padding: "50px 10px" }}
+          >
+            <Container sx={{ display: "flex" }}>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+            </Container>
+            <Grid item></Grid>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
   return (
     <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
       <Grid container justifyItems="center" alignItems="center">
@@ -112,7 +108,7 @@ export default function TestRunList() {
           }}
         >
           <Grid item md={4} style={{ padding: "15px" }}>
-            <Typography variant="h6">Test Runs & Results</Typography>
+            <Typography variant="h6">Test Jobs</Typography>
           </Grid>
           <Grid
             item
@@ -125,7 +121,7 @@ export default function TestRunList() {
             <Grid item>
               <Toolbar>
                 <Controls.Input
-                  label="Search TestRun "
+                  label="Search Workflow "
                   className={classes.searchInput}
                   InputProps={{
                     startAdornment: (
@@ -139,15 +135,15 @@ export default function TestRunList() {
               </Toolbar>
             </Grid>
             <Grid item>
-              <Tooltip title="Add TestRun" arrow disableInteractive>
+              <Tooltip title="Add new Job" arrow disableInteractive>
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
                   // onClick={() => setState(!state)}
-                  onClick={() => handleRightDrawer("Add TestRun", projectKey)}
+                  onClick={() => handleAddNewFlow(projectId)}
                   sx={{ m: 1.5 }}
                 >
-                  Add TestRun
+                  Add new job
                 </Button>
               </Tooltip>
             </Grid>
@@ -160,10 +156,10 @@ export default function TestRunList() {
           justifyItems="center"
           xs={12}
         >
-          <Tests
-            preloadedData={projectTestRuns}
-            projectKey={projectKey}
-            waitForProjectTestRuns={waitForProjectTestRuns}
+          <WorkflowList
+            preloadedData={workflows}
+            projectId={projectId}
+            waitForAllWorkflows={waitForAllWorkflows}
           />
         </Grid>
       </Grid>
@@ -171,11 +167,9 @@ export default function TestRunList() {
   );
 }
 
-const Tests = (props) => {
-  const { preloadedData, projectKey, waitForProjectTestRuns } = props;
+const WorkflowList = (props) => {
+  const { preloadedData, projectId, waitForAllWorkflows } = props;
   const { handleRightDrawer } = useGlobalContext();
-  const { selectionModel, setSelectionModel } = useProjectContext();
-  const classes = {};
 
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
@@ -188,15 +182,14 @@ const Tests = (props) => {
     loading: false,
   });
 
-  const handleEditTestRun = (id, projectKey) => {
+  const handleEditWorkflow = (id, projectKey) => {
     let params = [];
     params.push(projectKey);
     params.push(id);
-    handleRightDrawer("Edit TestRun", params);
-    setSelectionModel([]);
+    handleRightDrawer("Edit Workflow", params);
   };
 
-  const handleDeleteTestRun = (id, projectKey) => {
+  const handleDeleteWorkflow = (id, projectKey) => {
     let params = [];
     params.push(projectKey);
     params.push(id);
@@ -206,32 +199,17 @@ const Tests = (props) => {
     rows: preloadedData || [],
     columns: [
       {
-        field: "assignee",
-        headerName: "Assignee",
-        width: 150,
+        field: "workflow_name",
+        headerName: "Workflow Name",
+        width: 350,
+        padding: "50px",
       },
       {
-        field: "name",
-        headerName: "Title",
-        width: 450,
-        renderCell: (params) => {
-          return (
-            <Link href={`/project/${projectKey}/testrun/${params?.id}`}>
-              {params.value}
-            </Link>
-          );
-        },
-      },
-      {
-        field: "testcase_count",
-        headerName: "Test Cases",
+        field: "Create By",
+        headerName: "Create by",
         width: 150,
       },
-      {
-        field: "status",
-        headerName: "Status",
-        width: 150,
-      },
+
       {
         field: "actions",
         headerName: "Actions",
@@ -253,20 +231,20 @@ const Tests = (props) => {
                       <IconButton
                         color="secondary"
                         aria-label="edit the test run"
-                        onClick={() => handleEditTestRun(params.id, projectKey)}
+                        onClick={() => handleEditWorkflow(params.id, projectId)}
                         style={{ padding: "20px" }}
                       >
-                        <EditIcon style={{ color: blue[500] }} />
+                        <EditIcon style={{ color: grey[500] }} />
                       </IconButton>
                       <IconButton
                         color="secondary"
                         aria-label="delete the test run"
                         style={{ padding: "20px" }}
                         onClick={() =>
-                          handleDeleteTestRun(params.id, projectKey)
+                          handleDeleteWorkflow(params.id, projectId)
                         }
                       >
-                        <DeleteIcon style={{ color: blue[500] }} />
+                        <DeleteIcon style={{ color: grey[500] }} />
                       </IconButton>
                     </div>
                   </>
@@ -278,41 +256,8 @@ const Tests = (props) => {
       },
     ],
   };
-  const MatEdit = ({ index }) => {
-    const handleEditClick = (index) => {
-      // some action
 
-      console.log(index);
-    };
-    const handleEditTestRun = (id, projectKey) => {
-      let params = [];
-      params.push(projectKey);
-      params.push(id);
-      handleRightDrawer("Edit TestCase", params);
-    };
-
-    return (
-      <FormControlLabel
-        control={
-          <IconButton
-            color="secondary"
-            aria-label="edit the test case"
-            onClick={() => handleEditTestRun(index, projectKey)}
-          >
-            <EditIcon style={{ color: blue[500] }} />
-          </IconButton>
-        }
-      />
-    );
-  };
-
-  // useEffect(() => {
-  //   setSelectionModel(prevSelectionModel.current);
-  // }, [componentId]);
-
-  console.log("selectionModel", selectionModel);
-  console.log("preloadedData", preloadedData);
-  const getRowId = (row) => `${row?.id}`;
+  const getRowId = (row) => `${row?.Id}`;
   return (
     <Grid
       item
@@ -335,12 +280,7 @@ const Tests = (props) => {
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         rowsPerPageOptions={[20, 50, 100, 150]}
-        loading={waitForProjectTestRuns}
-        selectionModel={selectionModel}
-        onSelectionModelChange={(newSelectionModel) => {
-          // prevSelectionModel.current = selectionModel;
-          setSelectionModel(newSelectionModel);
-        }}
+        loading={waitForAllWorkflows}
       />
     </Grid>
   );

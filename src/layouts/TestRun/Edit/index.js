@@ -9,7 +9,7 @@ import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { useGlobalContext } from "../../../context/provider/context";
 import { useHistory } from "react-router-dom";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   useForm,
   useFieldArray,
@@ -26,7 +26,12 @@ import Tab from "@mui/material/Tab";
 import { Box } from "@mui/system";
 import Controls from "../../../components/controllers/Controls";
 
-import { addTestcase, addTestrun } from "../../../context/actions/testcase/api";
+import {
+  addTestcase,
+  addTestrun,
+  getProjectTestRun,
+  updateTestRun,
+} from "../../../context/actions/testcase/api";
 import TestRuns from "./testRun";
 import TestCaseRecords from "./testCaseRecords";
 import { useProjectContext } from "../../../context/provider/projectContext";
@@ -49,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgb(255, 255, 255)",
   },
 }));
-export default function CreateTestRun(props) {
+export default function EditTestRun(props) {
   const { param } = props;
   console.log("param", param);
   const [tabValue, setTabValue] = useState(0);
@@ -65,9 +70,9 @@ export default function CreateTestRun(props) {
     state,
     handleCloseToast,
   } = useGlobalContext();
-  const { selectionModel, setSelectionModel } = useProjectContext();
+  const { selectedModel, setSelectedModel } = useProjectContext();
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
-    useMutation(addTestrun, {
+    useMutation(updateTestRun, {
       onError: (error) => {
         setOpenToast(true);
       },
@@ -81,19 +86,35 @@ export default function CreateTestRun(props) {
   const history = useHistory();
 
   const queryClient = useQueryClient();
+  const {
+    data: testRunDetails,
+    error: testRunError,
+    isLoading: waitForTestRunDetails,
+    isError: isTestRunError,
+  } = useQuery(["testRunDetails", param[0], param[1]], getProjectTestRun, {
+    enabled: !!param[1],
+    onSuccess: (testRunDetails) => {},
+  });
+
   const onSubmit = async (data, e) => {
     console.log(data);
-    data.testcases = selectionModel;
+
+    console.log(...new Set([...testRunDetails?.testcases, ...selectedModel]));
+    data.testcases = [
+      ...new Set([...testRunDetails?.testcases, ...selectedModel]),
+    ];
+    // [...new Set(selectedModel)];
+
+    data.id = param[1];
     try {
       await mutateAsync(data);
 
       handleCloseRightDrawer(e);
-      setSelectionModel([]);
-      history.goBack();
+      // setSelectedModel([]);
     } catch (error) {
       history.goBack();
       console.log(error.message);
-      setSelectionModel([]);
+      setSelectedModel([]);
     }
   };
 
@@ -129,11 +150,14 @@ export default function CreateTestRun(props) {
               control={control}
               handleSubmit={handleSubmit}
               param={param}
+              testRunDetails={testRunDetails}
+              waitForTestRunDetails={waitForTestRunDetails}
             />
             <TestCaseRecords
               register={register}
               control={control}
               param={param}
+              testRunDetails={testRunDetails}
             />
           </TabPanel>
           {/* <TabPanel value={tabValue} index={1}>
@@ -154,7 +178,7 @@ export default function CreateTestRun(props) {
                 style={{ marginRight: "10px" }}
                 onClick={handleCloseRightDrawer}
               />
-              <Controls.Button text="Submit" />
+              <Controls.Button text="Update" />
             </Grid>
           </Grid>
         </form>

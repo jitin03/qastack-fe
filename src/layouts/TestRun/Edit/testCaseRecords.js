@@ -51,10 +51,10 @@ const BottomDrawer = styled("div")(({ theme }) => ({
   zIndex: 2,
 }));
 export default function TestCaseRecords(props) {
-  const { register, control, param: projectId } = props;
+  const { register, control, param, testRunDetails } = props;
   const classes = useStyles();
   const [selectedComponent, setSelectedComponent] = useState("");
-  console.log("projectId", projectId);
+  console.log("projectId", param[0]);
 
   const {
     componentState: { component },
@@ -81,10 +81,10 @@ export default function TestCaseRecords(props) {
             xs={3}
           >
             <Grid item container>
-              <Records
+              <Components
                 control={control}
                 setSelectedComponent={setSelectedComponent}
-                projectId={projectId}
+                projectId={param[0]}
               />
             </Grid>
           </Grid>
@@ -95,10 +95,11 @@ export default function TestCaseRecords(props) {
             justifyItems="center"
             xs={9}
           >
-            <TestCaseList
+            <TestCases
               control={control}
               component={selectedComponent}
-              projectId={projectId}
+              projectId={param[0]}
+              testRunDetails={testRunDetails}
             />
           </Grid>
         </Grid>
@@ -107,10 +108,10 @@ export default function TestCaseRecords(props) {
   );
 }
 
-const Records = (props) => {
+const Components = (props) => {
   const { control, projectId, setSelectedComponent } = props;
   const classes = {};
-  const [selectionModel, setSelectionModel] = useState([]);
+  // const [selectionModel, setSelectionModel] = useState([]);
 
   const [pageSize, setPageSize] = useState(5);
 
@@ -173,10 +174,10 @@ const Records = (props) => {
               loading={waitForComponents}
               onSelectionModelChange={(newSelectionModel) => {
                 console.log("newSelectionModel", newSelectionModel);
-                setSelectionModel(newSelectionModel);
+                // setSelectionModel(newSelectionModel);
                 setSelectedComponent(newSelectionModel);
               }}
-              selectionModel={selectionModel}
+              // selectionModel={selectionModel}
             />
           </div>
         </Grid>
@@ -185,10 +186,16 @@ const Records = (props) => {
   );
 };
 
-const TestCaseList = (props) => {
-  const { control, component: componentId, projectId: projectId } = props;
+const TestCases = (props) => {
+  const {
+    control,
+    component: componentId,
+    projectId: projectId,
+    testRunDetails,
+  } = props;
 
-  const { selectionModel, setSelectionModel } = useProjectContext();
+  // const { selectionModel, setSelectionModel } = useProjectContext();
+  const { selectedModel, setSelectedModel } = useProjectContext();
   const classes = {};
 
   const [page, setPage] = useState(0);
@@ -215,11 +222,19 @@ const TestCaseList = (props) => {
     },
   });
 
+  console.log("selectedModel", selectedModel);
   const {
     data: testcases,
     error: testcaseErrors,
     loading: waitForTests,
   } = useQuery(["testcases", componentId, pageSize], getAllTestCases, {
+    onSuccess: (testcases) => {
+      // if (selectedModel?.length === 0) {
+      //   console.log("call me");
+      //   console.log("testRunDetails", testRunDetails.testcases);
+      //   setSelectedModel(testRunDetails?.testcases);
+      // }
+    },
     onError: (error) => {},
     enabled: !!componentId,
   });
@@ -234,13 +249,20 @@ const TestCaseList = (props) => {
     ],
   };
 
-  const prevSelectionModel = useRef(selectionModel);
+  const prevSelectionModel = useRef(selectedModel);
 
   useEffect(() => {
-    setSelectionModel(prevSelectionModel.current);
+    if (selectedModel?.length === 0) {
+      console.log("call me");
+      console.log("testRunDetails", testRunDetails?.testcases);
+      setSelectedModel(testRunDetails?.testcases);
+    }
+  }, [testcases]);
+  useEffect(() => {
+    setSelectedModel(prevSelectionModel.current);
   }, [componentId]);
 
-  console.log("selectionModel", selectionModel);
+  console.log("selectionModel", selectedModel);
   const getRowId = (row) => `${row?.testcaseId}`;
   return (
     <Grid item container style={{ padding: "16px" }}>
@@ -254,7 +276,7 @@ const TestCaseList = (props) => {
         {...baselineProps}
         paginationMode="server"
         onPageChange={(newPage) => {
-          prevSelectionModel.current = selectionModel;
+          prevSelectionModel.current = selectedModel;
           setPage(newPage);
         }}
         pageSize={pageSize}
@@ -263,10 +285,10 @@ const TestCaseList = (props) => {
         loading={waitForComponents}
         checkboxSelection
         disableSelectionOnClick
-        selectionModel={selectionModel}
+        selectionModel={selectedModel}
         onSelectionModelChange={(newSelectionModel) => {
-          prevSelectionModel.current = selectionModel;
-          setSelectionModel(newSelectionModel);
+          prevSelectionModel.current = selectedModel;
+          setSelectedModel(newSelectionModel);
         }}
       />
     </Grid>

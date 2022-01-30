@@ -89,7 +89,7 @@ const CIFlow = () => {
     error,
     isLoading: waitForComponents,
     isError,
-  } = useQuery(["component", projectKey, rowsPerPage], getAllWorkFlows, {
+  } = useQuery(["workflows", projectKey, rowsPerPage], getAllWorkFlows, {
     onError: (error) => {
       setOpenToast(true);
       componentDispatch({
