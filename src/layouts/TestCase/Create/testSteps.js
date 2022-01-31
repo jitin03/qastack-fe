@@ -21,22 +21,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useGlobalContext } from "../../../context/provider/context";
 import Controls from "../../../components/controllers/Controls";
 import { useHistory } from "react-router-dom";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { Controller } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
-import {
-  COMPONENT_CREATE_ERROR,
-  COMPONENT_CREATE_SUCCESS,
-  COMPONENT_LIST_ERROR,
-} from "../../../constants/actionTypes";
+import { COMPONENT_LIST_ERROR } from "../../../constants/actionTypes";
 import {
   addComponent,
   getAllComponents,
 } from "../../../context/actions/component/api";
-import Toast from "../../../components/controllers/Toast";
-import { styled, useTheme } from "@mui/material/styles";
-import { Box } from "@mui/system";
 import { useQuery } from "react-query";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -59,14 +53,7 @@ const useStyles = makeStyles((theme) => ({
     // zIndex: 1202,
   },
 }));
-const BottomDrawer = styled("div")(({ theme }) => ({
-  position: "absolute",
-  bottom: "0px",
-  right: "0px",
-  padding: "1rem 1.5rem 1.5rem",
-  backgroundColor: "rgb(255, 255, 255)",
-  zIndex: 2,
-}));
+
 export default function TestSteps(props) {
   const classes = useStyles();
   const { register, handleSubmit, control, fields, remove, append, param } =
@@ -136,7 +123,7 @@ export default function TestSteps(props) {
             </Grid> */}
 
           <Grid item xs={9}>
-            <Grid style={{ height: "100vh" }}>
+            <Grid>
               {/* <YourCard /> */}
               <TestDetails
                 control={control}

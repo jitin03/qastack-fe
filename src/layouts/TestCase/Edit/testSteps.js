@@ -148,7 +148,7 @@ export default function TestSteps(props) {
             </Grid> */}
 
           <Grid item xs={9}>
-            <Grid style={{ height: "100vh" }}>
+            <Grid>
               {/* <YourCard /> */}
               <TestDetails
                 control={control}
