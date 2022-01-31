@@ -111,7 +111,7 @@ export default function ReleaseList(props) {
         </Grid>
         {releases.map((item, index) => (
           <Grid
-            key={item.Id}
+            key={index}
             item
             md={3}
             style={{
@@ -120,7 +120,7 @@ export default function ReleaseList(props) {
               fontWeight: "1rem",
             }}
           >
-            <Card style={{ minWidth: 275, minHeight: 180 }}>
+            <Card style={{ minWidth: 275, minHeight: 180 }} key={item.Id}>
               <CardContent style={{ padding: "20px" }}>
                 <Grid
                   container
@@ -175,7 +175,7 @@ export default function ReleaseList(props) {
                   justifyContent: "flex-end",
                 }}
               >
-                <Tooltip title="Edit project" arrow disableInteractive>
+                <Tooltip title="Edit release" arrow disableInteractive>
                   <IconButton
                     edge="start"
                     aria-label="edit"
@@ -195,7 +195,7 @@ export default function ReleaseList(props) {
                 {isLoading ? (
                   <CircularProgress />
                 ) : (
-                  <Tooltip title="Delete project" arrow disableInteractive>
+                  <Tooltip title="Delete release" arrow disableInteractive>
                     <IconButton
                       edge="start"
                       aria-label="delete"

@@ -15,6 +15,19 @@ export const addWorkFlow = async (data) => {
   return response.data;
 };
 
+export const deleteWorkflow = async (workflowId) => {
+  const response = await axiosAppWorkflowInstance().delete(
+    `/api/workflow/delete/${workflowId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return await response.data;
+};
+
 export const getAllWorkFlows = async ({ queryKey }) => {
   const [_key, componentId, pageId] = queryKey;
 
@@ -30,9 +43,9 @@ export const getAllWorkFlows = async ({ queryKey }) => {
   return response.data;
 };
 
-export const runWorkflowByName = async (data) => {
+export const runWorkflowByName = async (workflowName, userId) => {
   const response = await axiosAppWorkflowInstance().post(
-    `/api/workflow/run?workflowName=${data.workflowName}`,
+    `/api/workflow/run?workflowName=${workflowName}&userId=3`,
     {
       headers: {
         "Content-Type": "application/json",

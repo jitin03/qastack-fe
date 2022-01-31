@@ -14,18 +14,28 @@ import {
 import React, { useState } from "react";
 import { FormControlLabel } from "@material-ui/core";
 import EditIcon from "@mui/icons-material/Edit";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import { useForm } from "react-hook-form";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
+import StopCircleIcon from "@mui/icons-material/StopCircle";
 import Controls from "../../../components/controllers/Controls";
-import { getAllWorkFlows } from "../../../context/actions/workflow/api";
+import PlayArrow from "@mui/icons-material/PlayArrow";
+import {
+  deleteWorkflow,
+  getAllWorkFlows,
+  runWorkflowByName,
+} from "../../../context/actions/workflow/api";
 import AddIcon from "@mui/icons-material/Add";
 import { useGlobalContext } from "../../../context/provider/context";
 import { DataGrid } from "@mui/x-data-grid";
 import { grey } from "@mui/material/colors";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { getUserDetail } from "../../../context/actions/auth/api";
+import isAuthenticated from "../../../context/actions/auth/isAuthenticated";
+import { getUserDetailFromToken } from "../../../helper/token";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -44,6 +54,18 @@ export default function WorfklowCreate() {
   const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
 
   const history = useHistory();
+
+  const {
+    data: userDetails,
+    isSuccess: waitForUserDetails,
+    refetch,
+  } = useQuery(
+    isAuthenticated() && [
+      "users",
+      getUserDetailFromToken(localStorage.getItem("token")).Username,
+    ],
+    getUserDetail
+  );
   const {
     data: workflows,
     error,
@@ -60,6 +82,7 @@ export default function WorfklowCreate() {
     onSuccess: (components) => {
       // setData(components);
     },
+    enabled: !!userDetails,
   });
   const handleAddNewFlow = (projectId) => {
     console.log(projectId);
@@ -160,6 +183,7 @@ export default function WorfklowCreate() {
             preloadedData={workflows}
             projectId={projectId}
             waitForAllWorkflows={waitForAllWorkflows}
+            userDetails={userDetails}
           />
         </Grid>
       </Grid>
@@ -168,7 +192,7 @@ export default function WorfklowCreate() {
 }
 
 const WorkflowList = (props) => {
-  const { preloadedData, projectId, waitForAllWorkflows } = props;
+  const { preloadedData, projectId, waitForAllWorkflows, userDetails } = props;
   const { handleRightDrawer } = useGlobalContext();
 
   const [page, setPage] = useState(0);
@@ -181,19 +205,29 @@ const WorkflowList = (props) => {
 
     loading: false,
   });
-
-  const handleEditWorkflow = (id, projectKey) => {
+  const { mutateAsync, isLoading: waitForDeleteWorkflow } =
+    useMutation(deleteWorkflow);
+  const { mutateAsync: runNowWorkflow, isLoading: waitForWorkflowRun } =
+    useMutation(runWorkflowByName);
+  const handleEditWorkflow = (id, projectId) => {
     let params = [];
-    params.push(projectKey);
+    params.push(projectId);
     params.push(id);
     handleRightDrawer("Edit Workflow", params);
   };
 
-  const handleDeleteWorkflow = (id, projectKey) => {
+  const handleRunNowWorkflow = async (name, userId) => {
+    // console.log("userId", userDetails?.data.users_id);
+
+    await runNowWorkflow(name, userId);
+  };
+  const queryClient = useQueryClient();
+  const handleDeleteWorkflow = async (id) => {
     let params = [];
-    params.push(projectKey);
+    // params.push(projectKey);
     params.push(id);
-    // handleRightDrawer("Edit TestCase", params);
+    await mutateAsync(id);
+    queryClient.invalidateQueries("workflows");
   };
   const baselineProps = {
     rows: preloadedData || [],
@@ -205,8 +239,13 @@ const WorkflowList = (props) => {
         padding: "50px",
       },
       {
-        field: "Create By",
+        field: "username",
         headerName: "Create by",
+        width: 150,
+      },
+      {
+        field: "workflow_status",
+        headerName: "Status",
         width: 150,
       },
 
@@ -218,6 +257,7 @@ const WorkflowList = (props) => {
         headerAlign: "center",
         disableClickEventBubbling: true,
         renderCell: (params) => {
+          console.log(params);
           return (
             <div
               className="d-flex justify-content-between align-items-center"
@@ -227,24 +267,56 @@ const WorkflowList = (props) => {
               <FormControlLabel
                 control={
                   <>
-                    <div style={{ padding: "50px" }}>
+                    <div style={{ padding: "80px" }}>
+                      <Tooltip title="Run" arrow disableInteractive>
+                        <IconButton
+                          aria-label="Run"
+                          style={{ padding: "10px" }}
+                        >
+                          <PlayCircleOutlineIcon
+                            onClick={() =>
+                              handleRunNowWorkflow(
+                                params?.row.workflow_name,
+                                userDetails?.data.users_id
+                              )
+                            }
+                          />
+                        </IconButton>
+                      </Tooltip>
+
+                      <Tooltip title="Stop" arrow disableInteractive>
+                        <IconButton
+                          aria-label="Stop"
+                          style={{ padding: "10px" }}
+                        >
+                          <StopCircleIcon
+                          // onClick={() =>
+                          //   handleStopNowWorkflow(
+                          //     params?.row.workflow_name,
+                          //     userDetails?.data.users_id
+                          //   )
+                          // }
+                          />
+                        </IconButton>
+                      </Tooltip>
                       <IconButton
                         color="secondary"
                         aria-label="edit the test run"
                         onClick={() => handleEditWorkflow(params.id, projectId)}
-                        style={{ padding: "20px" }}
+                        style={{ padding: "10px" }}
                       >
                         <EditIcon style={{ color: grey[500] }} />
                       </IconButton>
                       <IconButton
                         color="secondary"
                         aria-label="delete the test run"
-                        style={{ padding: "20px" }}
-                        onClick={() =>
-                          handleDeleteWorkflow(params.id, projectId)
-                        }
+                        style={{ padding: "10px" }}
+                        onClick={() => handleDeleteWorkflow(params.id)}
                       >
                         <DeleteIcon style={{ color: grey[500] }} />
+                        {waitForDeleteWorkflow && (
+                          <CircularProgress key={params?.id} />
+                        )}
                       </IconButton>
                     </div>
                   </>

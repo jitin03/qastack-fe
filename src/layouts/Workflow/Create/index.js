@@ -6,11 +6,14 @@ import { Controller, useForm } from "react-hook-form";
 import PublishIcon from "@mui/icons-material/Publish";
 import WorkFlow from "../../CIFlow/Create/WorkFlow";
 import AddStep from "../../CIFlow/Create/AddStep";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { addWorkFlow } from "../../../context/actions/workflow/api";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
+import isAuthenticated from "../../../context/actions/auth/isAuthenticated";
+import { getUserDetailFromToken } from "../../../helper/token";
+import { getUserDetail } from "../../../context/actions/auth/api";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -35,6 +38,7 @@ export default function CreateWorkflow() {
   const [openDialog, setOpenDialog] = useState(false);
   const [elements, setElements] = useState([]);
   const [workFlowState, setworkFlowState] = useState([]);
+  const [stepsConfig, setStepsConfig] = useState([]);
   const { projectKey: projectId } = useParams();
   const onSubmitAddStep = (workFlowDetail) => {
     switch (elements.length) {
@@ -64,6 +68,14 @@ export default function CreateWorkflow() {
         break;
     }
   };
+  console.log("workFlowState", workFlowState);
+  const { data: user, isSuccess: userDetails } = useQuery(
+    isAuthenticated() && [
+      "users",
+      getUserDetailFromToken(localStorage.getItem("token")).Username,
+    ],
+    getUserDetail
+  );
   const history = useHistory();
   const { mutateAsync, isLoading, isHasError, err, output, isSuccess } =
     useMutation(addWorkFlow, {
@@ -73,13 +85,16 @@ export default function CreateWorkflow() {
       },
     });
   const onSubmit = async (data) => {
+    data.config = workFlowState;
+    data.project_Id = projectId;
+    data.user_Id = user?.data.users_id;
     console.log(data);
-    // try {
-    //   await mutateAsync(data);
-    // } catch (error) {
-    //   history.goBack();
-    //   console.log(error.message);
-    // }
+    try {
+      await mutateAsync(data);
+    } catch (error) {
+      history.goBack();
+      console.log(error.message);
+    }
   };
 
   return (
@@ -129,7 +144,7 @@ export default function CreateWorkflow() {
               >
                 <Grid item>
                   <Controller
-                    name="workflowname"
+                    name="name"
                     control={control}
                     render={({ field: { onChange, value } }) => (
                       <TextField
