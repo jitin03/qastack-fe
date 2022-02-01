@@ -84,7 +84,7 @@ export default function LinkJiraIssue() {
           alignItems="stretch"
         >
           <Grid item xs={9}>
-            <Grid style={{ height: "100vh" }}>
+            <Grid>
               {/* <YourCard /> */}
               <JiraIssue control={control} />
             </Grid>
