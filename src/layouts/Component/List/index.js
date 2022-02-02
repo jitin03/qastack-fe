@@ -199,7 +199,7 @@ const ComponentList = () => {
             </Toolbar>
           </Grid>
           <Grid item>
-            <Tooltip title="Add new component" arrow disableInteractive>
+            <Tooltip title="Add new component" arrow>
               <Button
                 variant="outlined"
                 startIcon={<AddIcon />}
@@ -222,7 +222,7 @@ const ComponentList = () => {
                     <TableCell>{item.component_id}</TableCell>
                     <TableCell>{item.component_name}</TableCell>
                     <TableCell>
-                      <Tooltip title="Edit component" arrow disableInteractive>
+                      <Tooltip title="Edit component" arrow>
                         <IconButton aria-label="Edit component">
                           <EditIcon
                             onClick={() =>
@@ -239,7 +239,7 @@ const ComponentList = () => {
                       {/* <Tooltip
                         title="Delete component"
                         arrow
-                        disableInteractive
+                        
                       >
                         <IconButton aria-label="delete component">
                           <DeleteIcon

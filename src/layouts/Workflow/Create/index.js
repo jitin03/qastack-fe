@@ -68,7 +68,7 @@ export default function CreateWorkflow() {
         break;
     }
   };
-  console.log("workFlowState", workFlowState);
+
   const { data: user, isSuccess: userDetails } = useQuery(
     isAuthenticated() && [
       "users",
@@ -88,12 +88,11 @@ export default function CreateWorkflow() {
     data.config = workFlowState;
     data.project_Id = projectId;
     data.user_Id = user?.data.users_id;
-    console.log(data);
+
     try {
       await mutateAsync(data);
     } catch (error) {
       history.goBack();
-      console.log(error.message);
     }
   };
 
@@ -170,7 +169,7 @@ export default function CreateWorkflow() {
                 style={{ padding: "10px" }}
               >
                 <Grid item xs={3}>
-                  <Tooltip title="Add step" arrow disableInteractive>
+                  <Tooltip title="Add step" arrow>
                     <Button
                       size="small"
                       variant="outlined"
@@ -184,7 +183,7 @@ export default function CreateWorkflow() {
                   </Tooltip>
                 </Grid>
                 <Grid item xs={1}>
-                  <Tooltip title="Publish" arrow disableInteractive>
+                  <Tooltip title="Publish" arrow>
                     <Button
                       size="small"
                       variant="outlined"

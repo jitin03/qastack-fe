@@ -51,7 +51,7 @@ const Project = () => {
   );
 
   let userId = user?.data.users_id;
-  console.log("userId", userId);
+
   const {
     data: projects,
     error,
@@ -61,7 +61,7 @@ const Project = () => {
     enabled: !!userId,
     cacheTime: 0,
   });
-  console.log(projects);
+
   let { id } = useParams();
 
   setEditId(id);
@@ -121,7 +121,7 @@ const Project = () => {
             }}
           >
             <Grid item>
-              <Tooltip title="Add new project" arrow disableInteractive>
+              <Tooltip title="Add new project" arrow>
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
@@ -143,7 +143,7 @@ const Project = () => {
             ) : (
               <Grid item>
                 <Typography>No Project avaiable</Typography>
-                <Tooltip title="Add new project" arrow disableInteractive>
+                <Tooltip title="Add new project" arrow>
                   <Button
                     variant="outlined"
                     startIcon={<AddIcon />}

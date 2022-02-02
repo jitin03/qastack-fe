@@ -6,8 +6,6 @@ const JobDisplayLogs = (props) => {
   const [logs, setLogs] = useState([]);
   const { params } = props;
   function handleFetchEvent(message, id) {
-    // console.log(message);
-
     if (message.trim()) {
       const parsedData = JSON.parse(message.trim());
       // setLogs(parsedData);

@@ -447,11 +447,7 @@ const TestCaseList = () => {
                             <TableCell>{item.type}</TableCell>
                             <TableCell>{item.priority}</TableCell>
                             <TableCell>
-                              <Tooltip
-                                title="Edit test"
-                                arrow
-                                disableInteractive
-                              >
+                              <Tooltip title="Edit test" arrow>
                                 <IconButton aria-label="Edit test">
                                   <EditIcon
                                     onClick={() =>
@@ -463,11 +459,7 @@ const TestCaseList = () => {
                                   />
                                 </IconButton>
                               </Tooltip>
-                              <Tooltip
-                                title="Delete test"
-                                arrow
-                                disableInteractive
-                              >
+                              <Tooltip title="Delete test" arrow>
                                 <IconButton aria-label="delete test">
                                   <DeleteIcon />
                                 </IconButton>

@@ -101,15 +101,6 @@ export default function CreateTestCase(props) {
   };
   return (
     <>
-      <Tabs
-        value={tabValue}
-        onChange={handleChange}
-        aria-label="basic tabs example"
-      >
-        <Tab label="Test Case Details" />
-        <Tab label="Link Requirement" />
-        <Tab label="Jira Requirement" />
-      </Tabs>
       <FormProvider
         register={register}
         control={control}
@@ -117,6 +108,16 @@ export default function CreateTestCase(props) {
         remove={remove}
         append={append}
       >
+        <Tabs
+          value={tabValue}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+        >
+          <Tab label="Test Case Details" />
+          <Tab label="Link Requirement" />
+          <Tab label="Jira Requirement" />
+        </Tabs>
+
         <form
           className={classes.root}
           autoComplete="off"
@@ -143,25 +144,26 @@ export default function CreateTestCase(props) {
             <Divider />
             <LinkJiraIssue />
           </TabPanel>
+
+          <Grid
+            container
+            className={classes.bottomDrawer}
+            justifyContent="flex-end"
+            alignContent="center"
+          >
+            <Grid item>
+              <Controls.Button
+                color="inherit"
+                type="cancel"
+                text="Cancel"
+                style={{ marginRight: "10px" }}
+                onClick={handleCloseRightDrawer}
+              />
+              <Controls.Button text="Submit" />
+            </Grid>
+          </Grid>
         </form>
       </FormProvider>
-      <Grid
-        container
-        className={classes.bottomDrawer}
-        justifyContent="flex-end"
-        alignContent="center"
-      >
-        <Grid item>
-          <Controls.Button
-            color="inherit"
-            type="cancel"
-            text="Cancel"
-            style={{ marginRight: "10px" }}
-            onClick={handleCloseRightDrawer}
-          />
-          <Controls.Button text="Submit" />
-        </Grid>
-      </Grid>
     </>
   );
 }

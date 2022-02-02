@@ -125,7 +125,6 @@ export default function ModuleForm() {
       });
       handleCloseRightDrawer();
     } else {
-      console.log("failure");
     }
   };
 

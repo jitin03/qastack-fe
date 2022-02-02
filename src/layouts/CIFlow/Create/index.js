@@ -119,7 +119,7 @@ export default function Create() {
         <Grid item>
           <Grid container>
             <Grid item>
-              <Tooltip title="Add step" arrow disableInteractive>
+              <Tooltip title="Add step" arrow>
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
@@ -133,7 +133,7 @@ export default function Create() {
               </Tooltip>
             </Grid>
             <Grid item>
-              <Tooltip title="Publish" arrow disableInteractive>
+              <Tooltip title="Publish" arrow>
                 <Button
                   variant="outlined"
                   // onClick={() => setState(!state)}

@@ -98,19 +98,27 @@ export default function EditTestRun(props) {
 
   const onSubmit = async (data, e) => {
     console.log(data);
+    console.log("selectedModel", selectedModel);
+    console.log("testRunDetails?.testcases");
 
-    console.log(...new Set([...testRunDetails?.testcases, ...selectedModel]));
-    data.testcases = [
-      ...new Set([...testRunDetails?.testcases, ...selectedModel]),
-    ];
+    console.log(new Set([...testRunDetails?.testcases, ...selectedModel]));
+    console.log(
+      selectedModel.filter((x) => testRunDetails?.testcases.indexOf(x) === -1)
+    );
+    // data.testcases = [
+    //   new Set([...testRunDetails?.testcases, ...selectedModel]),
+    // ];
     // [...new Set(selectedModel)];
 
+    data.testcases = selectedModel.filter(
+      (x) => testRunDetails?.testcases.indexOf(x) === -1
+    );
     data.id = param[1];
     try {
       await mutateAsync(data);
 
-      handleCloseRightDrawer(e);
       // setSelectedModel([]);
+      handleCloseRightDrawer(e);
     } catch (error) {
       history.goBack();
       console.log(error.message);

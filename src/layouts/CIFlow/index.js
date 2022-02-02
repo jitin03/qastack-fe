@@ -221,7 +221,7 @@ const CIFlow = () => {
             </Toolbar>
           </Grid>
           <Grid item>
-            <Tooltip title="Add new flow" arrow disableInteractive>
+            <Tooltip title="Add new flow" arrow>
               <Button
                 variant="outlined"
                 startIcon={<AddIcon />}
@@ -256,7 +256,7 @@ const CIFlow = () => {
                     <TableCell>{item.Id}</TableCell>
                     <TableCell>{item.workflow_name}</TableCell>
                     <TableCell>
-                      <Tooltip title="Run" arrow disableInteractive>
+                      <Tooltip title="Run" arrow>
                         <IconButton aria-label="Run">
                           <PlayArrow
                             onClick={async () => {
@@ -273,11 +273,7 @@ const CIFlow = () => {
                           />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip
-                        title="Delete component"
-                        arrow
-                        disableInteractive
-                      >
+                      <Tooltip title="Delete component" arrow>
                         <IconButton aria-label="delete component">
                           <DeleteIcon
                             onClick={

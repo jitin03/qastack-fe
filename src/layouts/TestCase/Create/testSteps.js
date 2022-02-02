@@ -314,7 +314,7 @@ const TestDetails = (props) => {
             <Typography variant="subtitle1">Test steps</Typography>
           </Grid>
           <Grid item sx={{ marginLeft: 35 }}>
-            <Tooltip title="Add steps" arrow disableInteractive>
+            <Tooltip title="Add steps" arrow>
               <Button
                 variant="outlined"
                 startIcon={<AddIcon />}
@@ -380,13 +380,13 @@ const TestDetails = (props) => {
                 />
               </Grid>
               <Grid item xs={1}>
-                <Tooltip title="Add steps" arrow disableInteractive>
+                <Tooltip title="Add steps" arrow>
                   <AddIcon onClick={handleAddStep} />
                 </Tooltip>
               </Grid>
               <Grid item xs={1}>
                 {index !== 0 && (
-                  <Tooltip title="Remove steps" arrow disableInteractive>
+                  <Tooltip title="Remove steps" arrow>
                     <DeleteIcon onClick={() => remove(index)} />
                   </Tooltip>
                 )}

@@ -274,9 +274,6 @@ const Tests = (props) => {
   };
 
   const updateRows = (value, id, field) => {
-    console.log(field);
-    console.log(id);
-    console.log(value);
     // const rowIds = apiRef.current.getAllRowIds();
     const rowId = id;
     apiRef.current.updateRows([{ id: id, status: "Passed" }]);
@@ -313,14 +310,10 @@ const Tests = (props) => {
                 label="Unexecuted"
                 onChange={(e) => {
                   handleChange(e, params);
-
-                  // updateRows(e.target.value, params?.id, params?.id);
                 }}
-                // onChange={(e) => setValue("name", e.target.value, true)}
                 style={{ width: "100%" }}
                 // MenuProps={MenuProps}
                 renderValue={(selected) => (
-                  // console.log("selected", selected)
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.2 }}>
                     <StatusChip key={selected} label={selected} />
                   </Box>
@@ -396,8 +389,6 @@ const Tests = (props) => {
     ],
   };
 
-  console.log("selectionModel", selectionModel);
-  console.log("preloadedData", preloadedData);
   const getRowId = (row) => `${row?.testcase_run_id}`;
   return (
     <Grid

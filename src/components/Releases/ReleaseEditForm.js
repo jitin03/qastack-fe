@@ -34,7 +34,7 @@ export const ReleaseEditForm = (props) => {
     editId,
     handleCloseRightDrawer,
   } = useGlobalContext();
-  console.log("releaseState", release.release?.data.ReleaseName);
+
   const { register, handleSubmit, control, setValue } = useForm({
     defaultValues: release.release?.data.ReleaseName,
   });
@@ -42,7 +42,6 @@ export const ReleaseEditForm = (props) => {
   const queryClient = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(updateRelease);
   const onSubmit = async (data, e) => {
-    console.log(data);
     e.preventDefault();
     data.editId = param[1];
     await mutateAsync(data);

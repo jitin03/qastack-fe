@@ -8,12 +8,10 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 export const Submenus = () => {
   const { projectKey } = useParams();
 
-  console.log("projectKey", projectKey);
-
   return (
     <>
       <Grid container>
-        <Tooltip title="Project Overview" arrow disableInteractive>
+        <Tooltip title="Project Overview" arrow>
           <ListItem
             button
             key="1"
@@ -38,7 +36,7 @@ export const Submenus = () => {
             </Grid>
           </ListItem>
         </Tooltip>
-        <Tooltip title="Components" arrow disableInteractive>
+        <Tooltip title="Components" arrow>
           <ListItem
             button
             key="2"
@@ -63,7 +61,7 @@ export const Submenus = () => {
           </ListItem>
         </Tooltip>
 
-        <Tooltip title="Releases" arrow disableInteractive>
+        <Tooltip title="Releases" arrow>
           <ListItem
             button
             key="2"
@@ -88,7 +86,7 @@ export const Submenus = () => {
           </ListItem>
         </Tooltip>
 
-        <Tooltip title="Test Cases" arrow disableInteractive>
+        <Tooltip title="Test Cases" arrow>
           <ListItem
             button
             key="2"
@@ -113,7 +111,7 @@ export const Submenus = () => {
           </ListItem>
         </Tooltip>
 
-        <Tooltip title="Test Runs" arrow disableInteractive>
+        <Tooltip title="Test Runs" arrow>
           <ListItem
             button
             key="2"
@@ -138,7 +136,7 @@ export const Submenus = () => {
           </ListItem>
         </Tooltip>
 
-        <Tooltip title="CI Flow" arrow disableInteractive>
+        <Tooltip title="CI Flow" arrow>
           <ListItem
             button
             key="2"

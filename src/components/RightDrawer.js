@@ -47,8 +47,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function RightDrawer({ configTitle, width = "550px", params }) {
   const { state, toggleDrawer, module, anchor, handleCloseRightDrawer } =
     useGlobalContext();
-  console.log("params", params);
-  console.log("configTitle", configTitle);
+
   const list = (width) => (
     <Box sx={{ width: width }}>
       <DrawerHeader>
@@ -65,8 +64,8 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
           </Grid>
           <Grid item style={{ flex: "1" }}></Grid>
           <Grid item>
-            <IconButton>
-              <CloseIcon onClick={(e) => handleCloseRightDrawer(e)} />
+            <IconButton onClick={(e) => handleCloseRightDrawer(e)}>
+              <CloseIcon />
             </IconButton>
           </Grid>
         </Grid>

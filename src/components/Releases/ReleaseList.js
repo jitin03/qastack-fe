@@ -176,7 +176,7 @@ export default function ReleaseList(props) {
                   justifyContent: "flex-end",
                 }}
               >
-                <Tooltip title="Edit release" arrow disableInteractive>
+                <Tooltip title="Edit release" arrow>
                   <IconButton
                     edge="start"
                     aria-label="edit"
@@ -197,7 +197,7 @@ export default function ReleaseList(props) {
                 {/* {isLoading ? (
                   <CircularProgress />
                 ) : (
-                  <Tooltip title="Delete release" arrow disableInteractive>
+                  <Tooltip title="Delete release" arrow >
                     <IconButton
                       edge="start"
                       aria-label="delete"

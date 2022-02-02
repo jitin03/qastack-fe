@@ -140,7 +140,7 @@ export default function TestRunList() {
               </Toolbar>
             </Grid>
             <Grid item>
-              <Tooltip title="Add TestRun" arrow disableInteractive>
+              <Tooltip title="Add TestRun" arrow>
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
@@ -283,8 +283,6 @@ const Tests = (props) => {
   const MatEdit = ({ index }) => {
     const handleEditClick = (index) => {
       // some action
-
-      console.log(index);
     };
     const handleEditTestRun = (id, projectKey) => {
       let params = [];
@@ -312,8 +310,6 @@ const Tests = (props) => {
   //   setSelectionModel(prevSelectionModel.current);
   // }, [componentId]);
 
-  console.log("selectionModel", selectionModel);
-  console.log("preloadedData", preloadedData);
   const getRowId = (row) => `${row?.id}`;
   return (
     <Grid

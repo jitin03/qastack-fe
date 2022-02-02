@@ -80,7 +80,7 @@ const Release = () => {
             }}
           >
             <Grid item>
-              <Tooltip title="Add Release" arrow disableInteractive>
+              <Tooltip title="Add Release" arrow>
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
@@ -102,7 +102,7 @@ const Release = () => {
             ) : (
               <Grid item>
                 <Typography>No Project avaiable</Typography>
-                <Tooltip title="Add Release" arrow disableInteractive>
+                <Tooltip title="Add Release" arrow>
                   <Button
                     variant="outlined"
                     startIcon={<AddIcon />}
