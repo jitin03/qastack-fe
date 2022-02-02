@@ -44,6 +44,7 @@ import {
 } from "../../../context/actions/testcase/api";
 import { blue, grey } from "@mui/material/colors";
 import { DataGrid } from "@mui/x-data-grid";
+import DeleteTestRun from "./DeleteTestRun";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -256,9 +257,10 @@ const Tests = (props) => {
                         onClick={() => handleEditTestRun(params.id, projectKey)}
                         style={{ padding: "20px" }}
                       >
-                        <EditIcon style={{ color: blue[500] }} />
+                        <EditIcon style={{ color: grey[800] }} />
                       </IconButton>
-                      <IconButton
+                      <DeleteTestRun params={params} projectId={projectKey} />
+                      {/* <IconButton
                         color="secondary"
                         aria-label="delete the test run"
                         style={{ padding: "20px" }}
@@ -267,7 +269,7 @@ const Tests = (props) => {
                         }
                       >
                         <DeleteIcon style={{ color: blue[500] }} />
-                      </IconButton>
+                      </IconButton> */}
                     </div>
                   </>
                 }

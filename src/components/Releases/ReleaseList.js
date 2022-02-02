@@ -31,6 +31,7 @@ import {
 } from "../../context/actions/project/api";
 import { EDIT_RELEASE } from "../../constants/actionTypes";
 import release from "../../context/reducers/release";
+import DeleteRelease from "./DeleteRelease";
 export default function ReleaseList(props) {
   const { releases, projectId } = props;
   const {
@@ -192,7 +193,8 @@ export default function ReleaseList(props) {
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
-                {isLoading ? (
+                <DeleteRelease item={item} />
+                {/* {isLoading ? (
                   <CircularProgress />
                 ) : (
                   <Tooltip title="Delete release" arrow disableInteractive>
@@ -207,7 +209,7 @@ export default function ReleaseList(props) {
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>
-                )}
+                )} */}
               </CardActions>
             </Card>
           </Grid>

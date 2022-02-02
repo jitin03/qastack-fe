@@ -14,7 +14,20 @@ export const addWorkFlow = async (data) => {
 
   return response.data;
 };
+export const updateWorkflowRunStatus = async (data) => {
+  let payload = JSON.stringify(data);
+  const response = await axiosAppWorkflowInstance().post(
+    `/api/workflow/status`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
+  return response.data;
+};
 export const deleteWorkflow = async (workflowId) => {
   const response = await axiosAppWorkflowInstance().delete(
     `/api/workflow/delete/${workflowId}`,
@@ -32,7 +45,7 @@ export const getAllWorkFlows = async ({ queryKey }) => {
   const [_key, componentId, pageId] = queryKey;
 
   const response = await axiosAppWorkflowInstance().get(
-    `/api/workflows?projectKey=PR937&page=10`,
+    `/api/workflows?projectKey=PR937&page=${pageId}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +58,20 @@ export const getAllWorkFlows = async ({ queryKey }) => {
 
 export const runWorkflowByName = async (workflowName, userId) => {
   const response = await axiosAppWorkflowInstance().post(
-    `/api/workflow/run?workflowName=${workflowName}&userId=3`,
+    `/api/workflow/run?id=${workflowName}&userId=3`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const reSubmitWorkflowByName = async ({ ...data }) => {
+  const response = await axiosAppWorkflowInstance().put(
+    `/api/workflow/resubmit?workflowName=${data?.workflowName}&&userId=${data?.userId}`,
     {
       headers: {
         "Content-Type": "application/json",

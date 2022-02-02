@@ -17,6 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import { useForm } from "react-hook-form";
 import DeleteIcon from "@mui/icons-material/Delete";
+import NotesIcon from "@mui/icons-material/Notes";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
@@ -26,7 +27,9 @@ import PlayArrow from "@mui/icons-material/PlayArrow";
 import {
   deleteWorkflow,
   getAllWorkFlows,
+  reSubmitWorkflowByName,
   runWorkflowByName,
+  updateWorkflowRunStatus,
 } from "../../../context/actions/workflow/api";
 import AddIcon from "@mui/icons-material/Add";
 import { useGlobalContext } from "../../../context/provider/context";
@@ -36,6 +39,12 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { getUserDetail } from "../../../context/actions/auth/api";
 import isAuthenticated from "../../../context/actions/auth/isAuthenticated";
 import { getUserDetailFromToken } from "../../../helper/token";
+import fetchData from "../../../context/actions/workflow/sseClient";
+import closeEventSource from "../../../context/actions/workflow/closeClient";
+import workflowStatus from "./workflowStatus";
+import WorkflowStatus from "./workflowStatus";
+import DeleteWorkflow from "./DeleteWorkflow";
+import StopWorkflow from "./StopWorkflow";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -193,33 +202,96 @@ export default function WorfklowCreate() {
 
 const WorkflowList = (props) => {
   const { preloadedData, projectId, waitForAllWorkflows, userDetails } = props;
+
+  const userId = userDetails?.data.users_id;
   const { handleRightDrawer } = useGlobalContext();
 
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
   const [loading, setLoading] = useState(false);
-
+  const [workflowTriggeredStatus, setTriggeredWorkflowStatus] =
+    useState("Unexecuted");
   const [rowsState, setRowsState] = useState({
     page: 0,
     pageSize: 5,
 
     loading: false,
   });
-  const { mutateAsync, isLoading: waitForDeleteWorkflow } =
-    useMutation(deleteWorkflow);
+  const { mutateAsync, isLoading: waitForDeleteWorkflow } = useMutation(
+    deleteWorkflow,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("workflows");
+      },
+    }
+  );
   const { mutateAsync: runNowWorkflow, isLoading: waitForWorkflowRun } =
-    useMutation(runWorkflowByName);
+    useMutation(runWorkflowByName, {
+      onSettled: () => {
+        queryClient.invalidateQueries("workflows");
+      },
+    });
+
+  const {
+    mutateAsync: reSubmitNowWorkflow,
+    isLoading: waitForWorkflowReSubmit,
+  } = useMutation(reSubmitWorkflowByName);
+
   const handleEditWorkflow = (id, projectId) => {
     let params = [];
     params.push(projectId);
     params.push(id);
     handleRightDrawer("Edit Workflow", params);
   };
+  const {
+    mutateAsync: updateWorkflowStatus,
+    isLoading: waitForWorkflowUpdateStatus,
 
-  const handleRunNowWorkflow = async (name, userId) => {
-    // console.log("userId", userDetails?.data.users_id);
+    err,
+    output,
+    isSuccess,
+  } = useMutation(updateWorkflowRunStatus, {});
 
-    await runNowWorkflow(name, userId);
+  function handleFetchEvent(message, id) {
+    console.log(message);
+    console.log(message.result.object.status.phase);
+    // setWorkflowStatus(message.result.object.status.phase);
+
+    // if (message?.result?.object.status.phase !== "Running") {
+    let workflowStatus = {};
+    workflowStatus.user_Id = "3";
+    workflowStatus.workflow_name = message?.result?.object.metadata.name;
+    workflowStatus.id = id;
+    workflowStatus.status = message?.result?.object.status.phase;
+    setTriggeredWorkflowStatus(message?.result?.object.status.phase);
+    updateWorkflowRunStatus(workflowStatus);
+    if (
+      message?.result?.object.status.phase === "Succeeded" ||
+      message?.result?.object.status.phase === "Failed"
+    ) {
+      setTriggeredWorkflowStatus(message?.result?.object.status.phase);
+      queryClient.invalidateQueries("workflows");
+    }
+    // }
+  }
+
+  const handleRunNowWorkflow = async (id, name, userId, status) => {
+    console.log("name", name);
+
+    let data = {};
+    if (status === "Build Now") {
+      await runNowWorkflow(id, userId);
+
+      console.log("preloadedData", preloadedData);
+      let response = await fetchData(name, id, handleFetchEvent);
+      console.log("response", response);
+    } else if (status === "Succeeded") {
+      data.workflowName = name;
+      data.userId = userId;
+      let response = await reSubmitNowWorkflow(data);
+
+      await fetchData(response?.workflow_run_name, id, handleFetchEvent);
+    }
   };
   const queryClient = useQueryClient();
   const handleDeleteWorkflow = async (id) => {
@@ -229,6 +301,11 @@ const WorkflowList = (props) => {
     await mutateAsync(id);
     queryClient.invalidateQueries("workflows");
   };
+
+  const handleViewLogs = (id) => {
+    handleRightDrawer("View Logs", id);
+  };
+
   const baselineProps = {
     rows: preloadedData || [],
     columns: [
@@ -247,6 +324,21 @@ const WorkflowList = (props) => {
         field: "workflow_status",
         headerName: "Status",
         width: 150,
+        renderCell: (params) => (
+          <Typography
+            variant="contained"
+            color="primary"
+            size="small"
+            style={{ marginLeft: 16 }}
+          >
+            <WorkflowStatus
+              params={params}
+              waitForWorkflowRun={waitForWorkflowRun}
+              workflowEventStatus={workflowTriggeredStatus}
+              key={params?.id}
+            />
+          </Typography>
+        ),
       },
 
       {
@@ -257,7 +349,6 @@ const WorkflowList = (props) => {
         headerAlign: "center",
         disableClickEventBubbling: true,
         renderCell: (params) => {
-          console.log(params);
           return (
             <div
               className="d-flex justify-content-between align-items-center"
@@ -276,29 +367,17 @@ const WorkflowList = (props) => {
                           <PlayCircleOutlineIcon
                             onClick={() =>
                               handleRunNowWorkflow(
-                                params?.row.workflow_name,
-                                userDetails?.data.users_id
+                                params?.id,
+                                params?.row.workflow_run_name,
+                                userId,
+                                params?.row.workflow_status
                               )
                             }
                           />
                         </IconButton>
                       </Tooltip>
 
-                      <Tooltip title="Stop" arrow disableInteractive>
-                        <IconButton
-                          aria-label="Stop"
-                          style={{ padding: "10px" }}
-                        >
-                          <StopCircleIcon
-                          // onClick={() =>
-                          //   handleStopNowWorkflow(
-                          //     params?.row.workflow_name,
-                          //     userDetails?.data.users_id
-                          //   )
-                          // }
-                          />
-                        </IconButton>
-                      </Tooltip>
+                      <StopWorkflow params={params} />
                       <IconButton
                         color="secondary"
                         aria-label="edit the test run"
@@ -307,17 +386,20 @@ const WorkflowList = (props) => {
                       >
                         <EditIcon style={{ color: grey[500] }} />
                       </IconButton>
-                      <IconButton
-                        color="secondary"
-                        aria-label="delete the test run"
-                        style={{ padding: "10px" }}
-                        onClick={() => handleDeleteWorkflow(params.id)}
-                      >
-                        <DeleteIcon style={{ color: grey[500] }} />
-                        {waitForDeleteWorkflow && (
-                          <CircularProgress key={params?.id} />
-                        )}
-                      </IconButton>
+                      <DeleteWorkflow params={params} />
+                      <Tooltip title="View Logs" arrow>
+                        <IconButton
+                          color="secondary"
+                          aria-label="delete the test run"
+                          style={{ padding: "10px" }}
+                          onClick={() => handleViewLogs(params.id)}
+                        >
+                          <NotesIcon style={{ color: grey[500] }} />
+                          {waitForDeleteWorkflow && (
+                            <CircularProgress key={params?.id} />
+                          )}
+                        </IconButton>
+                      </Tooltip>
                     </div>
                   </>
                 }
@@ -344,7 +426,7 @@ const WorkflowList = (props) => {
         getRowId={getRowId}
         {...rowsState}
         {...baselineProps}
-        // paginationMode="server"
+        paginationMode="server"
         onPageChange={(newPage) => {
           // prevSelectionModel.current = selectionModel;
           setPage(newPage);

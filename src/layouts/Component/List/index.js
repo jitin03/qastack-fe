@@ -35,6 +35,7 @@ import {
   COMPONENT_CREATE_ERROR,
   EDIT_COMPONENT,
 } from "../../../constants/actionTypes";
+import DeleteComponent from "./DeleteComponent";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -234,7 +235,8 @@ const ComponentList = () => {
                           />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip
+                      <DeleteComponent item={item} />
+                      {/* <Tooltip
                         title="Delete component"
                         arrow
                         disableInteractive
@@ -247,7 +249,7 @@ const ComponentList = () => {
                           />
                           {deleteComponentLoading && <CircularProgress />}
                         </IconButton>
-                      </Tooltip>
+                      </Tooltip> */}
                     </TableCell>
                   </TableRow>
                 ))}
