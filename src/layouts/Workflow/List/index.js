@@ -39,12 +39,14 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { getUserDetail } from "../../../context/actions/auth/api";
 import isAuthenticated from "../../../context/actions/auth/isAuthenticated";
 import { getUserDetailFromToken } from "../../../helper/token";
-import fetchData from "../../../context/actions/workflow/sseClient";
+
 import closeEventSource from "../../../context/actions/workflow/closeClient";
 import workflowStatus from "./workflowStatus";
 import WorkflowStatus from "./workflowStatus";
 import DeleteWorkflow from "./DeleteWorkflow";
 import StopWorkflow from "./StopWorkflow";
+import WorkflowLogs from "./WorkflowLogs";
+import { fetchData } from "../../../context/actions/workflow/sseClient";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -302,10 +304,6 @@ const WorkflowList = (props) => {
     queryClient.invalidateQueries("workflows");
   };
 
-  const handleViewLogs = (id) => {
-    handleRightDrawer("View Logs", id);
-  };
-
   const baselineProps = {
     rows: preloadedData || [],
     columns: [
@@ -381,13 +379,15 @@ const WorkflowList = (props) => {
                       <IconButton
                         color="secondary"
                         aria-label="edit the test run"
+                        disabled
                         onClick={() => handleEditWorkflow(params.id, projectId)}
                         style={{ padding: "10px" }}
                       >
                         <EditIcon style={{ color: grey[500] }} />
                       </IconButton>
                       <DeleteWorkflow params={params} />
-                      <Tooltip title="View Logs" arrow>
+                      <WorkflowLogs params={params} />
+                      {/* <Tooltip title="View Logs" arrow>
                         <IconButton
                           color="secondary"
                           aria-label="delete the test run"
@@ -399,7 +399,7 @@ const WorkflowList = (props) => {
                             <CircularProgress key={params?.id} />
                           )}
                         </IconButton>
-                      </Tooltip>
+                      </Tooltip> */}
                     </div>
                   </>
                 }

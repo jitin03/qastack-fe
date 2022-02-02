@@ -99,6 +99,8 @@ const AppProvider = ({ children }) => {
       history.push(`${window.location.pathname}/edit/${param[1]}`);
     } else if (configTitle === "Edit TestRun") {
       history.push(`${window.location.pathname}/edit/${param[1]}`);
+    } else if (configTitle === "View Logs") {
+      history.push(`${window.location.pathname}/workflow/logs/${param[0]}`);
     }
     setConfigTitle(configTitle);
     setState(!state);
