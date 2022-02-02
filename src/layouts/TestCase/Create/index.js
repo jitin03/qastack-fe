@@ -120,7 +120,7 @@ export default function CreateTestCase(props) {
         <form
           className={classes.root}
           autoComplete="off"
-          style={{ height: "100vh" }}
+          style={{ maxHeight: "100%", overflowY: "scroll" }}
           onSubmit={handleSubmit(onSubmit)}
         >
           <TabPanel value={tabValue} index={0}>
@@ -143,25 +143,25 @@ export default function CreateTestCase(props) {
             <Divider />
             <LinkJiraIssue />
           </TabPanel>
-          <Grid
-            container
-            className={classes.bottomDrawer}
-            justifyContent="flex-end"
-            alignContent="center"
-          >
-            <Grid item>
-              <Controls.Button
-                color="inherit"
-                type="cancel"
-                text="Cancel"
-                style={{ marginRight: "10px" }}
-                onClick={handleCloseRightDrawer}
-              />
-              <Controls.Button text="Submit" />
-            </Grid>
-          </Grid>
         </form>
       </FormProvider>
+      <Grid
+        container
+        className={classes.bottomDrawer}
+        justifyContent="flex-end"
+        alignContent="center"
+      >
+        <Grid item>
+          <Controls.Button
+            color="inherit"
+            type="cancel"
+            text="Cancel"
+            style={{ marginRight: "10px" }}
+            onClick={handleCloseRightDrawer}
+          />
+          <Controls.Button text="Submit" />
+        </Grid>
+      </Grid>
     </>
   );
 }

@@ -31,6 +31,7 @@ import {
 } from "../../context/actions/project/api";
 import { EDIT_RELEASE } from "../../constants/actionTypes";
 import release from "../../context/reducers/release";
+import DeleteRelease from "./DeleteRelease";
 export default function ReleaseList(props) {
   const { releases, projectId } = props;
   const {
@@ -111,7 +112,7 @@ export default function ReleaseList(props) {
         </Grid>
         {releases.map((item, index) => (
           <Grid
-            key={item.Id}
+            key={index}
             item
             md={3}
             style={{
@@ -120,7 +121,7 @@ export default function ReleaseList(props) {
               fontWeight: "1rem",
             }}
           >
-            <Card style={{ minWidth: 275, minHeight: 180 }}>
+            <Card style={{ minWidth: 275, minHeight: 180 }} key={item.Id}>
               <CardContent style={{ padding: "20px" }}>
                 <Grid
                   container
@@ -175,7 +176,7 @@ export default function ReleaseList(props) {
                   justifyContent: "flex-end",
                 }}
               >
-                <Tooltip title="Edit project" arrow disableInteractive>
+                <Tooltip title="Edit release" arrow disableInteractive>
                   <IconButton
                     edge="start"
                     aria-label="edit"
@@ -192,10 +193,11 @@ export default function ReleaseList(props) {
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
-                {isLoading ? (
+                <DeleteRelease item={item} />
+                {/* {isLoading ? (
                   <CircularProgress />
                 ) : (
-                  <Tooltip title="Delete project" arrow disableInteractive>
+                  <Tooltip title="Delete release" arrow disableInteractive>
                     <IconButton
                       edge="start"
                       aria-label="delete"
@@ -207,7 +209,7 @@ export default function ReleaseList(props) {
                       <DeleteIcon />
                     </IconButton>
                   </Tooltip>
-                )}
+                )} */}
               </CardActions>
             </Card>
           </Grid>

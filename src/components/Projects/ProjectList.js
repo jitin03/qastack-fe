@@ -19,6 +19,7 @@ import { makeStyles } from "@mui/styles";
 import ProjectOverview from "./ProjectOverview";
 import { Link } from "@material-ui/core";
 import Toast from "../controllers/Toast";
+import DeleteProject from "./DeleteProject";
 
 const useStyles = makeStyles((theme) => ({
   divider: {
@@ -178,7 +179,8 @@ export default function ProjectList(props) {
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
-                {isLoading ? (
+                <DeleteProject item={item} />
+                {/* {isLoading ? (
                   <CircularProgress />
                 ) : (
                   <IconButton
@@ -191,7 +193,7 @@ export default function ProjectList(props) {
                   >
                     <DeleteIcon />
                   </IconButton>
-                )}
+                )} */}
               </CardActions>
             </Card>
           </Grid>

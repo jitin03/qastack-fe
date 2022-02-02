@@ -39,20 +39,11 @@ const closedMixin = (theme) => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: "hidden",
-  width: `calc(${theme.spacing(12)} + 1px)`,
+  width: `calc(${theme.spacing(12)} + 10px)`,
   [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(12)} + 1px)`,
+    width: `calc(${theme.spacing(12)} + 10px)`,
   },
 });
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -70,25 +61,9 @@ const Drawer = styled(MuiDrawer, {
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
 }));
-const useStyles = makeStyles({
-  sideMenu: {
-    display: "flex",
-    flexDirection: "column",
-    position: "absolute",
-    left: "px",
-    width: "150px",
-    height: "100%",
-    backgroundColor: "#253053",
-  },
-});
 
 export default function SideMenu(props) {
-  const { open, handleDrawerClose } = props;
-  const classes = useStyles();
-  const theme = useTheme();
-  let { path, url } = useRouteMatch();
   const { projectKey } = useParams();
-  console.log("projectKey", projectKey);
   return (
     <>
       <Drawer variant="permanent">
@@ -97,15 +72,9 @@ export default function SideMenu(props) {
           <List>
             <Tooltip title="Projects" arrow disableInteractive>
               <ListItem button key="0" component={Link} to={`/projects`}>
-                <Grid
-                  item
-                  container
-                  direction="column"
-                  justifyContent="center"
-                  alignItems="center"
-                >
+                <Grid item container direction="column">
                   <Grid item xs={6}>
-                    <ListItemIcon sx={{ p: 2 }}>
+                    <ListItemIcon sx={{ pt: 2 }}>
                       <AssignmentIcon />
                     </ListItemIcon>
                   </Grid>
