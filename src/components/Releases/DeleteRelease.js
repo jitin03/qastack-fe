@@ -12,7 +12,7 @@ const DeleteRelease = (props) => {
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <Tooltip title="Close release" arrow disableInteractive>
+        <Tooltip title="Close release" arrow>
           <IconButton
             edge="start"
             aria-label="delete"

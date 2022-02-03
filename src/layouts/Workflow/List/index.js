@@ -28,6 +28,7 @@ import {
   deleteWorkflow,
   getAllWorkFlows,
   reSubmitWorkflowByName,
+  retryWorkflowByName,
   runWorkflowByName,
   updateWorkflowRunStatus,
 } from "../../../context/actions/workflow/api";
@@ -96,7 +97,6 @@ export default function WorfklowCreate() {
     enabled: !!userDetails,
   });
   const handleAddNewFlow = (projectId) => {
-    console.log(projectId);
     history.push(`/project/${projectId}/ciFlow/create`);
   };
 
@@ -169,7 +169,7 @@ export default function WorfklowCreate() {
               </Toolbar>
             </Grid>
             <Grid item>
-              <Tooltip title="Add new Job" arrow disableInteractive>
+              <Tooltip title="Add new Job" arrow>
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
@@ -211,8 +211,7 @@ const WorkflowList = (props) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
   const [loading, setLoading] = useState(false);
-  const [workflowTriggeredStatus, setTriggeredWorkflowStatus] =
-    useState("Unexecuted");
+  const [workflowTriggeredStatus, setTriggeredWorkflowStatus] = useState(false);
   const [rowsState, setRowsState] = useState({
     page: 0,
     pageSize: 5,
@@ -239,6 +238,9 @@ const WorkflowList = (props) => {
     isLoading: waitForWorkflowReSubmit,
   } = useMutation(reSubmitWorkflowByName);
 
+  const { mutateAsync: retryWorkflow, isLoading: waitForRetryWorkflow } =
+    useMutation(retryWorkflowByName);
+
   const handleEditWorkflow = (id, projectId) => {
     let params = [];
     params.push(projectId);
@@ -252,47 +254,56 @@ const WorkflowList = (props) => {
     err,
     output,
     isSuccess,
-  } = useMutation(updateWorkflowRunStatus, {});
+  } = useMutation(updateWorkflowRunStatus, {
+    onSettled: () => {
+      queryClient.invalidateQueries("workflows");
+    },
+  });
 
-  function handleFetchEvent(message, id) {
-    console.log(message);
-    console.log(message.result.object.status.phase);
+  function handleFetchEvent(message, id, workflowName) {
     // setWorkflowStatus(message.result.object.status.phase);
-
+    console.log(message.result.object);
     // if (message?.result?.object.status.phase !== "Running") {
     let workflowStatus = {};
     workflowStatus.user_Id = "3";
-    workflowStatus.workflow_name = message?.result?.object.metadata.name;
+    workflowStatus.workflow_name = workflowName;
     workflowStatus.id = id;
     workflowStatus.status = message?.result?.object.status.phase;
-    setTriggeredWorkflowStatus(message?.result?.object.status.phase);
-    updateWorkflowRunStatus(workflowStatus);
+    // setTriggeredWorkflowStatus(message?.result?.object.status.phase);
+
     if (
       message?.result?.object.status.phase === "Succeeded" ||
       message?.result?.object.status.phase === "Failed"
     ) {
-      setTriggeredWorkflowStatus(message?.result?.object.status.phase);
       queryClient.invalidateQueries("workflows");
+      updateWorkflowStatus(workflowStatus);
+      setTriggeredWorkflowStatus(false);
     }
     // }
   }
 
   const handleRunNowWorkflow = async (id, name, userId, status) => {
-    console.log("name", name);
-
     let data = {};
     if (status === "Build Now") {
+      setTriggeredWorkflowStatus(true);
       await runNowWorkflow(id, userId);
 
-      console.log("preloadedData", preloadedData);
       let response = await fetchData(name, id, handleFetchEvent);
-      console.log("response", response);
     } else if (status === "Succeeded") {
+      setTriggeredWorkflowStatus(true);
       data.workflowName = name;
       data.userId = userId;
       let response = await reSubmitNowWorkflow(data);
 
       await fetchData(response?.workflow_run_name, id, handleFetchEvent);
+    } else if (status === "Build Again") {
+      setTriggeredWorkflowStatus(true);
+      data.workflowName = name;
+      data.userId = userId;
+      data.id = id;
+      await retryWorkflow(data);
+
+      let response = await fetchData(name, id, handleFetchEvent);
     }
   };
   const queryClient = useQueryClient();
@@ -310,13 +321,18 @@ const WorkflowList = (props) => {
       {
         field: "workflow_name",
         headerName: "Workflow Name",
-        width: 350,
+        width: 200,
         padding: "50px",
       },
       {
         field: "username",
         headerName: "Create by",
         width: 150,
+      },
+      {
+        field: "created_date",
+        headerName: "Job Creation Date",
+        width: 250,
       },
       {
         field: "workflow_status",
@@ -357,12 +373,11 @@ const WorkflowList = (props) => {
                 control={
                   <>
                     <div style={{ padding: "80px" }}>
-                      <Tooltip title="Run" arrow disableInteractive>
-                        <IconButton
-                          aria-label="Run"
-                          style={{ padding: "10px" }}
-                        >
-                          <PlayCircleOutlineIcon
+                      {!workflowTriggeredStatus && (
+                        <Tooltip title="Run" arrow>
+                          <IconButton
+                            aria-label="Run"
+                            style={{ padding: "10px" }}
                             onClick={() =>
                               handleRunNowWorkflow(
                                 params?.id,
@@ -371,9 +386,11 @@ const WorkflowList = (props) => {
                                 params?.row.workflow_status
                               )
                             }
-                          />
-                        </IconButton>
-                      </Tooltip>
+                          >
+                            <PlayCircleOutlineIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
 
                       <StopWorkflow params={params} />
                       <IconButton
@@ -385,7 +402,9 @@ const WorkflowList = (props) => {
                       >
                         <EditIcon style={{ color: grey[500] }} />
                       </IconButton>
-                      <DeleteWorkflow params={params} />
+                      {!workflowTriggeredStatus && (
+                        <DeleteWorkflow params={params} />
+                      )}
                       <WorkflowLogs params={params} />
                       {/* <Tooltip title="View Logs" arrow>
                         <IconButton
@@ -407,6 +426,11 @@ const WorkflowList = (props) => {
             </div>
           );
         },
+      },
+      {
+        field: "last_execution_date",
+        headerName: "Last Execution Date",
+        width: 250,
       },
     ],
   };

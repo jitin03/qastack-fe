@@ -4,10 +4,8 @@ import React from "react";
 
 const StatusChip = (props) => {
   const { label } = props;
-  console.log("label", label);
 
   function colorForStatus(label) {
-    console.log("label", label);
     switch (label) {
       case "Unexecuted":
         return grey;

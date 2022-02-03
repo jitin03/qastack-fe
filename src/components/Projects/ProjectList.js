@@ -165,12 +165,12 @@ export default function ProjectList(props) {
                   justifyContent: "flex-end",
                 }}
               >
-                <Tooltip title="Bookmark project" arrow disableInteractive>
+                <Tooltip title="Bookmark project" arrow>
                   <IconButton aria-label="add to favorites">
                     <BookmarkBorderIcon />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="Edit project" arrow disableInteractive>
+                <Tooltip title="Edit project" arrow>
                   <IconButton
                     edge="start"
                     aria-label="edit"

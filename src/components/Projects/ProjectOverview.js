@@ -44,8 +44,6 @@ const ProjectOverview = () => {
     isLoading,
   } = useQuery(["project", projectKey], () => getProjectDetail(projectKey));
 
-  console.log("project", project);
-
   const {
     data: releases,
     error: releaseError,
@@ -82,7 +80,7 @@ const ProjectOverview = () => {
       enabled: !!projectKey,
     }
   );
-  console.log("projectTestRuns", projectTestRuns);
+
   return (
     <>
       <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>

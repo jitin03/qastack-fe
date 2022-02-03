@@ -14,7 +14,7 @@ const DeleteComponent = (props) => {
   };
   return (
     <>
-      <Tooltip title="Delete component" arrow disableInteractive>
+      <Tooltip title="Delete component" arrow>
         <IconButton aria-label="delete component">
           <DeleteIcon
             onClick={() => handleDeleteComponent(item.component_id)}

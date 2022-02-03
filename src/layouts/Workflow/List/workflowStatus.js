@@ -6,8 +6,7 @@ const WorkflowStatus = (props) => {
 
   return (
     <>
-      {workflowEventStatus == "Unexecuted" &&
-      workflowEventStatus === "Running" ? (
+      {workflowEventStatus ? (
         <Typography>
           Running
           <CircularProgress size={20} />

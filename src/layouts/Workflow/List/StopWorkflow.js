@@ -14,25 +14,27 @@ const StopWorkflow = (props) => {
       },
     }
   );
-  const handleDeleteWorkflow = async (id) => {
+  const handleStopNowWorkflow = async (id) => {
     let params = [];
     // params.push(projectKey);
     params.push(id);
-    await mutateAsync(id);
-    queryClient.invalidateQueries("workflows");
+    // await mutateAsync(id);
+    // queryClient.invalidateQueries("workflows");
   };
   return (
     <>
-      <Tooltip title="Stop" arrow disableInteractive>
-        <IconButton aria-label="Stop" style={{ padding: "10px" }}>
-          <StopCircleIcon
-          // onClick={() =>
-          //   handleStopNowWorkflow(
-          //     params?.row.workflow_name,
-          //     userDetails?.data.users_id
-          //   )
-          // }
-          />
+      <Tooltip title="Stop" arrow>
+        <IconButton
+          aria-label="Stop"
+          style={{ padding: "10px" }}
+          onClick={(e) =>
+            handleStopNowWorkflow(
+              params?.row.workflow_name
+              // userDetails?.data.users_id
+            )
+          }
+        >
+          <StopCircleIcon />
         </IconButton>
       </Tooltip>
     </>

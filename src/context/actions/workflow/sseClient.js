@@ -35,7 +35,7 @@ export async function fetchData(workflowName, id, onMessage) {
         // setData((data) => [...data, parsedData]);
         // console.log("workflow-status", parsedData);
         workflowEvent = parsedData;
-        onMessage(parsedData, id);
+        onMessage(parsedData, id, workflowName);
       },
       onclose() {
         console.log("Connection closed by the server");

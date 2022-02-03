@@ -70,7 +70,7 @@ export default function SideMenu(props) {
         <Toolbar />
         <Box sx={{ overflow: "auto" }}>
           <List>
-            <Tooltip title="Projects" arrow disableInteractive>
+            <Tooltip title="Projects" arrow>
               <ListItem button key="0" component={Link} to={`/projects`}>
                 <Grid item container direction="column">
                   <Grid item xs={6}>
