@@ -273,7 +273,8 @@ const WorkflowList = (props) => {
 
     if (
       message?.result?.object.status.phase === "Succeeded" ||
-      message?.result?.object.status.phase === "Failed"
+      message?.result?.object.status.phase === "Failed" ||
+      message?.result?.object.status.phase === "Error"
     ) {
       queryClient.invalidateQueries("workflows");
       updateWorkflowStatus(workflowStatus);

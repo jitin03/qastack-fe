@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -13,7 +14,6 @@ import {
   Select,
   makeStyles,
 } from "@material-ui/core";
-import { Controller, useForm } from "react-hook-form";
 import { FormControl } from "@mui/material";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,7 +57,7 @@ export default function AddStep({
     ],
   };
 
-  const { register, handleSubmit, control } = useForm();
+  const { register, handleSubmit, control, reset } = useForm();
   const classes = useStyles();
   const handleClose = () => {
     setOpenDialog(false);
@@ -113,6 +113,7 @@ export default function AddStep({
     console.log(data);
     setOpenDialog(false);
     onSubmitAddStep(data);
+    reset();
     // try {
     //   await mutateAsync(data);
     // } catch (error) {
@@ -269,11 +270,11 @@ export default function AddStep({
                       fullWidth
                       onChange={onChange}
                     >
-                      {workFlowState.length > 0 && (
-                        <MenuItem value={workFlowState[0].name}>
-                          {workFlowState[0].name}
+                      {workFlowState.map(item => (
+                        <MenuItem value={item.id} key={item.id}>
+                          { item.name }
                         </MenuItem>
-                      )}
+                      ))}
                     </Select>
                   </FormControl>
                 </>
