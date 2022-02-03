@@ -82,6 +82,19 @@ export const reSubmitWorkflowByName = async ({ ...data }) => {
   return response.data;
 };
 
+export const retryWorkflowByName = async ({ ...data }) => {
+  const response = await axiosAppWorkflowInstance().put(
+    `/api/workflow/retry?workflowName=${data?.workflowName}&userId=${data?.userId}&Id=${data?.id}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export const getWorkflowDetail = async (data) => {
   const response = await axiosAppWorkflowInstance().get(
     `http://localhost:8094/api/workflow/${data.queryKey[1]}`,

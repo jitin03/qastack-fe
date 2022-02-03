@@ -28,6 +28,7 @@ import {
   deleteWorkflow,
   getAllWorkFlows,
   reSubmitWorkflowByName,
+  retryWorkflowByName,
   runWorkflowByName,
   updateWorkflowRunStatus,
 } from "../../../context/actions/workflow/api";
@@ -237,6 +238,9 @@ const WorkflowList = (props) => {
     isLoading: waitForWorkflowReSubmit,
   } = useMutation(reSubmitWorkflowByName);
 
+  const { mutateAsync: retryWorkflow, isLoading: waitForRetryWorkflow } =
+    useMutation(retryWorkflowByName);
+
   const handleEditWorkflow = (id, projectId) => {
     let params = [];
     params.push(projectId);
@@ -250,7 +254,11 @@ const WorkflowList = (props) => {
     err,
     output,
     isSuccess,
-  } = useMutation(updateWorkflowRunStatus, {});
+  } = useMutation(updateWorkflowRunStatus, {
+    onSettled: () => {
+      queryClient.invalidateQueries("workflows");
+    },
+  });
 
   function handleFetchEvent(message, id, workflowName) {
     // setWorkflowStatus(message.result.object.status.phase);
@@ -267,9 +275,9 @@ const WorkflowList = (props) => {
       message?.result?.object.status.phase === "Succeeded" ||
       message?.result?.object.status.phase === "Failed"
     ) {
-      setTriggeredWorkflowStatus(false);
       queryClient.invalidateQueries("workflows");
-      updateWorkflowRunStatus(workflowStatus);
+      updateWorkflowStatus(workflowStatus);
+      setTriggeredWorkflowStatus(false);
     }
     // }
   }
@@ -288,6 +296,14 @@ const WorkflowList = (props) => {
       let response = await reSubmitNowWorkflow(data);
 
       await fetchData(response?.workflow_run_name, id, handleFetchEvent);
+    } else if (status === "Build Again") {
+      setTriggeredWorkflowStatus(true);
+      data.workflowName = name;
+      data.userId = userId;
+      data.id = id;
+      await retryWorkflow(data);
+
+      let response = await fetchData(name, id, handleFetchEvent);
     }
   };
   const queryClient = useQueryClient();
@@ -305,13 +321,18 @@ const WorkflowList = (props) => {
       {
         field: "workflow_name",
         headerName: "Workflow Name",
-        width: 350,
+        width: 200,
         padding: "50px",
       },
       {
         field: "username",
         headerName: "Create by",
         width: 150,
+      },
+      {
+        field: "created_date",
+        headerName: "Job Creation Date",
+        width: 250,
       },
       {
         field: "workflow_status",
@@ -405,6 +426,11 @@ const WorkflowList = (props) => {
             </div>
           );
         },
+      },
+      {
+        field: "last_execution_date",
+        headerName: "Last Execution Date",
+        width: 250,
       },
     ],
   };

@@ -7,9 +7,9 @@ const JobDisplayLogs = (props) => {
   const { params } = props;
   function handleFetchEvent(message, id) {
     if (message.trim()) {
-      const parsedData = JSON.parse(message.trim());
+      // const parsedData = JSON.parse(message.trim());
       // setLogs(parsedData);
-      setLogs((logs) => [...logs, parsedData]);
+      setLogs(message.trim());
     }
   }
   useEffect(async () => {
