@@ -102,17 +102,18 @@ export default function EditTestRun(props) {
     console.log("testRunDetails?.testcases");
 
     console.log(new Set([...testRunDetails?.testcases, ...selectedModel]));
-    console.log(
-      selectedModel.filter((x) => testRunDetails?.testcases.indexOf(x) === -1)
-    );
+    // console.log(
+    //   selectedModel.filter((x) => testRunDetails?.testcases.indexOf(x) === -1)
+    // );
+    data.testcases = selectedModel;
     // data.testcases = [
     //   new Set([...testRunDetails?.testcases, ...selectedModel]),
     // ];
     // [...new Set(selectedModel)];
 
-    data.testcases = selectedModel.filter(
-      (x) => testRunDetails?.testcases.indexOf(x) === -1
-    );
+    // data.testcases = selectedModel.filter(
+    //   (x) => testRunDetails?.testcases.indexOf(x) === -1
+    // );
     data.id = param[1];
     try {
       await mutateAsync(data);
