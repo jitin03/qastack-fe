@@ -20,14 +20,14 @@ import CreateWorkflow from "../layouts/Workflow/Create";
 
 const routes = [
   {
-    path: "/auth/register",
+    path: "/register",
     component: RegisterContainer,
     title: "Register",
     needsAuth: false,
   },
 
   {
-    path: "/auth/login",
+    path: "/login",
     component: LoginContainer,
     title: "Login",
     needsAuth: false,

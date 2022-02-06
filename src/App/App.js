@@ -103,7 +103,7 @@ function App() {
             {routes.map((route, index) => {
               const { path, component } = route;
               if (route.needsAuth && !isAuthenticated()) {
-                history.push("/auth/login");
+                history.push("/login");
               }
               return (
                 <Route key={index} exact path={path} component={component} />
