@@ -11,8 +11,11 @@ import { getUserDetailFromToken } from "../../../helper/token";
 import { getUserDetail } from "../../../context/actions/auth/api";
 import WorkFlow from "./WorkFlow";
 import AddStep from "./AddStep";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CloseIcon from "@mui/icons-material/Close";
 import { addWorkFlow } from "../../../context/actions/workflow/api";
 import { generateId } from "../../../helper/appHelper";
+import { useGlobalContext } from "../../../context/provider/context";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -34,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CreateWorkflow() {
   const classes = useStyles();
   const { register, handleSubmit, control } = useForm();
-
+  const { handleCloseRightDrawer } = useGlobalContext();
   const [openDialog, setOpenDialog] = useState(false);
   const [elements, setElements] = useState([]);
   const [workFlowState, setworkFlowState] = useState([]);
@@ -108,6 +111,31 @@ export default function CreateWorkflow() {
         >
           <Grid item md={4} style={{ padding: "15px" }}>
             <Typography variant="h6">Create Job</Typography>
+          </Grid>
+          <Grid
+            item
+            container
+            md={8}
+            style={{ padding: "15px" }}
+            justifyContent="flex-end"
+          >
+            <Grid item>
+              <Tooltip title="Close" arrow>
+                <Button>
+                  <CancelIcon
+                    variant="outlined"
+                    startIcon={<AddIcon />}
+                    // onClick={() => setState(!state)}
+                    onClick={(e) => {
+                      history.push(`/project/${projectId}/ciFlow`);
+                    }}
+                    sx={{ m: 1, textAlign: "right" }}
+                  >
+                    Close
+                  </CancelIcon>
+                </Button>
+              </Tooltip>
+            </Grid>
           </Grid>
           <Grid
             item

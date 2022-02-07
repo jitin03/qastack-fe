@@ -119,9 +119,9 @@ export default function EditTestRun(props) {
       await mutateAsync(data);
 
       // setSelectedModel([]);
-      handleCloseRightDrawer(e);
+      handleCloseRightDrawer(e, "Edit TestRun", param);
     } catch (error) {
-      history.goBack();
+      handleCloseRightDrawer(e, "Edit TestRun", param);
       console.log(error.message);
       setSelectedModel([]);
     }
@@ -185,7 +185,9 @@ export default function EditTestRun(props) {
                 type="cancel"
                 text="Cancel"
                 style={{ marginRight: "10px" }}
-                onClick={handleCloseRightDrawer}
+                onClick={(e) => {
+                  handleCloseRightDrawer(e, "Edit TestRun", param);
+                }}
               />
               <Controls.Button text="Update" />
             </Grid>

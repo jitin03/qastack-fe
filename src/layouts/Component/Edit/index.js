@@ -75,13 +75,13 @@ export default function EditComponent(props) {
       await mutateAsync({ editId, editPayload });
       queryClient.invalidateQueries("component");
       setForm({});
-      handleCloseRightDrawer(e);
+      handleCloseRightDrawer(e, "Edit Component", param[0]);
     } catch (error) {
       componentDispatch({
         type: COMPONENT_CREATE_ERROR,
         payload: error.message,
       });
-      handleCloseRightDrawer(e);
+      handleCloseRightDrawer(e, "Edit Component", param[0]);
       setForm({});
     }
   };
@@ -108,7 +108,9 @@ export default function EditComponent(props) {
           type="cancel"
           text="Cancel"
           style={{ marginRight: "10px" }}
-          onClick={handleCloseRightDrawer}
+          onClick={(e) => {
+            handleCloseRightDrawer(e, "Edit Component", param[0]);
+          }}
         />
         <Controls.Button
           text="Submit"

@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 });
 export const ReleaseEditForm = (props) => {
   const { param } = props;
-  console.log("param", param);
+
   const classes = useStyles();
   const {
     releaseState: release,
@@ -46,7 +46,7 @@ export const ReleaseEditForm = (props) => {
     data.editId = param[1];
     await mutateAsync(data);
     queryClient.invalidateQueries("releases");
-    handleCloseRightDrawer(e);
+    handleCloseRightDrawer(e, "Edit Release", param[0]);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -136,7 +136,9 @@ export const ReleaseEditForm = (props) => {
           type="cancel"
           text="Cancel"
           style={{ marginRight: "10px" }}
-          onClick={handleCloseRightDrawer}
+          onClick={(e) => {
+            handleCloseRightDrawer(e, "Edit Release", param[0]);
+          }}
         />
         <Controls.Button text="Submit" />
       </Grid>

@@ -406,7 +406,7 @@ const WorkflowList = (props) => {
                       {!workflowTriggeredStatus && (
                         <DeleteWorkflow params={params} />
                       )}
-                      <WorkflowLogs params={params} />
+                      <WorkflowLogs params={params} projectId={projectId} />
                       {/* <Tooltip title="View Logs" arrow>
                         <IconButton
                           color="secondary"

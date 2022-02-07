@@ -64,7 +64,9 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
           </Grid>
           <Grid item style={{ flex: "1" }}></Grid>
           <Grid item>
-            <IconButton onClick={(e) => handleCloseRightDrawer(e)}>
+            <IconButton
+              onClick={(e) => handleCloseRightDrawer(e, configTitle, params)}
+            >
               <CloseIcon />
             </IconButton>
           </Grid>

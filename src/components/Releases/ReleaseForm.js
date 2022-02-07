@@ -56,7 +56,7 @@ export default function ReleaseForm(props) {
     await mutateAsync(data);
     queryClient.invalidateQueries("releases");
 
-    handleCloseRightDrawer(e);
+    handleCloseRightDrawer(e, "Add Release", param);
     // projectDispatch({
     //   type: "RESET_PROJECT_FORM",
     // });
@@ -152,7 +152,9 @@ export default function ReleaseForm(props) {
           type="cancel"
           text="Cancel"
           style={{ marginRight: "10px" }}
-          onClick={handleCloseRightDrawer}
+          onClick={(e) => {
+            handleCloseRightDrawer(e, "Add Release", param);
+          }}
         />
         <Controls.Button text="Submit" />
       </Grid>

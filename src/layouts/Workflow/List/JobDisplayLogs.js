@@ -14,8 +14,8 @@ const JobDisplayLogs = (props) => {
   }
   useEffect(async () => {
     let response = await fetchWorkflowLogs(
+      params[2],
       params[1],
-      params[0],
       handleFetchEvent
     );
   }, []);

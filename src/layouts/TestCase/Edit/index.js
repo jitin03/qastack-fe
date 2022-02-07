@@ -126,9 +126,9 @@ export default function EditTestCase(props) {
     try {
       await mutateAsync(data);
 
-      handleCloseRightDrawer(e);
+      handleCloseRightDrawer(e, "Edit TestCase", param);
     } catch (error) {
-      history.goBack();
+      handleCloseRightDrawer(e, "Edit TestCase", param);
       console.log(error.message);
     }
   };
@@ -224,7 +224,9 @@ export default function EditTestCase(props) {
             type="cancel"
             text="Cancel"
             style={{ marginRight: "10px" }}
-            onClick={handleCloseRightDrawer}
+            onClick={(e) => {
+              handleCloseRightDrawer(e, "Edit TestCase", param);
+            }}
           />
           <Controls.Button text="Update" />
         </Grid>
