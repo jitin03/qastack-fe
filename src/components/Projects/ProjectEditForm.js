@@ -38,8 +38,8 @@ export default function ProjectEditForm() {
       queryClient.invalidateQueries("project");
     }
 
-    handleCloseRightDrawer(e);
-    history.push("/projects");
+    handleCloseRightDrawer(e, "Edit Project");
+
     projectDispatch({
       type: "RESET_PROJECT_FORM",
     });
@@ -68,7 +68,9 @@ export default function ProjectEditForm() {
           type="cancel"
           text="Cancel"
           style={{ marginRight: "10px" }}
-          onClick={handleCloseRightDrawer}
+          onClick={(e) => {
+            handleCloseRightDrawer(e, "Edit Project");
+          }}
         />
         <Controls.Button text="Save" onClick={handleProjectFormSave} />
       </Grid>

@@ -52,7 +52,7 @@ export default function ProjectForm() {
       queryClient.invalidateQueries("project");
     }
 
-    handleCloseRightDrawer(e);
+    handleCloseRightDrawer(e, "Add Project");
     projectDispatch({
       type: "RESET_PROJECT_FORM",
     });
@@ -82,7 +82,9 @@ export default function ProjectForm() {
           type="cancel"
           text="Cancel"
           style={{ marginRight: "10px" }}
-          onClick={handleCloseRightDrawer}
+          onClick={(e) => {
+            handleCloseRightDrawer(e, "Add Project");
+          }}
         />
         <Controls.Button text="Submit" onClick={handleProjectFormSubmit} />
       </Grid>

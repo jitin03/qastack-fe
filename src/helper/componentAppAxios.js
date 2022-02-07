@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default (history = null) => {
-  const baseURL = process.env.REACT_APP_COMPONENT_SERVER;
+  const baseURL = process.env.REACT_APP_API_SERVER;
 
   let headers = {};
 
@@ -30,9 +30,9 @@ export default (history = null) => {
         localStorage.removeItem("token");
 
         if (history) {
-          history.push("/auth/login");
+          history.push("/login");
         } else {
-          window.location = "/auth/login";
+          window.location = "/login";
         }
       } else {
         return new Promise((resolve, reject) => {

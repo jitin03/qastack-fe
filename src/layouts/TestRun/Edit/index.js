@@ -102,25 +102,26 @@ export default function EditTestRun(props) {
     console.log("testRunDetails?.testcases");
 
     console.log(new Set([...testRunDetails?.testcases, ...selectedModel]));
-    console.log(
-      selectedModel.filter((x) => testRunDetails?.testcases.indexOf(x) === -1)
-    );
+    // console.log(
+    //   selectedModel.filter((x) => testRunDetails?.testcases.indexOf(x) === -1)
+    // );
+    data.testcases = selectedModel;
     // data.testcases = [
     //   new Set([...testRunDetails?.testcases, ...selectedModel]),
     // ];
     // [...new Set(selectedModel)];
 
-    data.testcases = selectedModel.filter(
-      (x) => testRunDetails?.testcases.indexOf(x) === -1
-    );
+    // data.testcases = selectedModel.filter(
+    //   (x) => testRunDetails?.testcases.indexOf(x) === -1
+    // );
     data.id = param[1];
     try {
       await mutateAsync(data);
 
       // setSelectedModel([]);
-      handleCloseRightDrawer(e);
+      handleCloseRightDrawer(e, "Edit TestRun", param);
     } catch (error) {
-      history.goBack();
+      handleCloseRightDrawer(e, "Edit TestRun", param);
       console.log(error.message);
       setSelectedModel([]);
     }
@@ -184,7 +185,9 @@ export default function EditTestRun(props) {
                 type="cancel"
                 text="Cancel"
                 style={{ marginRight: "10px" }}
-                onClick={handleCloseRightDrawer}
+                onClick={(e) => {
+                  handleCloseRightDrawer(e, "Edit TestRun", param);
+                }}
               />
               <Controls.Button text="Update" />
             </Grid>

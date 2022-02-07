@@ -65,8 +65,7 @@ export default function CreateComponent(props) {
       await mutateAsync(form);
       queryClient.invalidateQueries("component");
       setForm({});
-      handleCloseRightDrawer(e);
-      history.push("/components");
+      handleCloseRightDrawer(e, "Add Component", param);
     } catch (error) {
       componentDispatch({
         type: COMPONENT_CREATE_ERROR,
@@ -99,7 +98,9 @@ export default function CreateComponent(props) {
           type="cancel"
           text="Cancel"
           style={{ marginRight: "10px" }}
-          onClick={handleCloseRightDrawer}
+          onClick={(e) => {
+            handleCloseRightDrawer(e, "Add Component", param);
+          }}
         />
         <Controls.Button text="Submit" onClick={handleComponentSubmit} />
       </Grid>

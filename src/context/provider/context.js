@@ -100,7 +100,7 @@ const AppProvider = ({ children }) => {
     } else if (configTitle === "Edit TestRun") {
       history.push(`${window.location.pathname}/edit/${param[1]}`);
     } else if (configTitle === "View Logs") {
-      history.push(`${window.location.pathname}/workflow/logs/${param[0]}`);
+      history.push(`${window.location.pathname}/workflow/logs/${param[1]}`);
     }
     setConfigTitle(configTitle);
     setState(!state);
@@ -150,10 +150,38 @@ const AppProvider = ({ children }) => {
     });
     setModule(newModules);
   };
-  const handleCloseRightDrawer = (e) => {
+  const handleCloseRightDrawer = (e, title, params) => {
     e.preventDefault();
     setState(!state);
-    history.goBack();
+    if (Array.isArray(params)) {
+      params = params[0];
+    }
+
+    if (title === "Add Project") {
+      history.push("/projects");
+    } else if (title === "Edit Project") {
+      history.push("/projects");
+    } else if (title === "Add Release") {
+      history.push(`/project/${params}/releases`);
+    } else if (title === "Edit Release") {
+      history.push(`/project/${params}/releases`);
+    } else if (title === "Add Component") {
+      history.push(`/project/${params}/components`);
+    } else if (title === "Edit Component") {
+      history.push(`/project/${params}/components`);
+    } else if (title === "Add TestCase") {
+      history.push(`/project/${params}/components/testcases`);
+    } else if (title === "Edit TestCase") {
+      history.push(`/project/${params}/components/testcases`);
+    } else if (title === "Add TestRun") {
+      history.push(`/project/${params}/testruns`);
+    } else if (title === "Edit TestRun") {
+      history.push(`/project/${params}/testruns`);
+    } else if (title === "View Logs") {
+      history.push(`/project/${params}/ciFlow`);
+    } else if (title === "Add Job") {
+      history.push(`/project/${params}/ciFlow`);
+    }
   };
   const toggleDrawer = () => (event) => {
     if (

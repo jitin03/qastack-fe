@@ -19,7 +19,7 @@ export const getAllProjects = async (userid) => {
 
 export const getAllRelease = async (projectId) => {
   const response = await axiosAppInstance().get(
-    `${process.env.REACT_APP_API_SERVER}/api/releases?projectId=${projectId}`,
+    `/api/releases?projectId=${projectId}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +32,7 @@ export const getAllRelease = async (projectId) => {
 
 export const deleteProject = async (id) => {
   const response = await axiosAppInstance().delete(
-    `${process.env.REACT_APP_API_SERVER}/api/project/delete/${id}`,
+    `/api/project/delete/${id}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -44,14 +44,11 @@ export const deleteProject = async (id) => {
 };
 
 export const getProjectDetail = async (id) => {
-  const response = await axiosAppInstance().get(
-    `${process.env.REACT_APP_API_SERVER}/api/project/${id}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await axiosAppInstance().get(`/api/project/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   return await response.data;
 };
@@ -88,7 +85,7 @@ export const addRelease = async ({ ...data }) => {
 
 export const deleteRelease = async (id) => {
   const response = await axiosAppInstance().delete(
-    `${process.env.REACT_APP_API_SERVER}/api/release/delete/${id}`,
+    `/api/release/delete/${id}`,
     {
       headers: {
         "Content-Type": "application/json",

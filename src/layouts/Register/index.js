@@ -82,7 +82,7 @@ const RegisterUI = ({
       await mutateAsync(form);
 
       setForm({});
-      history.push("/auth/login");
+      history.push("/login");
     } catch (error) {
       authDispatch({
         type: REGISTER_ERROR,

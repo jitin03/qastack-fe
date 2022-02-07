@@ -88,10 +88,9 @@ export default function CreateTestCase(props) {
     try {
       await mutateAsync(data);
 
-      handleCloseRightDrawer(e);
-      history.goBack();
+      handleCloseRightDrawer(e, "Add TestCase", param);
     } catch (error) {
-      history.goBack();
+      handleCloseRightDrawer(e, "Add TestCase", param);
       console.log(error.message);
     }
   };
@@ -157,7 +156,9 @@ export default function CreateTestCase(props) {
                 type="cancel"
                 text="Cancel"
                 style={{ marginRight: "10px" }}
-                onClick={handleCloseRightDrawer}
+                onClick={(e) => {
+                  handleCloseRightDrawer(e, "Add TestCase", param);
+                }}
               />
               <Controls.Button text="Submit" />
             </Grid>

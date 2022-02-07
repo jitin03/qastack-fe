@@ -273,7 +273,8 @@ const WorkflowList = (props) => {
 
     if (
       message?.result?.object.status.phase === "Succeeded" ||
-      message?.result?.object.status.phase === "Failed"
+      message?.result?.object.status.phase === "Failed" ||
+      message?.result?.object.status.phase === "Error"
     ) {
       queryClient.invalidateQueries("workflows");
       updateWorkflowStatus(workflowStatus);
@@ -405,7 +406,7 @@ const WorkflowList = (props) => {
                       {!workflowTriggeredStatus && (
                         <DeleteWorkflow params={params} />
                       )}
-                      <WorkflowLogs params={params} />
+                      <WorkflowLogs params={params} projectId={projectId} />
                       {/* <Tooltip title="View Logs" arrow>
                         <IconButton
                           color="secondary"

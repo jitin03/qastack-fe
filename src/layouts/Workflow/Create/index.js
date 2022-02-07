@@ -1,19 +1,21 @@
+import React, { useState } from "react";
+import { useMutation, useQuery } from "react-query";
+import { useParams, useHistory } from "react-router-dom";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Button, Grid, TextField, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import { Controller, useForm } from "react-hook-form";
-import PublishIcon from "@mui/icons-material/Publish";
-import WorkFlow from "../../CIFlow/Create/WorkFlow";
-import AddStep from "../../CIFlow/Create/AddStep";
-import { useMutation, useQuery } from "react-query";
-import { addWorkFlow } from "../../../context/actions/workflow/api";
-import { useParams } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { Add as AddIcon, Publish as PublishIcon } from "@mui/icons-material";
 import { makeStyles } from "@material-ui/core";
 import isAuthenticated from "../../../context/actions/auth/isAuthenticated";
 import { getUserDetailFromToken } from "../../../helper/token";
 import { getUserDetail } from "../../../context/actions/auth/api";
+import WorkFlow from "./WorkFlow";
+import AddStep from "./AddStep";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CloseIcon from "@mui/icons-material/Close";
+import { addWorkFlow } from "../../../context/actions/workflow/api";
+import { generateId } from "../../../helper/appHelper";
+import { useGlobalContext } from "../../../context/provider/context";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -35,40 +37,39 @@ const useStyles = makeStyles((theme) => ({
 export default function CreateWorkflow() {
   const classes = useStyles();
   const { register, handleSubmit, control } = useForm();
+  const { handleCloseRightDrawer } = useGlobalContext();
   const [openDialog, setOpenDialog] = useState(false);
   const [elements, setElements] = useState([]);
   const [workFlowState, setworkFlowState] = useState([]);
   const [stepsConfig, setStepsConfig] = useState([]);
   const { projectKey: projectId } = useParams();
   const onSubmitAddStep = (workFlowDetail) => {
-    switch (elements.length) {
-      case 0:
-        setElements([
-          {
-            id: `${elements.length}`,
-            data: { label: `${workFlowDetail.name}` },
-            position: { x: 600, y: 100 },
-          },
-        ]);
-        setworkFlowState([...workFlowState, workFlowDetail]);
-        break;
-      case 1:
-        setElements([
-          ...elements,
-          {
-            id: `${elements.length}`,
-            data: { label: `${workFlowDetail.name}` },
-            position: { x: 600, y: 300 },
-          },
-          { id: "e0-1", source: "0", target: "1" },
-        ]);
-        setworkFlowState([...workFlowState, workFlowDetail]);
-        break;
-      default:
-        break;
-    }
-  };
+    const elementId = generateId();
+    workFlowDetail.id = elementId;
+    const currentNode = {
+      id: `${elementId}`,
+      data: { label: `${workFlowDetail.name}` },
+    };
 
+    if (elements.length) {
+      currentNode.position = { x: (600 * workFlowState.length) / 2, y: 300 };
+      const updatedElements = [...elements, currentNode];
+      if (workFlowDetail.dependencies) {
+        // add edge
+        const edge = {
+          id: `${generateId()}`,
+          source: `${workFlowDetail.dependencies}`,
+          target: `${elementId}`,
+        };
+        updatedElements.push(edge);
+      }
+      setElements(updatedElements);
+    } else {
+      currentNode.position = { x: 600, y: 100 };
+      setElements([currentNode]);
+    }
+    setworkFlowState([...workFlowState, workFlowDetail]);
+  };
   const { data: user, isSuccess: userDetails } = useQuery(
     isAuthenticated() && [
       "users",
@@ -110,6 +111,31 @@ export default function CreateWorkflow() {
         >
           <Grid item md={4} style={{ padding: "15px" }}>
             <Typography variant="h6">Create Job</Typography>
+          </Grid>
+          <Grid
+            item
+            container
+            md={8}
+            style={{ padding: "15px" }}
+            justifyContent="flex-end"
+          >
+            <Grid item>
+              <Tooltip title="Close" arrow>
+                <Button>
+                  <CancelIcon
+                    variant="outlined"
+                    startIcon={<AddIcon />}
+                    // onClick={() => setState(!state)}
+                    onClick={(e) => {
+                      history.push(`/project/${projectId}/ciFlow`);
+                    }}
+                    sx={{ m: 1, textAlign: "right" }}
+                  >
+                    Close
+                  </CancelIcon>
+                </Button>
+              </Tooltip>
+            </Grid>
           </Grid>
           <Grid
             item

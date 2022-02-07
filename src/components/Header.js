@@ -84,7 +84,7 @@ export default function Header(props) {
   const history = useHistory();
   const handleUserLogout = () => {
     localStorage.removeItem("token");
-    history.push("/auth/login");
+    history.push("/login");
   };
   useEffect(() => {
     if (projects) {
@@ -163,7 +163,7 @@ export default function Header(props) {
                   variant="outlined"
                   text="Sign Up"
                   component={Link}
-                  to={"/auth/register"}
+                  to={"/register"}
                 ></Button>
               </Grid>
             ) : (

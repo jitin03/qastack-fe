@@ -7,7 +7,7 @@ import RegisterContainer from "../components/Register";
 import Release from "../components/Releases/Release";
 import CIFlow from "../layouts/CIFlow";
 import WorkflowList from "../layouts/Workflow/List";
-import OverviewFlow from "../layouts/CIFlow/Create";
+// import OverviewFlow from "../layouts/CIFlow/Create";
 import WorkflowInfo from "../layouts/CIFlow/Info";
 import CreateComponent from "../layouts/Component/Create";
 import EditComponent from "../layouts/Component/Edit";
@@ -20,14 +20,14 @@ import CreateWorkflow from "../layouts/Workflow/Create";
 
 const routes = [
   {
-    path: "/auth/register",
+    path: "/register",
     component: RegisterContainer,
     title: "Register",
     needsAuth: false,
   },
 
   {
-    path: "/auth/login",
+    path: "/login",
     component: LoginContainer,
     title: "Login",
     needsAuth: false,
