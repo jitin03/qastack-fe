@@ -73,7 +73,7 @@ export default function CreateWorkflow() {
   const { data: user, isSuccess: userDetails } = useQuery(
     isAuthenticated() && [
       "users",
-      getUserDetailFromToken(localStorage.getItem("token")).Username,
+      getUserDetailFromToken(localStorage.getItem("token")).username,
     ],
     getUserDetail
   );

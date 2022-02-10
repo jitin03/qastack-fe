@@ -17,6 +17,7 @@ import TestCaseList from "../layouts/TestCase/List";
 import { TestExecution } from "../layouts/TestRun/Execution";
 import TestRunList from "../layouts/TestRun/List";
 import CreateWorkflow from "../layouts/Workflow/Create";
+import VerifyUserEmail from "../layouts/VerifyUserEmail";
 
 const routes = [
   {
@@ -25,6 +26,13 @@ const routes = [
     title: "Register",
     needsAuth: false,
   },
+
+  // {
+  //   path: "/verify/mail?code=:code&email=:email",
+  //   component: VerifyUserEmail,
+  //   title: "VerifyUserEmail",
+  //   needsAuth: true,
+  // },
 
   {
     path: "/login",

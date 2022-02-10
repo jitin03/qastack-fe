@@ -40,3 +40,21 @@ export const getUserDetail = async ({ queryKey }) => {
     throw Error(error.response.data.message);
   }
 };
+export const getVerifyEmail = async ({ queryKey }) => {
+  const [_key, code, email] = queryKey;
+
+  try {
+    const response = await axiosInstance().get(
+      `/verify/mail?code=${code}&email=${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response;
+  } catch (error) {
+    throw Error(error.response.data.message);
+  }
+};

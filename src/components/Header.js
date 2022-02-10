@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { Badge, Grid, IconButton, Toolbar, Typography } from "@mui/material";
+import {
+  Badge,
+  Button,
+  Grid,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
 import { makeStyles } from "@mui/styles";
@@ -12,7 +19,7 @@ import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useProjectContext } from "../context/provider/projectContext";
-import Button from "./controllers/Button";
+
 import isAuthenticated from "../context/actions/auth/isAuthenticated";
 import { getAllProjects } from "../context/actions/project/api";
 import { useAuthContext } from "../context/provider/authContext";
@@ -66,7 +73,7 @@ export default function Header(props) {
   const { data: user, isSuccess: userDetails } = useQuery(
     isAuthenticated() && [
       "users",
-      getUserDetailFromToken(localStorage.getItem("token")).Username,
+      getUserDetailFromToken(localStorage.getItem("token")).username,
     ],
     getUserDetail
   );
@@ -151,7 +158,7 @@ export default function Header(props) {
                   <Typography>
                     {
                       getUserDetailFromToken(localStorage.getItem("token"))
-                        .Username
+                        .username
                     }
                   </Typography>
                 </Grid>
@@ -159,12 +166,16 @@ export default function Header(props) {
 
             {!isAuthenticated() ? (
               <Grid item textAlign="end">
-                <Button
-                  variant="outlined"
-                  text="Sign Up"
+                {/* <Button
                   component={Link}
-                  to={"/register"}
-                ></Button>
+                  variant="outlined"
+                  style={{
+                    backgroundColor: "#fefefe",
+                  }}
+                  to="/register"
+                >
+                  Sign Up
+                </Button> */}
               </Grid>
             ) : (
               <Grid item textAlign="end">
