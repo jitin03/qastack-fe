@@ -7,7 +7,7 @@ export default async function closeEventSource(workflowName) {
   }
   const ctrl = new AbortController();
   let eventResponse = await fetchEventSource(
-    `${process.env.REACT_APP_API_SERVER}/api/event/workflow?workflowName=${workflowName}`,
+    `https://test.qastack.io/api/event/workflow?workflowName=${workflowName}`,
     {
       method: "GET",
       headers: {
