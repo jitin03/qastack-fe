@@ -10,7 +10,7 @@ export async function fetchData(workflowName, id, onMessage) {
   }
 
   let eventResponse = await fetchEventSource(
-    `${process.env.REACT_APP_WORKFLOW_SERVER}/api/event/workflow?workflowName=${workflowName}`,
+    `${process.env.REACT_APP_API_SERVER}/api/event/workflow?workflowName=${workflowName}`,
     {
       method: "GET",
       headers: {
