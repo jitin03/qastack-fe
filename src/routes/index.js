@@ -56,6 +56,12 @@ const routes = [
     needsAuth: false,
   },
   {
+    path: "/",
+    component: LoginContainer,
+    title: "Login",
+    needsAuth: false,
+  },
+  {
     path: "/project/edit/:id",
     component: Project,
     title: "Edit Project",

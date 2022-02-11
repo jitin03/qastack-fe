@@ -78,7 +78,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 const RenderRoute = (route) => {
   const history = useHistory();
 
-  document.title = route.title || "TrulyContacts";
+  document.title = route.title || "QAStack";
   if (route.needsAuth && !isAuthenticated()) {
     history.push("/login");
   }
