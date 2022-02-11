@@ -10,7 +10,7 @@ export async function fetchData(workflowName, id, onMessage) {
   }
 
   let eventResponse = await fetchEventSource(
-    `${process.env.REACT_APP_WORKFLOW_SERVER}/api/event/workflow?workflowName=${workflowName}`,
+    `https://test.qastack.io/api/event/workflow?workflowName=${workflowName}`,
     {
       method: "GET",
       headers: {
@@ -57,7 +57,7 @@ export async function fetchWorkflowLogs(workflowName, id, onMessage) {
   }
 
   let eventResponse = await fetchEventSource(
-    `${process.env.REACT_APP_WORKFLOW_SERVER}/api/event/logs?workflowName=${workflowName}`,
+    `https://test.qastack.io/api/event/logs?workflowName=${workflowName}`,
     {
       method: "GET",
       headers: {
