@@ -18,6 +18,8 @@ import { TestExecution } from "../layouts/TestRun/Execution";
 import TestRunList from "../layouts/TestRun/List";
 import CreateWorkflow from "../layouts/Workflow/Create";
 import VerifyUserEmail from "../layouts/VerifyUserEmail";
+import ForgotPassword from "../layouts/ForgotPassword";
+import ResetPassword from "../layouts/ForgotPassword/resetPassword";
 
 const routes = [
   {
@@ -26,13 +28,26 @@ const routes = [
     title: "Register",
     needsAuth: false,
   },
+  {
+    path: "/forgot-password",
+    component: ForgotPassword,
+    title: "Forgot Password",
+    needsAuth: false,
+  },
 
-  // {
-  //   path: "/verify/mail?code=:code&email=:email",
-  //   component: VerifyUserEmail,
-  //   title: "VerifyUserEmail",
-  //   needsAuth: true,
-  // },
+  {
+    path: "/verify/mail/",
+    component: VerifyUserEmail,
+    title: "VerifyUserEmail",
+    needsAuth: false,
+  },
+
+  {
+    path: "/reset-password",
+    component: ResetPassword,
+    title: "ResetPassword",
+    needsAuth: false,
+  },
 
   {
     path: "/login",

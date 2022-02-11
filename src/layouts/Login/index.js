@@ -156,7 +156,7 @@ const LoginUI = ({
                 style={{ padding: "20px" }}
                 spacing={3}
               >
-                <Grid item>
+                <Grid item container>
                   <TextField
                     name="username"
                     label="Username"
@@ -190,8 +190,18 @@ const LoginUI = ({
                       ),
                     }}
                   />
+                  <Grid item xs={12}>
+                    <Link underline="none" href={`/forgot-password`}>
+                      <Typography
+                        align="right"
+                        style={{ color: "rgb(121, 92, 236)" }}
+                      >
+                        Forgot password?
+                      </Typography>
+                    </Link>
+                  </Grid>
                 </Grid>
-                <Grid item style={{ flex: "1" }}>
+                <Grid item xs={12}>
                   {loginFormValid ? (
                     <Controls.Button text="Submit" disabled fullWidth />
                   ) : isLoading ? (
@@ -221,7 +231,7 @@ const LoginUI = ({
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Grid item container spacing={1}>
+                  <Grid item container spacing={0.5}>
                     <Grid item xs={6} justifyContent="flex-end">
                       <Typography align="right">New User?</Typography>
                     </Grid>

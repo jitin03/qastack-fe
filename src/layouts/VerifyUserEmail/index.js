@@ -41,12 +41,27 @@ const useStyles = makeStyles((theme) => ({
     padding: "1rem 1.5rem 1.5rem",
   },
 }));
+function getQueryVariable(variable) {
+  var query = window.location.search.substring(1);
+  console.log(query); //"app=article&act=news_content&aid=160990"
+  var vars = query.split("&");
+  console.log(vars); //[ 'app=article', 'act=news_content', 'aid=160990' ]
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    console.log(pair); //[ 'app', 'article' ][ 'act', 'news_content' ][ 'aid', '160990' ]
+    if (pair[0] == variable) {
+      return pair[1];
+    }
+  }
+  return false;
+}
 
 const VerifyUserEmail = () => {
   const queryClient = useQueryClient();
   const history = useHistory();
 
-  let { code, email } = useParams();
+  let code = getQueryVariable("code");
+  let email = getQueryVariable("email");
   const {
     handleCloseToast,
     openToast,
@@ -109,9 +124,38 @@ const VerifyUserEmail = () => {
     );
   }
 
+  if (isLoading) {
+    return (
+      <>
+        <Grid container>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ padding: "50px 10px" }}
+          >
+            <Container sx={{ display: "flex" }}>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+            </Container>
+            <Grid item></Grid>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
+
   return (
     <>
-      <Grid
+      {/* <Grid
         container
         justifyItems="center"
         alignContent="center"
@@ -122,7 +166,7 @@ const VerifyUserEmail = () => {
         <Grid item md={4}></Grid>
         <Typography>Verified</Typography>
         <Grid item md={4}></Grid>
-      </Grid>
+      </Grid> */}
     </>
   );
 };

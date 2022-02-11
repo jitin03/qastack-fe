@@ -6,10 +6,12 @@ import {
   InputAdornment,
   Typography,
   Container,
+  Button,
 } from "@mui/material";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import React, { useState, useEffect } from "react";
+import SaveIcon from "@mui/icons-material/Save";
 import { Form } from "../../components/useForm";
 import Controls from "../../components/controllers/Controls";
 import { Link, Paper } from "@material-ui/core";
@@ -28,6 +30,7 @@ import {
   REGISTER_SUCCESS,
 } from "../../constants/actionTypes";
 import { useGlobalContext } from "../../context/provider/context";
+import { LoadingButton } from "@mui/lab";
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: theme.spacing(0.5),
@@ -113,7 +116,7 @@ const RegisterUI = ({
               >
                 <Grid item container justifyContent="center">
                   <Grid item>
-                    <Typography variant="h3" style={{ fontWeight: "600" }}>
+                    <Typography variant="h3" style={{ fontWeight: "500" }}>
                       Awesome! Please check your email.
                     </Typography>
                     <br></br>
@@ -141,8 +144,8 @@ const RegisterUI = ({
         textAlign="center"
         marginTop="80px"
       >
-        <Grid item md={4}></Grid>
-        <Grid item md={4} className={classes.registerForm}>
+        <Grid item xs={4}></Grid>
+        <Grid item xs={4} className={classes.registerForm}>
           {isSuccess && (
             <Typography variant="h5">Click here to login</Typography>
           )}
@@ -153,15 +156,14 @@ const RegisterUI = ({
               <Grid
                 container
                 justifyContent="center"
-                style={{ padding: "20px" }}
-                spacing={4}
+                alignContent="center"
+                // spacing={4}
               >
                 <Grid item>
                   <TextField
                     name="username"
                     label="Username"
                     value={form.username || ""}
-                    style={{ width: "100%" }}
                     onChange={handleInputChange}
                   />
                   <TextField
@@ -169,7 +171,6 @@ const RegisterUI = ({
                     label="Password"
                     type={passwordIsMasked ? "password" : "text"}
                     value={form.password || ""}
-                    style={{ width: "100%" }}
                     onChange={handleInputChange}
                     InputProps={{
                       endAdornment: (
@@ -193,24 +194,37 @@ const RegisterUI = ({
                     name="confirmpassword"
                     label="Confirm Password"
                     value={form.confirmpassword || ""}
-                    style={{ width: "100%" }}
                     onChange={handleInputChange}
                   />
                   <TextField
                     name="email"
                     label="Email"
                     value={form.email || ""}
-                    style={{ width: "100%" }}
                     onChange={handleInputChange}
                   />
                 </Grid>
-                <Grid item style={{ flex: "1" }}>
-                  {registerFormValid ? (
-                    <Controls.Button text="Submit" disabled fullWidth />
+                <Grid
+                  item
+                  xs={12}
+                  style={{ marginTop: "20px", padding: "32px" }}
+                >
+                  {isLoading ? (
+                    <LoadingButton
+                      loading
+                      loadingPosition="start"
+                      startIcon={<SaveIcon />}
+                      variant="outlined"
+                      fullWidth
+                    >
+                      Save
+                    </LoadingButton>
                   ) : (
-                    <Controls.Button text="Submit" fullWidth onClick={onSubmit}>
-                      {isLoading && <CircularProgress />}
-                    </Controls.Button>
+                    <Controls.Button
+                      text="Submit"
+                      fullWidth
+                      disabled={registerFormValid}
+                      onClick={onSubmit}
+                    />
                   )}
                   <Grid item>
                     <Toast
@@ -220,7 +234,13 @@ const RegisterUI = ({
                     ></Toast>
                   </Grid>
                 </Grid>
-                <Grid item container justifyContent="center" spacing={1}>
+                <Grid
+                  item
+                  xs={12}
+                  container
+                  justifyContent="center"
+                  spacing={1}
+                >
                   <Grid item justifyContent="flex-end">
                     <Typography>Already have an account?</Typography>
                   </Grid>
