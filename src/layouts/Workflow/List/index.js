@@ -74,7 +74,7 @@ export default function WorfklowCreate() {
   } = useQuery(
     isAuthenticated() && [
       "users",
-      getUserDetailFromToken(localStorage.getItem("token")).Username,
+      getUserDetailFromToken(localStorage.getItem("token")).username,
     ],
     getUserDetail
   );

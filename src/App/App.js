@@ -75,6 +75,24 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
+const RenderRoute = (route) => {
+  const history = useHistory();
+
+  document.title = route.title || "QAStack";
+  console.log("route.needsAuth", route.needsAuth);
+  console.log("route.needsAuth", route.needsAuth);
+  if (route.needsAuth && !isAuthenticated()) {
+    history.push("/login");
+  }
+  return (
+    <Route
+      path={route.path}
+      exact
+      render={(props) => <route.component {...props} />}
+    ></Route>
+  );
+};
+
 function App() {
   const [open, setOpen] = useState(false);
   const { configTitle, drawerParam } = useGlobalContext();
@@ -98,13 +116,15 @@ function App() {
 
         <Box component="main" sx={{ flexGrow: 1, p: 3, minHeight: "100vh" }}>
           <DrawerHeader />
-
+          {/* <Switch>
+            {routes.map((route, index) => (
+              <RenderRoute {...route} key={index} />
+            ))}
+          </Switch> */}
           <Switch>
             {routes.map((route, index) => {
               const { path, component } = route;
-              if (route.needsAuth && !isAuthenticated()) {
-                history.push("/login");
-              }
+
               return (
                 <Route key={index} exact path={path} component={component} />
               );

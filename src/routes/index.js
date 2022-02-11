@@ -17,12 +17,35 @@ import TestCaseList from "../layouts/TestCase/List";
 import { TestExecution } from "../layouts/TestRun/Execution";
 import TestRunList from "../layouts/TestRun/List";
 import CreateWorkflow from "../layouts/Workflow/Create";
+import VerifyUserEmail from "../layouts/VerifyUserEmail";
+import ForgotPassword from "../layouts/ForgotPassword";
+import ResetPassword from "../layouts/ForgotPassword/resetPassword";
 
 const routes = [
   {
     path: "/register",
     component: RegisterContainer,
     title: "Register",
+    needsAuth: false,
+  },
+  {
+    path: "/forgot-password",
+    component: ForgotPassword,
+    title: "Forgot Password",
+    needsAuth: false,
+  },
+
+  {
+    path: "/verify/mail",
+    component: VerifyUserEmail,
+    title: "VerifyUserEmail",
+    needsAuth: false,
+  },
+
+  {
+    path: "/reset-password",
+    component: ResetPassword,
+    title: "ResetPassword",
     needsAuth: false,
   },
 
@@ -32,6 +55,7 @@ const routes = [
     title: "Login",
     needsAuth: false,
   },
+
   {
     path: "/project/edit/:id",
     component: Project,

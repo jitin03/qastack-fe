@@ -42,8 +42,12 @@ const Project = () => {
 
   const { starProject } = useProjectContext();
 
+  console.log(
+    "username",
+    getUserDetailFromToken(localStorage.getItem("token")).username
+  );
   const { data: user, isSuccess: userDetails } = useQuery(
-    ["users", getUserDetailFromToken(localStorage.getItem("token")).Username],
+    ["users", getUserDetailFromToken(localStorage.getItem("token")).username],
     getUserDetail,
     {
       enabled: isAuthenticated(),

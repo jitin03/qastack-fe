@@ -2,6 +2,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  Link,
   Paper,
   TextField,
   Typography,
@@ -89,7 +90,8 @@ const LoginUI = ({
       setOpenToast(true);
     },
     onSuccess: (token) => {
-      localStorage.token = token.data;
+      localStorage.token = token.data.access_token;
+
       authDispatch({
         type: LOGIN_SUCCESS,
         payload: token,
@@ -154,7 +156,7 @@ const LoginUI = ({
                 style={{ padding: "20px" }}
                 spacing={3}
               >
-                <Grid item>
+                <Grid item container>
                   <TextField
                     name="username"
                     label="Username"
@@ -188,8 +190,18 @@ const LoginUI = ({
                       ),
                     }}
                   />
+                  <Grid item xs={12}>
+                    <Link underline="none" href={`/forgot-password`}>
+                      <Typography
+                        align="right"
+                        style={{ color: "rgb(121, 92, 236)" }}
+                      >
+                        Forgot password?
+                      </Typography>
+                    </Link>
+                  </Grid>
                 </Grid>
-                <Grid item style={{ flex: "1" }}>
+                <Grid item xs={12}>
                   {loginFormValid ? (
                     <Controls.Button text="Submit" disabled fullWidth />
                   ) : isLoading ? (
@@ -211,6 +223,28 @@ const LoginUI = ({
                       message={auth.error}
                       handleCloseToast={handleCloseToast}
                     ></Toast>
+                  </Grid>
+                </Grid>
+                <Grid
+                  item
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Grid item container spacing={0.5}>
+                    <Grid item xs={6} justifyContent="flex-end">
+                      <Typography align="right">New User?</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Link underline="none" href={`/register`}>
+                        <Typography
+                          align="left"
+                          style={{ color: "rgb(121, 92, 236)" }}
+                        >
+                          Create Account
+                        </Typography>
+                      </Link>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>

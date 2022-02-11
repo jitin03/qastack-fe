@@ -1,9 +1,27 @@
 import React, { useEffect } from "react";
-import { Badge, Grid, IconButton, Toolbar, Typography } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Divider,
+  Grid,
+  IconButton,
+  Link,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Popover,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
 import { makeStyles } from "@mui/styles";
-import { Link } from "react-router-dom";
+import InboxIcon from "@mui/icons-material/Inbox";
+import LogoutIcon from "@mui/icons-material/Logout";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import Menu from "@mui/icons-material/Menu";
 import Controls from "./controllers/Controls";
@@ -12,12 +30,14 @@ import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useProjectContext } from "../context/provider/projectContext";
-import Button from "./controllers/Button";
+import DraftsIcon from "@mui/icons-material/Drafts";
 import isAuthenticated from "../context/actions/auth/isAuthenticated";
 import { getAllProjects } from "../context/actions/project/api";
 import { useAuthContext } from "../context/provider/authContext";
-import { getUserDetail } from "../context/actions/auth/api";
+import { getUserDetail, logout } from "../context/actions/auth/api";
 import { getUserDetailFromToken } from "../helper/token";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { Box } from "@mui/system";
 const drawerWidth = 240;
 const useStyles = makeStyles({
   headerRight: {
@@ -52,8 +72,20 @@ const AppBar = styled(MuiAppBar, {
     }),
   }),
 }));
+
 export default function Header(props) {
   const { open, handleDrawerOpen } = props;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const openPop = Boolean(anchorEl);
+  const id = openPop ? "simple-popover" : undefined;
   const { projectState, projectList, setProjectList } = useGlobalContext();
   const { starProject, setStarProject } = useProjectContext();
   const classes = useStyles();
@@ -66,7 +98,7 @@ export default function Header(props) {
   const { data: user, isSuccess: userDetails } = useQuery(
     isAuthenticated() && [
       "users",
-      getUserDetailFromToken(localStorage.getItem("token")).Username,
+      getUserDetailFromToken(localStorage.getItem("token")).username,
     ],
     getUserDetail
   );
@@ -115,9 +147,14 @@ export default function Header(props) {
             alignItems="center"
           >
             <Grid item>
-              <Typography variant="h5" style={{ marginLeft: "20px" }}>
-                QA-Stack
-              </Typography>
+              <Link underline="none" href={`/login`}>
+                <Typography
+                  variant="h5"
+                  style={{ marginLeft: "20px", color: "#fefe" }}
+                >
+                  QAStack
+                </Typography>
+              </Link>
             </Grid>
           </Grid>
 
@@ -132,49 +169,87 @@ export default function Header(props) {
             alignItems="center"
           >
             {isAuthenticated() && (
-                <Grid item className={classes.headerRight}>
-                  {isLoading ? (
-                    <CircularProgress />
-                  ) : (
-                    <Controls.Select
-                      variant="standard"
-                      name="projectName"
-                      label="Select Project"
-                      value={starProject}
-                      onChange={(e) => setStarProject(e.target.value)}
-                      options={projectList}
+              <>
+                <Button
+                  variant="text"
+                  size="small"
+                  style={{
+                    backgroundColor: "rgb(121, 92, 236)",
+                    color: "#fefe",
+                  }}
+                  startIcon={
+                    <Avatar
+                      size="small"
+                      sx={{ width: 24, height: 24 }}
+                      src="/broken-image.jpg"
                     />
-                  )}
-                </Grid>
-              ) && (
-                <Grid item>
-                  <Typography>
-                    {
-                      getUserDetailFromToken(localStorage.getItem("token"))
-                        .Username
-                    }
-                  </Typography>
-                </Grid>
-              )}
+                  }
+                  endIcon={<KeyboardArrowDownIcon />}
+                  onClick={handleClick}
+                >
+                  {
+                    getUserDetailFromToken(localStorage.getItem("token"))
+                      .username
+                  }
+                </Button>
 
-            {!isAuthenticated() ? (
-              <Grid item textAlign="end">
-                <Button
-                  variant="outlined"
-                  text="Sign Up"
-                  component={Link}
-                  to={"/register"}
-                ></Button>
-              </Grid>
-            ) : (
-              <Grid item textAlign="end">
-                <Button
-                  color="error"
-                  variant="outlined"
-                  text="Logout"
-                  onClick={handleUserLogout}
-                ></Button>
-              </Grid>
+                <Popover
+                  id={id}
+                  open={openPop}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      bgcolor: "background.paper",
+                    }}
+                  >
+                    <List dense="true">
+                      <ListItem disablePadding>
+                        <ListItemButton>
+                          <ListItemIcon>
+                            <Avatar
+                              size="small"
+                              sx={{ width: 24, height: 24 }}
+                              src="/broken-image.jpg"
+                            />
+                          </ListItemIcon>
+                          <ListItemText primary="Profile" />
+                        </ListItemButton>
+                      </ListItem>
+                      <ListItem disablePadding>
+                        <ListItemButton>
+                          <ListItemIcon>
+                            <LockOpenIcon />
+                          </ListItemIcon>
+                          <ListItemText primary="Change Password" />
+                        </ListItemButton>
+                      </ListItem>
+                    </List>
+
+                    <Divider />
+
+                    <List dense="true">
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          onClick={(e) => {
+                            logout();
+                          }}
+                        >
+                          <ListItemIcon>
+                            <LogoutIcon />
+                          </ListItemIcon>
+                          <ListItemText primary="Logout" />
+                        </ListItemButton>
+                      </ListItem>
+                    </List>
+                  </Box>
+                </Popover>
+              </>
             )}
           </Grid>
         </Grid>
