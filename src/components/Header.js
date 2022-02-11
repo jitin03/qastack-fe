@@ -147,7 +147,7 @@ export default function Header(props) {
             alignItems="center"
           >
             <Grid item>
-              <Link underline="none" href={`/login`}>
+              <Link underline="none" href={`/`}>
                 <Typography
                   variant="h5"
                   style={{ marginLeft: "20px", color: "#fefe" }}
