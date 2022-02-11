@@ -187,7 +187,10 @@ export default function Header(props) {
                   endIcon={<KeyboardArrowDownIcon />}
                   onClick={handleClick}
                 >
-                  Send
+                  {
+                    getUserDetailFromToken(localStorage.getItem("token"))
+                      .username
+                  }
                 </Button>
 
                 <Popover

@@ -79,6 +79,8 @@ const RenderRoute = (route) => {
   const history = useHistory();
 
   document.title = route.title || "QAStack";
+  console.log("route.needsAuth", route.needsAuth);
+  console.log("route.needsAuth", route.needsAuth);
   if (route.needsAuth && !isAuthenticated()) {
     history.push("/login");
   }
@@ -114,24 +116,20 @@ function App() {
 
         <Box component="main" sx={{ flexGrow: 1, p: 3, minHeight: "100vh" }}>
           <DrawerHeader />
-          <Switch>
+          {/* <Switch>
             {routes.map((route, index) => (
               <RenderRoute {...route} key={index} />
             ))}
-          </Switch>
-          {/* <Switch>
+          </Switch> */}
+          <Switch>
             {routes.map((route, index) => {
               const { path, component } = route;
-              if (!route.needsAuth || route.component === "RegisterContainer") {
-                history.push("/register");
-              } else if (route.needsAuth && !isAuthenticated()) {
-                history.push("/login");
-              }
+
               return (
                 <Route key={index} exact path={path} component={component} />
               );
             })}
-          </Switch> */}
+          </Switch>
         </Box>
       </Box>
       <RightDrawer

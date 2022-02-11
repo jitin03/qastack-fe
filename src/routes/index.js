@@ -36,7 +36,7 @@ const routes = [
   },
 
   {
-    path: "/verify/mail/",
+    path: "/verify/mail",
     component: VerifyUserEmail,
     title: "VerifyUserEmail",
     needsAuth: false,
@@ -55,12 +55,7 @@ const routes = [
     title: "Login",
     needsAuth: false,
   },
-  {
-    path: "/",
-    component: LoginContainer,
-    title: "Login",
-    needsAuth: false,
-  },
+
   {
     path: "/project/edit/:id",
     component: Project,
