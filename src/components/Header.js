@@ -114,10 +114,12 @@ export default function Header(props) {
   });
 
   const history = useHistory();
+
   const handleUserLogout = () => {
     localStorage.removeItem("token");
-    history.push("/login");
+    // history.push("/login");
   };
+
   useEffect(() => {
     if (projects) {
       const temp = projects.map((item) => {
@@ -147,7 +149,7 @@ export default function Header(props) {
             alignItems="center"
           >
             <Grid item>
-              <Link underline="none" href={`/`}>
+              <Link underline="none" href={`/projects`}>
                 <Typography
                   variant="h5"
                   style={{ marginLeft: "20px", color: "#fefe" }}
@@ -235,16 +237,18 @@ export default function Header(props) {
 
                     <List dense="true">
                       <ListItem disablePadding>
-                        <ListItemButton
-                          onClick={(e) => {
-                            logout();
-                          }}
-                        >
-                          <ListItemIcon>
-                            <LogoutIcon />
-                          </ListItemIcon>
-                          <ListItemText primary="Logout" />
-                        </ListItemButton>
+                        <Link underline="none" href={`/login`}>
+                          <ListItemButton
+                            onClick={(e) => {
+                              handleUserLogout();
+                            }}
+                          >
+                            <ListItemIcon>
+                              <LogoutIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Logout" />
+                          </ListItemButton>
+                        </Link>
                       </ListItem>
                     </List>
                   </Box>
