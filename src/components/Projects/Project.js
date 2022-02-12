@@ -2,7 +2,6 @@ import { Button, Container, Grid, Tooltip, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 
 import { useGlobalContext } from "../../context/provider/context";
-import Breadcrumb from "../Breadcrumb";
 
 import AddIcon from "@mui/icons-material/Add";
 import { makeStyles } from "@mui/styles";
@@ -10,7 +9,7 @@ import RightDrawer from "../RightDrawer";
 import ProjectList from "./ProjectList";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -84,9 +83,7 @@ const Project = () => {
     return (
       <>
         <Grid container>
-          <Grid item style={{ flex: "1" }} color="GrayText">
-            <Breadcrumb />
-          </Grid>
+          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
           <Grid
             item
             container

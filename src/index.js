@@ -9,20 +9,17 @@ import { AppProvider } from "./context/provider/context";
 
 import theme from "./theme";
 import { ProjectProvider } from "./context/provider/projectContext";
-import { AuthProvider } from "./context/provider/authContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <Router>
-        <AppProvider>
-          <AuthProvider>
-            <ProjectProvider>
-              <App />
-            </ProjectProvider>
-          </AuthProvider>
-        </AppProvider>
-      </Router>
+      <ProjectProvider>
+        <Router>
+          <AppProvider>
+            <App />
+          </AppProvider>
+        </Router>
+      </ProjectProvider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")

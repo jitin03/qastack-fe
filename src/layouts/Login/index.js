@@ -8,14 +8,14 @@ import {
   Typography,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import React from "react";
+import React, { useState } from "react";
 import Controls from "../../components/controllers/Controls";
 import { makeStyles } from "@mui/styles";
 import { LoadingButton } from "@mui/lab";
 import { useQuery } from "react-query";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { useGlobalContext } from "../../context/provider/context";
 import {
@@ -29,11 +29,12 @@ import {
   LOGIN_SUCCESS,
   LOGIN_USER_DETAIL,
 } from "../../constants/actionTypes";
-import { useAuthContext } from "../../context/provider/authContext";
+
 import Button from "../../components/controllers/Button";
 
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Controller, useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,24 +57,26 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing.unit,
   },
 }));
-const LoginUI = ({
-  form: { handleInputChange, form, setForm, loginFormValid },
-}) => {
+const LoginUI = () => {
+  const { register, handleSubmit, control } = useForm();
   const queryClient = useQueryClient();
-  const history = useHistory();
+  let navigate = useNavigate();
   const {
     authState: { auth },
     authState: { loggedIn },
     authDispatch,
-  } = useAuthContext();
+  } = useGlobalContext();
+  const [passwordIsMasked, setPasswordIsMasked] = useState(true);
+  const togglePasswordMask = () => {
+    setPasswordIsMasked(!passwordIsMasked);
+  };
+
   const {
     componentState,
     handleCloseToast,
     openToast,
     setOpenToast,
-    passwordIsMasked,
-    setPasswordIsMasked,
-    togglePasswordMask,
+
     handleMouseDownPassword,
   } = useGlobalContext();
   const {
@@ -96,39 +99,35 @@ const LoginUI = ({
         type: LOGIN_SUCCESS,
         payload: token,
       });
-      history.push("/projects");
+      navigate("/projects");
     },
   });
 
-  let userName = form?.username;
-  const { data: user, isSuccess: userDetails } = useQuery(
-    ["users", userName],
-    getUserDetail,
-    {
-      enabled: !!token,
-    }
-  );
+  // const { data: user, isSuccess: userDetails } = useQuery(
+  //   ["users", userName],
+  //   getUserDetail,
+  //   {
+  //     enabled: !!token,
+  //   }
+  // );
 
-  if (userDetails) {
-    authDispatch({
-      type: LOGIN_USER_DETAIL,
-      payload: user,
-    });
-  }
+  // if (userDetails) {
+  //   authDispatch({
+  //     type: LOGIN_USER_DETAIL,
+  //     payload: user,
+  //   });
+  // }
+
   const classes = useStyles();
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data, e) => {
     try {
-      await mutateAsync(form);
+      await mutateAsync(data);
     } catch (error) {
       authDispatch({
         type: LOGIN_ERROR,
         payload: error.message,
       });
-
-      setForm({});
     }
   };
 
@@ -144,7 +143,11 @@ const LoginUI = ({
       >
         <Grid item md={4}></Grid>
         <Grid item md={4} className={classes.loginForm}>
-          <form className={classes.root} autoComplete="off">
+          <form
+            className={classes.root}
+            autoComplete="off"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Paper>
               <Typography variant="h5">
                 Login to your QAStack account !
@@ -157,39 +160,57 @@ const LoginUI = ({
                 spacing={3}
               >
                 <Grid item container>
-                  <TextField
+                  <Controller
                     name="username"
-                    label="Username"
-                    value={form.username || ""}
-                    style={{ width: "100%" }}
-                    onChange={handleInputChange}
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <TextField
+                        id="username"
+                        label="Username"
+                        placeholder="Username"
+                        multiline
+                        size="small"
+                        variant="outlined"
+                        // inputProps={{ className: classes.textarea }}
+                        onChange={onChange}
+                        value={value}
+                        style={{ width: "450px" }}
+                      />
+                    )}
                   />
-                  <TextField
+
+                  <Controller
                     name="password"
-                    label="Password"
-                    type={passwordIsMasked ? "password" : "text"}
-                    value={form.password || ""}
-                    style={{ width: "100%" }}
-                    onChange={handleInputChange}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={togglePasswordMask}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                          >
-                            {passwordIsMasked ? (
-                              <VisibilityOffIcon />
-                            ) : (
-                              <VisibilityIcon />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <TextField
+                        id="password"
+                        label="Password"
+                        type={passwordIsMasked ? "password" : "text"}
+                        value={value}
+                        style={{ width: "100%" }}
+                        onChange={onChange}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={togglePasswordMask}
+                                edge="end"
+                              >
+                                {passwordIsMasked ? (
+                                  <VisibilityOffIcon />
+                                ) : (
+                                  <VisibilityIcon />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    )}
                   />
+
                   <Grid item xs={12}>
                     <Link underline="none" href={`/forgot-password`}>
                       <Typography
@@ -202,7 +223,7 @@ const LoginUI = ({
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  {loginFormValid ? (
+                  {false ? (
                     <Controls.Button text="Submit" disabled fullWidth />
                   ) : isLoading ? (
                     <LoadingButton
@@ -215,7 +236,7 @@ const LoginUI = ({
                       Save
                     </LoadingButton>
                   ) : (
-                    <Button text="Submit" fullWidth onClick={onSubmit}></Button>
+                    <Button text="Submit" fullWidth></Button>
                   )}
                   <Grid item>
                     <Toast

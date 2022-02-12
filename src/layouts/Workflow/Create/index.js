@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Button, Grid, TextField, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
@@ -77,12 +77,12 @@ export default function CreateWorkflow() {
     ],
     getUserDetail
   );
-  const history = useHistory();
+  let navigate = useNavigate();
   const { mutateAsync, isLoading, isHasError, err, output, isSuccess } =
     useMutation(addWorkFlow, {
       onError: (error) => {},
       onSuccess: (data) => {
-        history.push(`/project/${projectId}/ciFlow`);
+        navigate(`/project/${projectId}/ciFlow`);
       },
     });
   const onSubmit = async (data) => {
@@ -92,9 +92,7 @@ export default function CreateWorkflow() {
 
     try {
       await mutateAsync(data);
-    } catch (error) {
-      history.goBack();
-    }
+    } catch (error) {}
   };
 
   return (
@@ -127,7 +125,7 @@ export default function CreateWorkflow() {
                     startIcon={<AddIcon />}
                     // onClick={() => setState(!state)}
                     onClick={(e) => {
-                      history.push(`/project/${projectId}/ciFlow`);
+                      navigate(`/project/${projectId}/ciFlow`);
                     }}
                     sx={{ m: 1, textAlign: "right" }}
                   >

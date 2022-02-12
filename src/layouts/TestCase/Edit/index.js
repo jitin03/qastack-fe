@@ -8,7 +8,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../../context/provider/context";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useForm, useFieldArray, FormProvider } from "react-hook-form";
 
@@ -101,7 +101,7 @@ export default function EditTestCase(props) {
     state,
     handleCloseToast,
   } = useGlobalContext();
-  const history = useHistory();
+  let navigate = useNavigate();
 
   const [form, setForm] = useState({});
 

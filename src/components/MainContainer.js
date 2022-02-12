@@ -2,7 +2,7 @@ import { Button, Grid, Typography } from "@mui/material";
 import React from "react";
 
 import { useGlobalContext } from "../../src/context";
-import Breadcrumb from "./Breadcrumb";
+
 import ModuleList from "../components/Modules/ModuleList";
 import AddIcon from "@mui/icons-material/Add";
 import { makeStyles } from "@mui/styles";
@@ -20,9 +20,7 @@ const Release = () => {
   return (
     <>
       <Grid container>
-        <Grid item style={{ flex: "1" }} color="GrayText">
-          <Breadcrumb />
-        </Grid>
+        <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
         <Grid
           item
           container

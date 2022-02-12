@@ -30,7 +30,7 @@ export default (history = null) => {
   //       localStorage.removeItem("token");
 
   //       if (history) {
-  //         history.push("/auth/login");
+  //         navigate("/auth/login");
   //       } else {
   //         window.location = "/auth/login";
   //       }

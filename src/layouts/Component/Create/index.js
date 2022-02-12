@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useGlobalContext } from "../../../context/provider/context";
 import Controls from "../../../components/controllers/Controls";
 import { Form } from "../../../components/useForm";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import {
   COMPONENT_CREATE_ERROR,
@@ -32,7 +32,7 @@ export default function CreateComponent(props) {
     openToast,
     handleCloseToast,
   } = useGlobalContext();
-  const history = useHistory();
+  let navigate = useNavigate();
   const { projectKey } = useParams();
   console.log("projectKey", param);
   const [form, setForm] = useState({});

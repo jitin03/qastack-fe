@@ -23,7 +23,7 @@ import useTable from "../../../components/Shared/useTable";
 import { Search } from "@material-ui/icons";
 import { makeStyles } from "@mui/styles";
 import { useQuery } from "react-query";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   deleteComponent,
   getAllComponents,
@@ -93,7 +93,7 @@ const ComponentList = () => {
       setData(components);
     },
   });
-  const history = useHistory();
+  let navigate = useNavigate();
   const { mutateAsync, isLoading: deleteComponentLoading } =
     useMutation(deleteComponent);
 

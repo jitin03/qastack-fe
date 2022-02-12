@@ -8,7 +8,7 @@ const Error = (props) => {
     <>
       <h1>oops! it's a dead end</h1>
       <Button>
-        <Link onClick={() => history.push("/")} underline="none">
+        <Link onClick={() => navigate("/")} underline="none">
           back home
         </Link>
       </Button>

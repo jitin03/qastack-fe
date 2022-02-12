@@ -27,13 +27,13 @@ import Menu from "@mui/icons-material/Menu";
 import Controls from "./controllers/Controls";
 import { useGlobalContext } from "../context/provider/context";
 import { useQuery } from "react-query";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useProjectContext } from "../context/provider/projectContext";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import isAuthenticated from "../context/actions/auth/isAuthenticated";
 import { getAllProjects } from "../context/actions/project/api";
-import { useAuthContext } from "../context/provider/authContext";
+
 import { getUserDetail, logout } from "../context/actions/auth/api";
 import { getUserDetailFromToken } from "../helper/token";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
@@ -86,13 +86,16 @@ export default function Header(props) {
   };
   const openPop = Boolean(anchorEl);
   const id = openPop ? "simple-popover" : undefined;
-  const { projectState, projectList, setProjectList } = useGlobalContext();
-  const { starProject, setStarProject } = useProjectContext();
-  const classes = useStyles();
   const {
+    projectState,
+    projectList,
+    setProjectList,
     authState: { loggedIn },
     authDispatch,
-  } = useAuthContext();
+  } = useGlobalContext();
+  const { starProject, setStarProject } = useProjectContext();
+  const classes = useStyles();
+
   const cars = ["tset", "asdad"];
   let getProjectList = [];
   const { data: user, isSuccess: userDetails } = useQuery(
@@ -113,10 +116,10 @@ export default function Header(props) {
     enabled: !!user,
   });
 
-  const history = useHistory();
+  let navigate = useNavigate();
   const handleUserLogout = () => {
     localStorage.removeItem("token");
-    history.push("/login");
+    navigate("/login");
   };
   useEffect(() => {
     if (projects) {
@@ -238,6 +241,7 @@ export default function Header(props) {
                         <ListItemButton
                           onClick={(e) => {
                             logout();
+                            navigate("/login");
                           }}
                         >
                           <ListItemIcon>

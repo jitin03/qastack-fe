@@ -9,7 +9,7 @@ import ComponentList from "../layouts/Component/List";
 import LoginContainer from "../components/Login";
 import Box from "@mui/material/Box";
 import React, { useState } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes, Switch } from "react-router-dom";
 import MuiDrawer from "@mui/material/Drawer";
 import { styled } from "@mui/material/styles";
 import RightDrawer from "../components/RightDrawer";
@@ -17,9 +17,10 @@ import { useGlobalContext } from "../context/provider/context";
 import { QueryClientProvider, QueryClient } from "react-query";
 import routes from "../routes";
 import { useParams, Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReactQueryDevtools } from "react-query/devtools";
 import isAuthenticated from "../context/actions/auth/isAuthenticated";
+import RegisterContainer from "../components/Register";
 const drawerWidth = 240;
 const useStyles = makeStyles({
   appMain: {
@@ -76,13 +77,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const RenderRoute = (route) => {
-  const history = useHistory();
+  let navigate = useNavigate();
 
   document.title = route.title || "QAStack";
   console.log("route.needsAuth", route.needsAuth);
   console.log("route.needsAuth", route.needsAuth);
   if (route.needsAuth && !isAuthenticated()) {
-    history.push("/login");
+    navigate("/login");
   }
   return (
     <Route
@@ -97,7 +98,7 @@ function App() {
   const [open, setOpen] = useState(false);
   const { configTitle, drawerParam } = useGlobalContext();
 
-  const history = useHistory();
+  let navigate = useNavigate();
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -121,15 +122,13 @@ function App() {
               <RenderRoute {...route} key={index} />
             ))}
           </Switch> */}
-          <Switch>
+          <Routes>
             {routes.map((route, index) => {
               const { path, component } = route;
 
-              return (
-                <Route key={index} exact path={path} component={component} />
-              );
+              return <Route key={index} path={path} element={component} />;
             })}
-          </Switch>
+          </Routes>
         </Box>
       </Box>
       <RightDrawer
