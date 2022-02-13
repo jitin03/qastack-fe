@@ -119,6 +119,8 @@ export default function Header(props) {
   let navigate = useNavigate();
   const handleUserLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("roles");
     navigate("/login");
   };
   useEffect(() => {
@@ -238,12 +240,7 @@ export default function Header(props) {
 
                     <List dense="true">
                       <ListItem disablePadding>
-                        <ListItemButton
-                          onClick={(e) => {
-                            logout();
-                            navigate("/login");
-                          }}
-                        >
+                        <ListItemButton onClick={handleUserLogout}>
                           <ListItemIcon>
                             <LogoutIcon />
                           </ListItemIcon>

@@ -22,39 +22,39 @@ import ForgotPassword from "../layouts/ForgotPassword";
 import ResetPassword from "../layouts/ForgotPassword/resetPassword";
 
 const routes = [
-  {
-    path: "/register",
-    component: <RegisterContainer />,
-    title: "Register",
-    needsAuth: false,
-  },
-  {
-    path: "/forgot-password",
-    component: <ForgotPassword />,
-    title: "Forgot Password",
-    needsAuth: false,
-  },
+  // {
+  //   path: "/register",
+  //   component: <RegisterContainer />,
+  //   title: "Register",
+  //   needsAuth: false,
+  // },
+  // {
+  //   path: "/forgot-password",
+  //   component: <ForgotPassword />,
+  //   title: "Forgot Password",
+  //   needsAuth: false,
+  // },
 
-  {
-    path: "/verify/mail",
-    component: <VerifyUserEmail />,
-    title: "VerifyUserEmail",
-    needsAuth: false,
-  },
+  // {
+  //   path: "/verify/mail",
+  //   component: <VerifyUserEmail />,
+  //   title: "VerifyUserEmail",
+  //   needsAuth: false,
+  // },
 
-  {
-    path: "/reset-password",
-    component: <ResetPassword />,
-    title: "ResetPassword",
-    needsAuth: false,
-  },
+  // {
+  //   path: "/reset-password",
+  //   component: <ResetPassword />,
+  //   title: "ResetPassword",
+  //   needsAuth: false,
+  // },
 
-  {
-    path: "/login",
-    component: <LoginContainer />,
-    title: "Login",
-    needsAuth: false,
-  },
+  // {
+  //   path: "/login",
+  //   component: <LoginContainer />,
+  //   title: "Login",
+  //   needsAuth: false,
+  // },
 
   {
     path: "/",

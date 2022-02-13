@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./index.css";
 import App from "./App/App";
 import reportWebVitals from "./reportWebVitals";
@@ -9,6 +9,7 @@ import { AppProvider } from "./context/provider/context";
 
 import theme from "./theme";
 import { ProjectProvider } from "./context/provider/projectContext";
+import { AuthProvider } from "./context/provider/AuthProvider";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -16,7 +17,11 @@ ReactDOM.render(
       <ProjectProvider>
         <Router>
           <AppProvider>
-            <App />
+            <AuthProvider>
+              <Routes>
+                <Route path="/*" element={<App />} />
+              </Routes>
+            </AuthProvider>
           </AppProvider>
         </Router>
       </ProjectProvider>

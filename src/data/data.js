@@ -14,7 +14,12 @@ export const menus = [
 export const submenus = [
   {
     id: 1,
-    url: "/project/:projectKey",
+    url: "/project/:projectKey/*",
+    sidebar: <Submenus />,
+  },
+  {
+    id: 2,
+    url: "/project/:projectKey/components/testcases",
     sidebar: <Submenus />,
   },
   {

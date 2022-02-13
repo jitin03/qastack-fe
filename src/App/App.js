@@ -21,6 +21,12 @@ import { useNavigate } from "react-router-dom";
 import { ReactQueryDevtools } from "react-query/devtools";
 import isAuthenticated from "../context/actions/auth/isAuthenticated";
 import RegisterContainer from "../components/Register";
+import RequireAuth from "../components/RequireAuth";
+import Layout from "../components/Layout";
+import Unauthorized from "../components/Unauthorized";
+import ForgotPassword from "../layouts/ForgotPassword";
+import ResetPassword from "../layouts/ForgotPassword/resetPassword";
+import VerifyUserEmail from "../layouts/VerifyUserEmail";
 const drawerWidth = 240;
 const useStyles = makeStyles({
   appMain: {
@@ -93,6 +99,12 @@ const RenderRoute = (route) => {
     ></Route>
   );
 };
+const ROLES = {
+  User: "user",
+  Manager: "manager",
+  QA: "qa",
+  Admin: "admin",
+};
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -122,12 +134,25 @@ function App() {
               <RenderRoute {...route} key={index} />
             ))}
           </Switch> */}
-          <Routes>
-            {routes.map((route, index) => {
-              const { path, component } = route;
 
-              return <Route key={index} path={path} element={component} />;
-            })}
+          <Routes>
+            {/* public routes */}
+            <Route path="/" element={<Layout />}>
+              <Route path="login" element={<LoginContainer />} />
+              <Route path="register" element={<RegisterContainer />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route path="reset-password" element={<ResetPassword />} />
+              <Route path="verify/user" element={<VerifyUserEmail />} />
+              <Route path="unauthorized" element={<Unauthorized />} />
+
+              <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+                {routes.map((route, index) => {
+                  const { path, component } = route;
+
+                  return <Route key={index} path={path} element={component} />;
+                })}
+              </Route>
+            </Route>
           </Routes>
         </Box>
       </Box>

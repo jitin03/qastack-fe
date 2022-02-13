@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import jwt_decode from "jwt-decode";
 import CircularProgress from "@mui/material/CircularProgress";
 import React, { useState } from "react";
 import Controls from "../../components/controllers/Controls";
@@ -35,6 +36,7 @@ import Button from "../../components/controllers/Button";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Controller, useForm } from "react-hook-form";
+import useAuth from "../../hooks/useAuth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +72,8 @@ const LoginUI = () => {
   const togglePasswordMask = () => {
     setPasswordIsMasked(!passwordIsMasked);
   };
-
+  let user;
+  let roles = [];
   const {
     componentState,
     handleCloseToast,
@@ -79,6 +82,7 @@ const LoginUI = () => {
 
     handleMouseDownPassword,
   } = useGlobalContext();
+  const { setAuth } = useAuth();
   const {
     mutateAsync,
     isLoading,
@@ -94,7 +98,15 @@ const LoginUI = () => {
     },
     onSuccess: (token) => {
       localStorage.token = token.data.access_token;
+      localStorage.roles = [];
+      let accessToken = token.data.access_token;
+      let decoded_token = jwt_decode(token.data.access_token);
+      user = decoded_token?.username;
+      localStorage.user = decoded_token?.username;
+      roles.push(decoded_token?.role);
+      localStorage.roles = [...roles];
 
+      setAuth({ user, roles, accessToken });
       authDispatch({
         type: LOGIN_SUCCESS,
         payload: token,
