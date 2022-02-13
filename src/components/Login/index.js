@@ -1,11 +1,12 @@
 import { Grid, Typography } from "@mui/material";
 import React from "react";
-import { useAuthContext } from "../../context/provider/authContext";
+import { useGlobalContext } from "../../context/provider/context";
+
 import LoginUI from "../../layouts/Login";
 import useForm from "./useForm";
 
 const LoginContainer = () => {
-  const { form, authState } = useAuthContext();
+  const { form, authState } = useGlobalContext();
 
   return <LoginUI form={useForm()} />;
 };

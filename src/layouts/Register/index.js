@@ -16,11 +16,11 @@ import { Form } from "../../components/useForm";
 import Controls from "../../components/controllers/Controls";
 import { Link, Paper } from "@material-ui/core";
 import { makeStyles } from "@mui/styles";
-import { useAuthContext } from "../../context/provider/authContext";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import { registerUser } from "../../context/actions/auth/api";
 import CloseIcon from "@mui/icons-material/Close";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 
 import Toast from "../../components/controllers/Toast";
@@ -49,13 +49,13 @@ const RegisterUI = ({
   form: { handleInputChange, form, registerFormValid, setForm },
 }) => {
   const queryClient = useQueryClient();
-  const history = useHistory();
+  const [passwordIsMasked, setPasswordIsMasked] = useState(true);
+  let navigate = useNavigate();
   const {
     handleCloseToast,
     openToast,
     setOpenToast,
-    togglePasswordMask,
-    passwordIsMasked,
+
     handleMouseDownPassword,
   } = useGlobalContext();
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
@@ -75,7 +75,10 @@ const RegisterUI = ({
   const {
     authState: { auth },
     authDispatch,
-  } = useAuthContext();
+  } = useGlobalContext();
+  const togglePasswordMask = () => {
+    setPasswordIsMasked(!passwordIsMasked);
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -86,7 +89,7 @@ const RegisterUI = ({
       await mutateAsync(form);
 
       setForm({});
-      // history.push("/verify");
+      // navigate("/verify");
     } catch (error) {
       authDispatch({
         type: REGISTER_ERROR,

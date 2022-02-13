@@ -22,7 +22,7 @@ import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import Chip from "@mui/material/Chip";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate } from "react-router-dom";
 import Controls from "../../../components/controllers/Controls";
 import AddIcon from "@mui/icons-material/Add";
 import {
@@ -138,7 +138,7 @@ export const TestExecution = (props) => {
     { id: "action", label: "Action" },
   ];
 
-  const history = useHistory();
+  let navigate = useNavigate();
 
   const {
     data: testCasesTitle,

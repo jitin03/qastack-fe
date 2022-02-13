@@ -5,7 +5,7 @@ import { Submenus } from "../components/Submenus";
 export const menus = [
   {
     id: 1,
-    url: "/projects",
+    url: "/projects/",
     text: "Projects",
     icon: <AssignmentIcon />,
   },
@@ -14,12 +14,17 @@ export const menus = [
 export const submenus = [
   {
     id: 1,
-    url: "/project/:projectKey",
-    sidebar: () => <Submenus />,
+    url: "/project/:projectKey/*",
+    sidebar: <Submenus />,
   },
   {
     id: 2,
     url: "/project/:projectKey/components/testcases",
-    sidebar: () => <Submenus />,
+    sidebar: <Submenus />,
+  },
+  {
+    id: 2,
+    url: "/project/:projectKey/components/testcases",
+    sidebar: <Submenus />,
   },
 ];

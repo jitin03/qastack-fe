@@ -21,7 +21,7 @@ import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useGlobalContext } from "../../../context/provider/context";
 import Controls from "../../../components/controllers/Controls";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { Controller } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
@@ -86,7 +86,7 @@ export default function TestRuns(props) {
     setOpenToast,
     componentDispatch,
   } = useGlobalContext();
-  const history = useHistory();
+  let navigate = useNavigate();
 
   const queryClient = useQueryClient();
   const onSubmit = (data) => console.log(data);

@@ -16,7 +16,7 @@ import { Form } from "../../components/useForm";
 import Controls from "../../components/controllers/Controls";
 import { Link, Paper } from "@material-ui/core";
 import { makeStyles } from "@mui/styles";
-import { useAuthContext } from "../../context/provider/authContext";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import {
@@ -24,7 +24,7 @@ import {
   registerUser,
 } from "../../context/actions/auth/api";
 import CloseIcon from "@mui/icons-material/Close";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import Toast from "../../components/controllers/Toast";
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ForgotPassword = () => {
   const queryClient = useQueryClient();
-  const history = useHistory();
+  let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const { register, handleSubmit, control } = useForm();
   const {
@@ -85,7 +85,7 @@ const ForgotPassword = () => {
   const {
     authState: { auth },
     authDispatch,
-  } = useAuthContext();
+  } = useGlobalContext();
   const onSubmit = async (data, e) => {
     console.log(data);
     // setEmail(data.emailaddress);

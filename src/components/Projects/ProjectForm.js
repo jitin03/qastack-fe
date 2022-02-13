@@ -6,7 +6,7 @@ import Controls from "../controllers/Controls";
 import { Form } from "../useForm";
 import { useMutation, useQueryClient, useQuery } from "react-query";
 import { addProject } from "../../context/actions/project/api";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getUserDetail } from "../../context/actions/auth/api";
 import { getUserDetailFromToken } from "../../helper/token";
 import isAuthenticated from "../../context/actions/auth/isAuthenticated";
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 });
 export default function ProjectForm() {
   const classes = useStyles();
-  const history = useHistory();
+  let navigate = useNavigate();
   const [form, setForm] = useState({});
   const {
     projectState,
@@ -56,7 +56,7 @@ export default function ProjectForm() {
     projectDispatch({
       type: "RESET_PROJECT_FORM",
     });
-    history.push("/projects");
+    navigate("/projects");
   };
 
   return (

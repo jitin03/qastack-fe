@@ -2,10 +2,12 @@ import React, { useState, useContext, useReducer } from "react";
 import releaseInitialState from "../initialStates/releaseInitialState";
 import release from "../reducers/release";
 import project from "../reducers/project";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import projectInitialState from "../initialStates/projectInitialState";
 import componentInitialState from "../initialStates/componentInitialState";
 import component from "../reducers/component";
+import authInitialState from "../initialStates/authInitialState";
+import auth from "../reducers/auth";
 import RightDrawer from "../../components/RightDrawer";
 const AppContext = React.createContext();
 
@@ -19,11 +21,12 @@ const AppProvider = ({ children }) => {
     isEditing: false,
   };
 
-  const history = useHistory();
+  let navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [authState, authDispatch] = useReducer(auth, authInitialState);
   const [configTitle, setConfigTitle] = useState("");
   const [drawerParam, setDrawerParam] = useState("");
-  const [passwordIsMasked, setPasswordIsMasked] = useState(true);
+
   const [registerPasswordIsMasked, setRegisterPasswordIsMasked] =
     useState(true);
   const [confirmPasswordIsMasked, setConfirmPasswordIsMasked] = useState(true);
@@ -84,23 +87,23 @@ const AppProvider = ({ children }) => {
 
   const handleRightDrawer = (configTitle, param) => {
     if (configTitle === "Add Release") {
-      history.push(`${window.location.pathname}/create`);
+      navigate(`${window.location.pathname}/create`);
     } else if (configTitle === "Edit Release") {
-      history.push(`${window.location.pathname}/edit/${param[1]}`);
+      navigate(`${window.location.pathname}/edit/${param[1]}`);
     } else if (configTitle === "Add Project") {
-      history.push("/project/create");
+      navigate("/project/create");
     } else if (configTitle === "Edit Project") {
-      history.push(`/project/edit/${param}`);
+      navigate(`/project/edit/${param}`);
     } else if (configTitle === "Edit Component") {
-      history.push(`${window.location.pathname}/edit/${param[1]}`);
+      navigate(`${window.location.pathname}/edit/${param[1]}`);
     } else if (configTitle === "Add TestCase") {
-      history.push(`${window.location.pathname}/create`);
+      navigate(`${window.location.pathname}/create`);
     } else if (configTitle === "Edit TestCase") {
-      history.push(`${window.location.pathname}/edit/${param[1]}`);
+      navigate(`${window.location.pathname}/edit/${param[1]}`);
     } else if (configTitle === "Edit TestRun") {
-      history.push(`${window.location.pathname}/edit/${param[1]}`);
+      navigate(`${window.location.pathname}/edit/${param[1]}`);
     } else if (configTitle === "View Logs") {
-      history.push(`${window.location.pathname}/workflow/logs/${param[1]}`);
+      navigate(`${window.location.pathname}/workflow/logs/${param[1]}`);
     }
     setConfigTitle(configTitle);
     setState(!state);
@@ -158,29 +161,29 @@ const AppProvider = ({ children }) => {
     }
 
     if (title === "Add Project") {
-      history.push("/projects");
+      navigate("/projects");
     } else if (title === "Edit Project") {
-      history.push("/projects");
+      navigate("/projects");
     } else if (title === "Add Release") {
-      history.push(`/project/${params}/releases`);
+      navigate(`/project/${params}/releases`);
     } else if (title === "Edit Release") {
-      history.push(`/project/${params}/releases`);
+      navigate(`/project/${params}/releases`);
     } else if (title === "Add Component") {
-      history.push(`/project/${params}/components`);
+      navigate(`/project/${params}/components`);
     } else if (title === "Edit Component") {
-      history.push(`/project/${params}/components`);
+      navigate(`/project/${params}/components`);
     } else if (title === "Add TestCase") {
-      history.push(`/project/${params}/components/testcases`);
+      navigate(`/project/${params}/components/testcases`);
     } else if (title === "Edit TestCase") {
-      history.push(`/project/${params}/components/testcases`);
+      navigate(`/project/${params}/components/testcases`);
     } else if (title === "Add TestRun") {
-      history.push(`/project/${params}/testruns`);
+      navigate(`/project/${params}/testruns`);
     } else if (title === "Edit TestRun") {
-      history.push(`/project/${params}/testruns`);
+      navigate(`/project/${params}/testruns`);
     } else if (title === "View Logs") {
-      history.push(`/project/${params}/ciFlow`);
+      navigate(`/project/${params}/ciFlow`);
     } else if (title === "Add Job") {
-      history.push(`/project/${params}/ciFlow`);
+      navigate(`/project/${params}/ciFlow`);
     }
   };
   const toggleDrawer = () => (event) => {
@@ -192,13 +195,7 @@ const AppProvider = ({ children }) => {
     }
     setState(!state);
   };
-  const togglePasswordMask = () => {
-    setPasswordIsMasked(!passwordIsMasked);
-  };
-  const toggleRegisterPasswordMask = (e) => {
-    e.preventDefault();
-    setRegisterPasswordIsMasked(!registerPasswordIsMasked);
-  };
+
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -214,10 +211,12 @@ const AppProvider = ({ children }) => {
         setModule,
         anchor,
         projects,
+        authState,
+        authDispatch,
         setProjects,
         setModuleName,
         toggleDrawer,
-        passwordIsMasked,
+
         setState,
         subModule,
         setSubModule,
@@ -228,10 +227,9 @@ const AppProvider = ({ children }) => {
         setConfirmPasswordIsMasked,
         registerPasswordIsMasked,
         setRegisterPasswordIsMasked,
-        toggleRegisterPasswordMask,
+
         handleCloseToast,
-        setPasswordIsMasked,
-        togglePasswordMask,
+
         handleMouseDownPassword,
         openToast,
         setOpenToast,

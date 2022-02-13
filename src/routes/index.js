@@ -22,167 +22,167 @@ import ForgotPassword from "../layouts/ForgotPassword";
 import ResetPassword from "../layouts/ForgotPassword/resetPassword";
 
 const routes = [
-  {
-    path: "/register",
-    component: RegisterContainer,
-    title: "Register",
-    needsAuth: false,
-  },
-  {
-    path: "/forgot-password",
-    component: ForgotPassword,
-    title: "Forgot Password",
-    needsAuth: false,
-  },
+  // {
+  //   path: "/register",
+  //   component: <RegisterContainer />,
+  //   title: "Register",
+  //   needsAuth: false,
+  // },
+  // {
+  //   path: "/forgot-password",
+  //   component: <ForgotPassword />,
+  //   title: "Forgot Password",
+  //   needsAuth: false,
+  // },
 
-  {
-    path: "/verify/mail",
-    component: VerifyUserEmail,
-    title: "VerifyUserEmail",
-    needsAuth: false,
-  },
+  // {
+  //   path: "/verify/mail",
+  //   component: <VerifyUserEmail />,
+  //   title: "VerifyUserEmail",
+  //   needsAuth: false,
+  // },
 
-  {
-    path: "/reset-password",
-    component: ResetPassword,
-    title: "ResetPassword",
-    needsAuth: false,
-  },
+  // {
+  //   path: "/reset-password",
+  //   component: <ResetPassword />,
+  //   title: "ResetPassword",
+  //   needsAuth: false,
+  // },
 
-  {
-    path: "/login",
-    component: LoginContainer,
-    title: "Login",
-    needsAuth: false,
-  },
+  // {
+  //   path: "/login",
+  //   component: <LoginContainer />,
+  //   title: "Login",
+  //   needsAuth: false,
+  // },
 
   {
     path: "/",
-    component: LoginContainer,
+    component: <LoginContainer />,
     title: "Login",
     needsAuth: false,
   },
 
   {
     path: "/project/edit/:id",
-    component: Project,
+    component: <Project />,
     title: "Edit Project",
     needsAuth: true,
   },
   {
     path: "/project/:name/component/edit/:id",
-    component: ComponentList,
+    component: <ComponentList />,
     title: "Edit Component",
     needsAuth: true,
   },
   {
     path: "/project/create",
-    component: Project,
+    component: <Project />,
     title: "Create Project",
     needsAuth: true,
   },
 
   {
     path: "/projects",
-    component: Project,
+    component: <Project />,
     title: "All Projects",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey",
-    component: ProjectOverview,
+    component: <ProjectOverview />,
     title: "Project Overview",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/components",
-    component: ComponentList,
+    component: <ComponentList />,
     title: "All Components",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/components/create",
-    component: ComponentList,
+    component: <ComponentList />,
     title: "Create Component",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/components/edit/:name",
-    component: ComponentList,
+    component: <ComponentList />,
     title: "Create Component",
     needsAuth: true,
   },
 
   {
     path: "/project/:projectKey/components/testcases",
-    component: TestCaseList,
+    component: <TestCaseList />,
     title: "TestCases",
     needsAuth: true,
   },
 
   {
     path: "/project/:projectKey/releases",
-    component: Release,
+    component: <Release />,
     title: "Release",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/release/create",
-    component: Release,
+    component: <Release />,
     title: "Release",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/releases/edit/:id",
-    component: Release,
+    component: <Release />,
     title: "Release",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/component/:name/testcase/create",
-    component: TestCaseList,
+    component: <TestCaseList />,
     title: "Create TestCase",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/testruns",
-    component: TestRunList,
+    component: <TestRunList />,
     title: "Create TestCase",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/testrun/:id",
-    component: TestExecution,
+    component: <TestExecution />,
     title: "TestRun Status",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/testrun/create",
-    component: TestRunList,
+    component: <TestRunList />,
     title: "Create TestCase",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/ciFlow",
-    component: WorkflowList,
+    component: <WorkflowList />,
     title: "CI Flow",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/ciFlow/workflow/logs/:workflowname",
-    component: WorkflowList,
+    component: <WorkflowList />,
     title: "CI Flow",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/ciFlow/create",
-    component: CreateWorkflow,
+    component: <CreateWorkflow />,
     title: "Create CI Flow",
     needsAuth: true,
   },
   {
     path: "/project/:projectKey/ciFlow/:workflowName",
-    component: WorkflowInfo,
+    component: <WorkflowInfo />,
     title: "CI Flow Logs",
     needsAuth: true,
   },

@@ -4,7 +4,13 @@ import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import { Grid, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
 import List from "@mui/material/List";
-import { useHistory, useParams, Link } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  Link,
+  NavLink,
+  Routes,
+} from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -71,7 +77,7 @@ export default function SideMenu(props) {
         <Box sx={{ overflow: "auto" }}>
           <List>
             <Tooltip title="Projects" arrow>
-              <ListItem button key="0" component={Link} to={`/projects`}>
+              <ListItem button key="0" component={NavLink} to={`/projects`}>
                 <Grid item container direction="column">
                   <Grid item xs={6}>
                     <ListItemIcon sx={{ pt: 2 }}>
@@ -90,7 +96,7 @@ export default function SideMenu(props) {
               </ListItem>
             </Tooltip>
 
-            <Switch>
+            <Routes>
               {submenus.map((route, index) => (
                 // You can render a <Route> in as many places
                 // as you want in your app. It will render along
@@ -99,13 +105,9 @@ export default function SideMenu(props) {
                 // that requires you to render multiple things
                 // in multiple places at the same URL is nothing
                 // more than multiple <Route>s.
-                <Route
-                  key={index}
-                  path={route.url}
-                  children={<route.sidebar />}
-                />
+                <Route key={index} path={route.url} element={route.sidebar} />
               ))}
-            </Switch>
+            </Routes>
           </List>
         </Box>
       </Drawer>

@@ -1,14 +1,15 @@
 import { useState, useContext, useEffect } from "react";
 // import { GlobalContext } from "../../context/Provider";
 // import { register } from "../../context/actions/auth/register";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
-import { useAuthContext } from "../../context/provider/authContext";
+
 import { registerUser } from "../../context/actions/auth/api";
 import {
   REGISTER_LOADING,
   REGISTER_SUCCESS,
 } from "../../constants/actionTypes";
+import { useGlobalContext } from "../../context/provider/context";
 
 export default () => {
   const {
@@ -16,7 +17,7 @@ export default () => {
       auth: { loading, error, data },
     },
     authDispatch,
-  } = useAuthContext();
+  } = useGlobalContext();
   const [form, setForm] = useState({});
 
   const [fieldErrors, setFieldErrors] = useState({});

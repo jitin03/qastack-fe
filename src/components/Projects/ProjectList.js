@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, Grid, IconButton, Tooltip } from "@mui/material";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -40,7 +40,7 @@ export default function ProjectList(props) {
     handleCloseToast,
     handleRightDrawer,
   } = useGlobalContext();
-  const history = useHistory();
+  let navigate = useNavigate();
   const headCells = [
     { id: "projectName", label: "Project Name" },
     { id: "createdBy", label: "Created By" },

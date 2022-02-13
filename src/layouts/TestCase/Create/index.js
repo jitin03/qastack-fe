@@ -2,7 +2,7 @@ import { Divider, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { useGlobalContext } from "../../../context/provider/context";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import {
   useForm,
@@ -64,7 +64,7 @@ export default function CreateTestCase(props) {
     state,
     handleCloseToast,
   } = useGlobalContext();
-  const history = useHistory();
+  let navigate = useNavigate();
 
   const [form, setForm] = useState({});
 

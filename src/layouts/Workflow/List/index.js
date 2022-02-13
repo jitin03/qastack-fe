@@ -36,7 +36,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useGlobalContext } from "../../../context/provider/context";
 import { DataGrid } from "@mui/x-data-grid";
 import { grey } from "@mui/material/colors";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate } from "react-router-dom";
 import { getUserDetail } from "../../../context/actions/auth/api";
 import isAuthenticated from "../../../context/actions/auth/isAuthenticated";
 import { getUserDetailFromToken } from "../../../helper/token";
@@ -65,7 +65,7 @@ export default function WorfklowCreate() {
   const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
 
-  const history = useHistory();
+  let navigate = useNavigate();
 
   const {
     data: userDetails,
@@ -97,7 +97,7 @@ export default function WorfklowCreate() {
     enabled: !!userDetails,
   });
   const handleAddNewFlow = (projectId) => {
-    history.push(`/project/${projectId}/ciFlow/create`);
+    navigate(`/project/${projectId}/ciFlow/create`);
   };
 
   if (waitForAllWorkflows) {

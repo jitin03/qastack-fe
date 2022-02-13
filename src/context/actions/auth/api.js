@@ -80,7 +80,7 @@ export const resetPassword = async ({ ...data }) => {
   try {
     let payload = JSON.stringify(data);
     const response = await axiosInstance().put(
-      `reset-password?email=${data.email}&code=${data.code}`,
+      `/reset-password?email=${data.email}&code=${data.code}`,
       payload,
       {
         headers: {

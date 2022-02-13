@@ -6,7 +6,7 @@ import Controls from "../controllers/Controls";
 import { Form } from "../useForm";
 import { useMutation, useQueryClient } from "react-query";
 import { addProject, updateProject } from "../../context/actions/project/api";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const useStyles = makeStyles({
   bottomDrawer: {
     position: "absolute",
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 });
 export default function ProjectEditForm() {
   const classes = useStyles();
-  const history = useHistory();
+  let navigate = useNavigate();
   const [form, setForm] = useState({});
   const { module, state, editId, setEditId, handleRightDrawer } =
     useGlobalContext();

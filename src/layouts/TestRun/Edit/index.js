@@ -8,7 +8,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { useGlobalContext } from "../../../context/provider/context";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   useForm,
@@ -83,7 +83,7 @@ export default function EditTestRun(props) {
         });
       },
     });
-  const history = useHistory();
+  let navigate = useNavigate();
 
   const queryClient = useQueryClient();
   const {

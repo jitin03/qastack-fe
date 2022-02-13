@@ -60,7 +60,7 @@ export default function ReleaseForm(props) {
     // projectDispatch({
     //   type: "RESET_PROJECT_FORM",
     // });
-    // history.push("/projects");
+    // navigate("/projects");
   };
   const { register, handleSubmit, control, setValue } = useForm();
 

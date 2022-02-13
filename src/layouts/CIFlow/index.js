@@ -23,7 +23,7 @@ import useTable from "../../components/Shared/useTable";
 import { Search } from "@material-ui/icons";
 import { makeStyles } from "@mui/styles";
 import { useQuery } from "react-query";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   deleteComponent,
   getAllComponents,
@@ -76,7 +76,7 @@ const CIFlow = () => {
   const [showToaster, setShowToaster] = useState({ state: false, message: "" });
   let { id } = useParams();
   let { projectKey } = useParams();
-  const history = useHistory();
+  let navigate = useNavigate();
 
   setEditId(id);
   const headCells = [
@@ -227,9 +227,7 @@ const CIFlow = () => {
                 startIcon={<AddIcon />}
                 // onClick={() => setState(!state)}
                 onClick={() =>
-                  history.push(
-                    `/project/${projectKey}/components/ciFlow/create`
-                  )
+                  navigate(`/project/${projectKey}/components/ciFlow/create`)
                 }
                 sx={{ m: 1 }}
               >
@@ -248,7 +246,7 @@ const CIFlow = () => {
                   <TableRow
                     key={index}
                     onClick={() => {
-                      history.push(
+                      navigate(
                         `/project/${projectKey}/components/ciFlow/${item.workflow_name}`
                       );
                     }}

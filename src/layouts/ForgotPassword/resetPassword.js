@@ -16,7 +16,7 @@ import { Form } from "../../components/useForm";
 import Controls from "../../components/controllers/Controls";
 import { Link, Paper } from "@material-ui/core";
 import { makeStyles } from "@mui/styles";
-import { useAuthContext } from "../../context/provider/authContext";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import {
   getPasswordResetCode,
@@ -24,7 +24,7 @@ import {
   resetPassword,
 } from "../../context/actions/auth/api";
 import CloseIcon from "@mui/icons-material/Close";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import Toast from "../../components/controllers/Toast";
@@ -74,7 +74,7 @@ const ResetPassword = () => {
   let code = getQueryVariable("code");
   console.log("email", email);
   console.log("code", code);
-  const history = useHistory();
+  let navigate = useNavigate();
 
   const { register, handleSubmit, control } = useForm();
   const {
@@ -103,7 +103,7 @@ const ResetPassword = () => {
   const {
     authState: { auth },
     authDispatch,
-  } = useAuthContext();
+  } = useGlobalContext();
   const onSubmit = async (data, e) => {
     console.log(data);
     // setEmail(data.emailaddress);
