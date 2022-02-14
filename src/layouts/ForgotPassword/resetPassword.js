@@ -67,7 +67,7 @@ function getQueryVariable(variable) {
 }
 
 const ResetPassword = () => {
-  console.log("reset-password");
+  console.log("resetpassword");
   const queryClient = useQueryClient();
 
   let email = getQueryVariable("email");
@@ -76,7 +76,7 @@ const ResetPassword = () => {
   console.log("code", code);
   let navigate = useNavigate();
 
-  const { register, handleSubmit, control } = useForm();
+  const { register, handleSubmit, control, setValue } = useForm();
   const {
     handleCloseToast,
     openToast,
@@ -205,13 +205,16 @@ const ResetPassword = () => {
                   <Controller
                     name="password"
                     control={control}
-                    render={({ field: { onChange, value } }) => (
+                    render={({ field: { onChange, value, onBlur } }) => (
                       <TextField
                         id="password"
                         label="Password"
                         placeholder="New Password"
                         multiline
                         size="small"
+                        onBlur={(e) =>
+                          setValue("password", e.target.value.trim())
+                        }
                         variant="outlined"
                         // inputProps={{ className: classes.textarea }}
                         onChange={onChange}

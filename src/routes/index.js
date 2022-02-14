@@ -29,7 +29,7 @@ const routes = [
   //   needsAuth: false,
   // },
   // {
-  //   path: "/forgot-password",
+  //   path: "/forgotpassword",
   //   component: <ForgotPassword />,
   //   title: "Forgot Password",
   //   needsAuth: false,
@@ -43,7 +43,7 @@ const routes = [
   // },
 
   // {
-  //   path: "/reset-password",
+  //   path: "/resetpassword",
   //   component: <ResetPassword />,
   //   title: "ResetPassword",
   //   needsAuth: false,
@@ -56,12 +56,12 @@ const routes = [
   //   needsAuth: false,
   // },
 
-  {
-    path: "/",
-    component: <LoginContainer />,
-    title: "Login",
-    needsAuth: false,
-  },
+  // {
+  //   path: "/",
+  //   component: <LoginContainer />,
+  //   title: "Login",
+  //   needsAuth: false,
+  // },
 
   {
     path: "/project/edit/:id",
@@ -127,7 +127,7 @@ const routes = [
     needsAuth: true,
   },
   {
-    path: "/project/:projectKey/release/create",
+    path: "/project/:projectKey/releases/create",
     component: <Release />,
     title: "Release",
     needsAuth: true,

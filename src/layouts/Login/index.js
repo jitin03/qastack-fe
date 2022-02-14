@@ -16,7 +16,7 @@ import { LoadingButton } from "@mui/lab";
 import { useQuery } from "react-query";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { useGlobalContext } from "../../context/provider/context";
 import {
@@ -60,7 +60,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const LoginUI = () => {
-  const { register, handleSubmit, control } = useForm();
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+  } = useForm({ mode: "onTouched" });
   const queryClient = useQueryClient();
   let navigate = useNavigate();
   const {
@@ -83,6 +89,8 @@ const LoginUI = () => {
     handleMouseDownPassword,
   } = useGlobalContext();
   const { setAuth } = useAuth();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const {
     mutateAsync,
     isLoading,
@@ -111,7 +119,7 @@ const LoginUI = () => {
         type: LOGIN_SUCCESS,
         payload: token,
       });
-      navigate("/projects");
+      navigate(from, { replace: true });
     },
   });
 
@@ -134,6 +142,7 @@ const LoginUI = () => {
 
   const onSubmit = async (data, e) => {
     try {
+      console.log(data);
       await mutateAsync(data);
     } catch (error) {
       authDispatch({
@@ -142,6 +151,7 @@ const LoginUI = () => {
       });
     }
   };
+  console.log("errors", errors);
 
   return (
     <>
@@ -171,24 +181,35 @@ const LoginUI = () => {
                 style={{ padding: "20px" }}
                 spacing={3}
               >
-                <Grid item container>
+                <Grid item container xs={12}>
                   <Controller
                     name="username"
                     control={control}
-                    render={({ field: { onChange, value } }) => (
+                    render={({
+                      field: { onChange, value, onTouched, onBlur },
+                    }) => (
                       <TextField
                         id="username"
                         label="Username"
                         placeholder="Username"
-                        multiline
                         size="small"
                         variant="outlined"
                         // inputProps={{ className: classes.textarea }}
                         onChange={onChange}
                         value={value}
+                        onBlur={(e) =>
+                          setValue("username", e.target.value.trim())
+                        }
                         style={{ width: "450px" }}
+                        error={!!errors?.username}
+                        helperText={
+                          errors?.username ? errors?.username.message : null
+                        }
                       />
                     )}
+                    rules={{
+                      required: "Username is required field!",
+                    }}
                   />
 
                   <Controller
@@ -198,6 +219,11 @@ const LoginUI = () => {
                       <TextField
                         id="password"
                         label="Password"
+                        size="small"
+                        variant="outlined"
+                        onBlur={(e) =>
+                          setValue("password", e.target.value.trim())
+                        }
                         type={passwordIsMasked ? "password" : "text"}
                         value={value}
                         style={{ width: "100%" }}
@@ -219,12 +245,17 @@ const LoginUI = () => {
                             </InputAdornment>
                           ),
                         }}
+                        error={!!errors?.password}
+                        helperText={
+                          errors?.password ? errors?.password.message : null
+                        }
                       />
                     )}
+                    rules={{ required: "Password is required field!" }}
                   />
 
                   <Grid item xs={12}>
-                    <Link underline="none" href={`/forgot-password`}>
+                    <Link underline="none" href={`/forgotpassword`}>
                       <Typography
                         align="right"
                         style={{ color: "rgb(121, 92, 236)" }}

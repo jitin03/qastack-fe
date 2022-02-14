@@ -31,6 +31,7 @@ import {
 } from "../../constants/actionTypes";
 import { useGlobalContext } from "../../context/provider/context";
 import { LoadingButton } from "@mui/lab";
+import { Controller, useForm } from "react-hook-form";
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: theme.spacing(0.5),
@@ -50,6 +51,7 @@ const RegisterUI = ({
 }) => {
   const queryClient = useQueryClient();
   const [passwordIsMasked, setPasswordIsMasked] = useState(true);
+  const [confirmPasswordIsMasked, setConfirmPasswordIsMasked] = useState(true);
   let navigate = useNavigate();
   const {
     handleCloseToast,
@@ -58,6 +60,14 @@ const RegisterUI = ({
 
     handleMouseDownPassword,
   } = useGlobalContext();
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm({ mode: "onTouched" });
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
     useMutation(registerUser, {
       onError: (error) => {
@@ -79,24 +89,20 @@ const RegisterUI = ({
   const togglePasswordMask = () => {
     setPasswordIsMasked(!passwordIsMasked);
   };
+  const toggleConfirmPasswordMask = () => {
+    setConfirmPasswordIsMasked(!confirmPasswordIsMasked);
+  };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data, e) => {
     // add a default user role as of now: TODO for later RBAC
-    form.role = "user";
+    data.role = "user";
     try {
-      await mutateAsync(form);
-
-      setForm({});
-      // navigate("/verify");
+      await mutateAsync(data);
     } catch (error) {
       authDispatch({
         type: REGISTER_ERROR,
         payload: error.message,
       });
-
-      setForm({});
     }
   };
 
@@ -152,58 +158,188 @@ const RegisterUI = ({
           {isSuccess && (
             <Typography variant="h5">Click here to login</Typography>
           )}
-          <form className={classes.root} autoComplete="off">
+          <form
+            className={classes.root}
+            autoComplete="off"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Paper>
               <Typography variant="h5">Please Register !</Typography>
 
-              <Grid
-                container
-                justifyContent="center"
-                alignContent="center"
-                // spacing={4}
-              >
-                <Grid item>
-                  <TextField
+              <Grid container justifyContent="center" alignContent="center">
+                <Grid
+                  item
+                  container
+                  xs={12}
+                  justifyContent="center"
+                  alignContent="center"
+                >
+                  <Controller
                     name="username"
-                    label="Username"
-                    value={form.username || ""}
-                    onChange={handleInputChange}
-                  />
-                  <TextField
-                    name="password"
-                    label="Password"
-                    type={passwordIsMasked ? "password" : "text"}
-                    value={form.password || ""}
-                    onChange={handleInputChange}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={togglePasswordMask}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                          >
-                            {passwordIsMasked ? (
-                              <VisibilityOffIcon />
-                            ) : (
-                              <VisibilityIcon />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
+                    control={control}
+                    render={({ field: { onChange, value, onTouched } }) => (
+                      <TextField
+                        id="username"
+                        label="Username"
+                        placeholder="Username"
+                        multiline
+                        size="small"
+                        onBlur={(e) =>
+                          setValue("username", e.target.value.trim())
+                        }
+                        variant="outlined"
+                        // inputProps={{ className: classes.textarea }}
+                        onChange={onChange}
+                        value={value}
+                        error={!!errors?.username}
+                        helperText={
+                          errors?.username ? errors?.username.message : null
+                        }
+                      />
+                    )}
+                    rules={{
+                      required: "Username is required field!",
+                      minLength: {
+                        value: 6,
+                        message: "Username should be minimum 6 character",
+                      },
                     }}
                   />
-                  <TextField
+                  <Controller
+                    name="password"
+                    control={control}
+                    render={({ field: { onChange, value, onBlur } }) => (
+                      <TextField
+                        name="password"
+                        label="Password"
+                        size="small"
+                        onBlur={(e) =>
+                          setValue("password", e.target.value.trim())
+                        }
+                        type={passwordIsMasked ? "password" : "text"}
+                        value={value || ""}
+                        onChange={onChange}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={togglePasswordMask}
+                                onMouseDown={handleMouseDownPassword}
+                                edge="end"
+                              >
+                                {passwordIsMasked ? (
+                                  <VisibilityOffIcon />
+                                ) : (
+                                  <VisibilityIcon />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                        error={!!errors?.password}
+                        helperText={
+                          errors?.password ? errors?.password.message : null
+                        }
+                      />
+                    )}
+                    rules={{
+                      required: "Password is required field!",
+                      pattern: {
+                        value:
+                          /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
+                        message:
+                          "Password must have (UpperCase, LowerCase, Number/SpecialChar and min 8 Chars)",
+                      },
+                    }}
+                  />
+                  {/* <TextField
                     name="confirmpassword"
                     label="Confirm Password"
                     value={form.confirmpassword || ""}
                     onChange={handleInputChange}
+                  /> */}
+                  <Controller
+                    name="confirmpassword"
+                    control={control}
+                    render={({ field: { onChange, value, onBlur } }) => (
+                      <TextField
+                        name="confirmpassword"
+                        label="Confirm Password"
+                        size="small"
+                        onBlur={(e) =>
+                          setValue("confirmpassword", e.target.value.trim())
+                        }
+                        type={confirmPasswordIsMasked ? "password" : "text"}
+                        value={value || ""}
+                        onChange={onChange}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={toggleConfirmPasswordMask}
+                                onMouseDown={handleMouseDownPassword}
+                                edge="end"
+                              >
+                                {confirmPasswordIsMasked ? (
+                                  <VisibilityOffIcon />
+                                ) : (
+                                  <VisibilityIcon />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                        error={!!errors?.confirmpassword}
+                        helperText={
+                          errors?.confirmpassword
+                            ? errors?.confirmpassword.message
+                            : null
+                        }
+                      />
+                    )}
+                    rules={{
+                      required: "Password is required field!",
+                      validate: {
+                        matchesPreviousPassword: (value) => {
+                          const { password } = getValues();
+                          return (
+                            password === value || "Passwords should match!"
+                          );
+                        },
+                      },
+                    }}
                   />
-                  <TextField
+                  <Controller
                     name="email"
-                    label="Email"
-                    value={form.email || ""}
-                    onChange={handleInputChange}
+                    control={control}
+                    render={({
+                      field: { onChange, value, onTouched, onBlur },
+                    }) => (
+                      <TextField
+                        id="email"
+                        label="Email"
+                        placeholder="Email"
+                        onBlur={(e) => setValue("email", e.target.value.trim())}
+                        multiline
+                        size="small"
+                        variant="outlined"
+                        // inputProps={{ className: classes.textarea }}
+                        onChange={onChange}
+                        value={value}
+                        error={!!errors?.email}
+                        helperText={
+                          errors?.email ? errors?.email.message : null
+                        }
+                      />
+                    )}
+                    rules={{
+                      required: "Email is required field!",
+                      pattern: {
+                        value:
+                          /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                        message: "Please enter a valid email address!",
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid
@@ -222,12 +358,7 @@ const RegisterUI = ({
                       Save
                     </LoadingButton>
                   ) : (
-                    <Controls.Button
-                      text="Submit"
-                      fullWidth
-                      disabled={registerFormValid}
-                      onClick={onSubmit}
-                    />
+                    <Controls.Button text="Submit" fullWidth />
                   )}
                   <Grid item>
                     <Toast

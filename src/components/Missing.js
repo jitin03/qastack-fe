@@ -1,14 +1,29 @@
+import { Container, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const Missing = () => {
   return (
-    <article style={{ padding: "100px" }}>
-      <h1>Oops!</h1>
-      <p>Page Not Found</p>
-      <div className="flexGrow">
-        <Link to="/">Visit Our Homepage</Link>
-      </div>
-    </article>
+    <Container maxWidth="sm" style={{ textAlign: "center" }}>
+      <Grid container justifyContent="center" alignItems="center" mt={20}>
+        <Grid
+          item
+          container
+          justifyContent="center"
+          alignItems="center"
+          spacing={4}
+        >
+          <Grid item md={12}>
+            <Typography variant="h4">Oops!</Typography>
+            <Typography>Page Not Found</Typography>
+          </Grid>
+          <Grid item md={12}>
+            <div className="flexGrow">
+              <Link to="/">Visit Our Homepage</Link>
+            </div>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

@@ -56,8 +56,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TestSteps(props) {
   const classes = useStyles();
-  const { register, handleSubmit, control, fields, remove, append, param } =
-    props;
+  const {
+    register,
+    handleSubmit,
+    control,
+    fields,
+    remove,
+    append,
+    param,
+    setValue,
+  } = props;
   console.log("param", param);
   const {
     componentState: { component },
@@ -130,6 +138,7 @@ export default function TestSteps(props) {
                 handleAddStep={handleAddStep}
                 fields={fields}
                 remove={remove}
+                setValue={setValue}
               />
             </Grid>
           </Grid>
@@ -256,7 +265,7 @@ const CustomeAttributes = (props) => {
 };
 
 const TestDetails = (props) => {
-  const { control, handleAddStep, remove, fields } = props;
+  const { control, handleAddStep, remove, fields, setValue } = props;
   const classes = {};
   return (
     <Card
@@ -274,11 +283,12 @@ const TestDetails = (props) => {
           <Controller
             name="title"
             control={control}
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { onChange, value, onBlur } }) => (
               <TextField
                 id="title"
                 label="Enter title"
                 placeholder="Testcase title"
+                onBlur={(e) => setValue("title", e.target.value.trim())}
                 multiline
                 size="small"
                 variant="outlined"
@@ -345,12 +355,18 @@ const TestDetails = (props) => {
                 <Controller
                   name={`Steps[${index}].stepDescription`}
                   control={control}
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, value, onBlur } }) => (
                     <TextField
                       label="Step description"
                       multiline
                       size="small"
                       variant="outlined"
+                      onBlur={(e) =>
+                        setValue(
+                          `Steps[${index}].stepDescription`,
+                          e.target.value.trim()
+                        )
+                      }
                       // inputProps={{ className: classes.textarea }}
                       onChange={onChange}
                       // defaultValue={item.stepDescription}
@@ -364,7 +380,7 @@ const TestDetails = (props) => {
                 <Controller
                   name={`Steps[${index}].expectedResult`}
                   control={control}
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, value, onBlur } }) => (
                     <TextField
                       size="small"
                       //   style={{ width: "150px" }}
@@ -372,8 +388,15 @@ const TestDetails = (props) => {
                       multiline
                       variant="outlined"
                       onChange={onChange}
+                      onBlur={(e) =>
+                        setValue(
+                          `Steps[${index}].expectedResult`,
+                          e.target.value.trim()
+                        )
+                      }
                       // defaultValue={item.expectedResult}
                       value={value}
+
                       // inputProps={{ className: classes.textarea }}
                     />
                   )}

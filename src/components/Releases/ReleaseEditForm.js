@@ -35,7 +35,13 @@ export const ReleaseEditForm = (props) => {
     handleCloseRightDrawer,
   } = useGlobalContext();
 
-  const { register, handleSubmit, control, setValue } = useForm({
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm({
     defaultValues: release.release?.data.ReleaseName,
   });
 
@@ -48,6 +54,7 @@ export const ReleaseEditForm = (props) => {
     queryClient.invalidateQueries("releases");
     handleCloseRightDrawer(e, "Edit Release", param[0]);
   };
+  console.log("errors", errors);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Divider />
@@ -62,18 +69,24 @@ export const ReleaseEditForm = (props) => {
           <Controller
             name="ReleaseName"
             control={control}
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { onChange, value, onBlur } }) => (
               <TextField
                 id="name"
                 label="Release Name"
                 placeholder="Release"
-                size="medium"
+                onBlur={(e) => setValue("ReleaseName", e.target.value.trim())}
+                size="small"
                 variant="outlined"
                 onChange={onChange}
                 value={value}
                 style={{ minWidth: "100%" }}
+                error={!!errors?.ReleaseName}
+                helperText={
+                  errors?.ReleaseName ? errors?.ReleaseName.message : null
+                }
               />
             )}
+            rules={{ required: "Release Name is required field!" }}
           />
         </Grid>
         <Grid item style={{ minWidth: "250px", padding: "16px" }}>

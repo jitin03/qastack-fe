@@ -71,7 +71,7 @@ const BottomDrawer = styled("div")(({ theme }) => ({
 }));
 export default function TestRuns(props) {
   const classes = useStyles();
-  const { register, handleSubmit, control, param: projectId } = props;
+  const { register, handleSubmit, control, param: projectId, setValue } = props;
   console.log("param", projectId);
   const {
     data: releases,
@@ -131,7 +131,7 @@ export default function TestRuns(props) {
         >
           <Grid item container xs={8}>
             <Grid item style={{ padding: "5px" }}>
-              <TestRunForm control={control} />
+              <TestRunForm control={control} setValue={setValue} />
             </Grid>
           </Grid>
           <Grid item container xs={4}>
@@ -260,7 +260,7 @@ const CustomeAttributes = (props) => {
 };
 
 const TestRunForm = (props) => {
-  const { control } = props;
+  const { control, setValue } = props;
   const classes = {};
   return (
     <Card
@@ -277,10 +277,11 @@ const TestRunForm = (props) => {
           <Controller
             name="name"
             control={control}
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { onChange, value, onBlur } }) => (
               <TextField
                 id="name"
                 label="Enter Name"
+                onBlur={(e) => setValue("name", e.target.value.trim())}
                 placeholder="TestRun Name"
                 size="small"
                 variant="outlined"

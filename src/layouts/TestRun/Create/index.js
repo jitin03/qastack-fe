@@ -54,7 +54,7 @@ export default function CreateTestRun(props) {
   console.log("param", param);
   const [tabValue, setTabValue] = useState(0);
   const classes = useStyles();
-  const { register, handleSubmit, control } = useForm();
+  const { register, handleSubmit, control, setValue } = useForm();
 
   const {
     componentDispatch,
@@ -128,6 +128,7 @@ export default function CreateTestRun(props) {
               control={control}
               handleSubmit={handleSubmit}
               param={param}
+              setValue={setValue}
             />
             <TestCaseRecords
               register={register}

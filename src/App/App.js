@@ -27,6 +27,8 @@ import Unauthorized from "../components/Unauthorized";
 import ForgotPassword from "../layouts/ForgotPassword";
 import ResetPassword from "../layouts/ForgotPassword/resetPassword";
 import VerifyUserEmail from "../layouts/VerifyUserEmail";
+import ProjectList from "../components/Projects/ProjectList";
+import Missing from "../components/Missing";
 const drawerWidth = 240;
 const useStyles = makeStyles({
   appMain: {
@@ -140,11 +142,15 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route path="login" element={<LoginContainer />} />
               <Route path="register" element={<RegisterContainer />} />
-              <Route path="forgot-password" element={<ForgotPassword />} />
-              <Route path="reset-password" element={<ResetPassword />} />
+              <Route path="forgotpassword" element={<ForgotPassword />} />
+              <Route path="newpassword" element={<ResetPassword />} />
               <Route path="verify/user" element={<VerifyUserEmail />} />
               <Route path="unauthorized" element={<Unauthorized />} />
 
+              {/* we want to protect these routes */}
+              <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+                <Route path="/" element={<Project />} />
+              </Route>
               <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
                 {routes.map((route, index) => {
                   const { path, component } = route;
@@ -152,6 +158,8 @@ function App() {
                   return <Route key={index} path={path} element={component} />;
                 })}
               </Route>
+              {/* catch all */}
+              <Route path="*" element={<Missing />} />
             </Route>
           </Routes>
         </Box>

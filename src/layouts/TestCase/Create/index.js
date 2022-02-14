@@ -44,7 +44,7 @@ export default function CreateTestCase(props) {
 
   const [tabValue, setTabValue] = useState(0);
   const classes = useStyles();
-  const { register, handleSubmit, control } = useForm({
+  const { register, handleSubmit, control, setValue } = useForm({
     defaultValues: {
       Steps: [{ stepDescription: "", expectedResult: "" }],
     },
@@ -133,6 +133,7 @@ export default function CreateTestCase(props) {
               remove={remove}
               append={append}
               param={param}
+              setValue={setValue}
             />
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
