@@ -155,7 +155,7 @@ const VerifyUserEmail = () => {
 
   return (
     <>
-      {/* <Grid
+      <Grid
         container
         justifyItems="center"
         alignContent="center"
@@ -164,9 +164,9 @@ const VerifyUserEmail = () => {
         marginTop="80px"
       >
         <Grid item md={4}></Grid>
-        <Typography>Verified</Typography>
+        <Typography>Verification is in-progress !!</Typography>
         <Grid item md={4}></Grid>
-      </Grid> */}
+      </Grid>
     </>
   );
 };
