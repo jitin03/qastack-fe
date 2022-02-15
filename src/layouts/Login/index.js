@@ -200,7 +200,7 @@ const LoginUI = () => {
                         onBlur={(e) =>
                           setValue("username", e.target.value.trim())
                         }
-                        style={{ width: "450px" }}
+                        style={{ width: "100%" }}
                         error={!!errors?.username}
                         helperText={
                           errors?.username ? errors?.username.message : null

@@ -30,6 +30,7 @@ import {
   getAllComponents,
 } from "../../../context/actions/component/api";
 import { useQuery } from "react-query";
+import { FormHelperText } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,6 +66,7 @@ export default function TestSteps(props) {
     append,
     param,
     setValue,
+    errors,
   } = props;
   console.log("param", param);
   const {
@@ -139,13 +141,18 @@ export default function TestSteps(props) {
                 fields={fields}
                 remove={remove}
                 setValue={setValue}
+                errors={errors}
               />
             </Grid>
           </Grid>
           <Grid item xs={3}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <CustomeAttributes control={control} components={components} />
+                <CustomeAttributes
+                  control={control}
+                  components={components}
+                  errors={errors}
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -156,7 +163,7 @@ export default function TestSteps(props) {
 }
 
 const CustomeAttributes = (props) => {
-  const { control, handleAddStep, remove, fields, components } = props;
+  const { control, handleAddStep, remove, fields, components, errors } = props;
 
   const classes = {};
   return (
@@ -178,7 +185,7 @@ const CustomeAttributes = (props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth>
+                <FormControl fullWidth error={!!errors?.Priority}>
                   <InputLabel id="demo-simple-select-helper-label">
                     Priority
                   </InputLabel>
@@ -193,9 +200,13 @@ const CustomeAttributes = (props) => {
                     <MenuItem value="medium">Medium</MenuItem>
                     <MenuItem value="low">Low</MenuItem>
                   </Select>
+                  <FormHelperText error={true}>
+                    {errors?.Priority ? errors?.Priority.message : null}
+                  </FormHelperText>
                 </FormControl>
               </>
             )}
+            rules={{ required: "Priority is required field!" }}
           />
         </Grid>
         <Grid item>
@@ -205,7 +216,7 @@ const CustomeAttributes = (props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth>
+                <FormControl fullWidth error={!!errors?.Type}>
                   <InputLabel id="demo-simple-select-helper-label">
                     Type
                   </InputLabel>
@@ -222,9 +233,13 @@ const CustomeAttributes = (props) => {
                     <MenuItem value="functional">Functional</MenuItem>
                     <MenuItem value="other">Other</MenuItem>
                   </Select>
+                  <FormHelperText error={true}>
+                    {errors?.Type ? errors?.Type.message : null}
+                  </FormHelperText>
                 </FormControl>
               </>
             )}
+            rules={{ required: "Type is required field!" }}
           />
         </Grid>
         <Grid item style={{ width: "100%" }}>
@@ -234,7 +249,7 @@ const CustomeAttributes = (props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth>
+                <FormControl fullWidth error={!!errors?.componentId}>
                   <InputLabel id="demo-simple-select-helper-label">
                     Select Component
                   </InputLabel>
@@ -254,9 +269,13 @@ const CustomeAttributes = (props) => {
                       </MenuItem>
                     ))}
                   </Select>
+                  <FormHelperText error={true}>
+                    {errors?.componentId ? errors?.componentId.message : null}
+                  </FormHelperText>
                 </FormControl>
               </>
             )}
+            rules={{ required: "Component is required field!" }}
           />
         </Grid>
       </CardContent>
@@ -265,7 +284,7 @@ const CustomeAttributes = (props) => {
 };
 
 const TestDetails = (props) => {
-  const { control, handleAddStep, remove, fields, setValue } = props;
+  const { control, handleAddStep, remove, fields, setValue, errors } = props;
   const classes = {};
   return (
     <Card
@@ -296,8 +315,11 @@ const TestDetails = (props) => {
                 onChange={onChange}
                 value={value}
                 style={{ width: "450px" }}
+                error={!!errors?.title}
+                helperText={errors?.title ? errors?.title.message : null}
               />
             )}
+            rules={{ required: "Title is required field!" }}
           />
         </Grid>
         <Grid item>

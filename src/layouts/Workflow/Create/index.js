@@ -16,6 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { addWorkFlow } from "../../../context/actions/workflow/api";
 import { generateId } from "../../../helper/appHelper";
 import { useGlobalContext } from "../../../context/provider/context";
+import InfoIcon from "@mui/icons-material/Info";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -36,14 +37,30 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function CreateWorkflow() {
   const classes = useStyles();
-  const { register, handleSubmit, control } = useForm();
-  const { handleCloseRightDrawer } = useGlobalContext();
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    defaultValues: {
+      parameters: [{ parameter_name: "", parameter_value: "" }],
+    },
+  });
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    {
+      control,
+      name: "parameters",
+    }
+  );
+  const { handleCloseRightDrawer, handleRightDrawer } = useGlobalContext();
   const [openDialog, setOpenDialog] = useState(false);
   const [elements, setElements] = useState([]);
   const [workFlowState, setworkFlowState] = useState([]);
   const [stepsConfig, setStepsConfig] = useState([]);
   const { projectKey: projectId } = useParams();
-  const onSubmitAddStep = (workFlowDetail) => {
+  const onSubmitAddStep = async (workFlowDetail) => {
     const elementId = generateId();
     workFlowDetail.id = elementId;
     const currentNode = {
@@ -85,7 +102,7 @@ export default function CreateWorkflow() {
         navigate(`/project/${projectId}/ciFlow`);
       },
     });
-  const onSubmit = async (data) => {
+  const onSubmit = async (data, e) => {
     data.config = workFlowState;
     data.project_Id = projectId;
     data.user_Id = user?.data.users_id;
@@ -165,23 +182,48 @@ export default function CreateWorkflow() {
                 justifyContent="flex-end"
                 style={{ padding: "10px" }}
               >
-                <Grid item>
-                  <Controller
-                    name="name"
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <TextField
-                        id="workflowname"
-                        label="Job Name"
-                        placeholder="Job Name"
-                        size="small"
-                        variant="outlined"
-                        onChange={onChange}
-                        value={value}
-                        style={{ width: "250px" }}
-                      />
-                    )}
-                  />
+                <Grid item container justifyContent="center" spacing={2}>
+                  <Grid item>
+                    <Controller
+                      name="name"
+                      control={control}
+                      render={({ field: { onChange, value, onBlur } }) => (
+                        <TextField
+                          id="workflowname"
+                          label="Job Name"
+                          placeholder="Job Name"
+                          onBlur={(e) =>
+                            setValue(
+                              "name",
+                              e.target.value.toLocaleLowerCase().trim()
+                            )
+                          }
+                          size="small"
+                          variant="outlined"
+                          onChange={onChange}
+                          value={value}
+                          style={{ width: "250px" }}
+                          error={!!errors?.name}
+                          helperText={
+                            errors?.name ? errors?.name.message : null
+                          }
+                        />
+                      )}
+                      rules={{
+                        required: "Workflow Name is required field!",
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Tooltip
+                      title="Only alphanumeric characters and hyphen(-) are allowed"
+                      placement="right"
+                    >
+                      <Button size="small" style={{ marginTop: "10px" }}>
+                        <InfoIcon></InfoIcon>
+                      </Button>
+                    </Tooltip>
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid
@@ -201,6 +243,7 @@ export default function CreateWorkflow() {
                       onClick={() => {
                         setOpenDialog(true);
                       }}
+                      // onClick={() => handleRightDrawer("Add Step", projectId)}
                     >
                       Add step
                     </Button>
@@ -245,6 +288,10 @@ export default function CreateWorkflow() {
         setOpenDialog={setOpenDialog}
         onSubmitAddStep={onSubmitAddStep}
         workFlowState={workFlowState}
+        setValue={setValue}
+        remove={remove}
+        append={append}
+        fields={fields}
       />
     </Box>
   );
