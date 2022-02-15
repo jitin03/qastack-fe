@@ -30,6 +30,7 @@ import {
   getAllComponents,
 } from "../../../context/actions/component/api";
 import { useQuery } from "react-query";
+import { FormHelperText } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,8 +57,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TestSteps(props) {
   const classes = useStyles();
-  const { register, handleSubmit, control, fields, remove, append, param } =
-    props;
+  const {
+    register,
+    handleSubmit,
+    control,
+    fields,
+    remove,
+    append,
+    param,
+    setValue,
+    errors,
+  } = props;
   console.log("param", param);
   const {
     componentState: { component },
@@ -130,13 +140,19 @@ export default function TestSteps(props) {
                 handleAddStep={handleAddStep}
                 fields={fields}
                 remove={remove}
+                setValue={setValue}
+                errors={errors}
               />
             </Grid>
           </Grid>
           <Grid item xs={3}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <CustomeAttributes control={control} components={components} />
+                <CustomeAttributes
+                  control={control}
+                  components={components}
+                  errors={errors}
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -147,7 +163,7 @@ export default function TestSteps(props) {
 }
 
 const CustomeAttributes = (props) => {
-  const { control, handleAddStep, remove, fields, components } = props;
+  const { control, handleAddStep, remove, fields, components, errors } = props;
 
   const classes = {};
   return (
@@ -169,7 +185,7 @@ const CustomeAttributes = (props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth>
+                <FormControl fullWidth error={!!errors?.Priority}>
                   <InputLabel id="demo-simple-select-helper-label">
                     Priority
                   </InputLabel>
@@ -184,9 +200,13 @@ const CustomeAttributes = (props) => {
                     <MenuItem value="medium">Medium</MenuItem>
                     <MenuItem value="low">Low</MenuItem>
                   </Select>
+                  <FormHelperText error={true}>
+                    {errors?.Priority ? errors?.Priority.message : null}
+                  </FormHelperText>
                 </FormControl>
               </>
             )}
+            rules={{ required: "Priority is required field!" }}
           />
         </Grid>
         <Grid item>
@@ -196,7 +216,7 @@ const CustomeAttributes = (props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth>
+                <FormControl fullWidth error={!!errors?.Type}>
                   <InputLabel id="demo-simple-select-helper-label">
                     Type
                   </InputLabel>
@@ -213,9 +233,13 @@ const CustomeAttributes = (props) => {
                     <MenuItem value="functional">Functional</MenuItem>
                     <MenuItem value="other">Other</MenuItem>
                   </Select>
+                  <FormHelperText error={true}>
+                    {errors?.Type ? errors?.Type.message : null}
+                  </FormHelperText>
                 </FormControl>
               </>
             )}
+            rules={{ required: "Type is required field!" }}
           />
         </Grid>
         <Grid item style={{ width: "100%" }}>
@@ -225,7 +249,7 @@ const CustomeAttributes = (props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth>
+                <FormControl fullWidth error={!!errors?.componentId}>
                   <InputLabel id="demo-simple-select-helper-label">
                     Select Component
                   </InputLabel>
@@ -245,9 +269,13 @@ const CustomeAttributes = (props) => {
                       </MenuItem>
                     ))}
                   </Select>
+                  <FormHelperText error={true}>
+                    {errors?.componentId ? errors?.componentId.message : null}
+                  </FormHelperText>
                 </FormControl>
               </>
             )}
+            rules={{ required: "Component is required field!" }}
           />
         </Grid>
       </CardContent>
@@ -256,7 +284,7 @@ const CustomeAttributes = (props) => {
 };
 
 const TestDetails = (props) => {
-  const { control, handleAddStep, remove, fields } = props;
+  const { control, handleAddStep, remove, fields, setValue, errors } = props;
   const classes = {};
   return (
     <Card
@@ -274,11 +302,12 @@ const TestDetails = (props) => {
           <Controller
             name="title"
             control={control}
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { onChange, value, onBlur } }) => (
               <TextField
                 id="title"
                 label="Enter title"
                 placeholder="Testcase title"
+                onBlur={(e) => setValue("title", e.target.value.trim())}
                 multiline
                 size="small"
                 variant="outlined"
@@ -286,8 +315,11 @@ const TestDetails = (props) => {
                 onChange={onChange}
                 value={value}
                 style={{ width: "450px" }}
+                error={!!errors?.title}
+                helperText={errors?.title ? errors?.title.message : null}
               />
             )}
+            rules={{ required: "Title is required field!" }}
           />
         </Grid>
         <Grid item>
@@ -345,12 +377,18 @@ const TestDetails = (props) => {
                 <Controller
                   name={`Steps[${index}].stepDescription`}
                   control={control}
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, value, onBlur } }) => (
                     <TextField
                       label="Step description"
                       multiline
                       size="small"
                       variant="outlined"
+                      onBlur={(e) =>
+                        setValue(
+                          `Steps[${index}].stepDescription`,
+                          e.target.value.trim()
+                        )
+                      }
                       // inputProps={{ className: classes.textarea }}
                       onChange={onChange}
                       // defaultValue={item.stepDescription}
@@ -364,7 +402,7 @@ const TestDetails = (props) => {
                 <Controller
                   name={`Steps[${index}].expectedResult`}
                   control={control}
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, value, onBlur } }) => (
                     <TextField
                       size="small"
                       //   style={{ width: "150px" }}
@@ -372,8 +410,15 @@ const TestDetails = (props) => {
                       multiline
                       variant="outlined"
                       onChange={onChange}
+                      onBlur={(e) =>
+                        setValue(
+                          `Steps[${index}].expectedResult`,
+                          e.target.value.trim()
+                        )
+                      }
                       // defaultValue={item.expectedResult}
                       value={value}
+
                       // inputProps={{ className: classes.textarea }}
                     />
                   )}

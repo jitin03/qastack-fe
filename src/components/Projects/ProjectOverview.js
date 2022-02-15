@@ -125,7 +125,7 @@ const ProjectOverview = () => {
                     </>
                   ))}
                 </CardContent>
-                <Link underline="none" to={`/project/${projectKey}/releases`}>
+                <Link underline="none" href={`/project/${projectKey}/releases`}>
                   <Typography
                     style={{ textAlign: "center" }}
                     color="textSecondary"

@@ -45,7 +45,7 @@ export const getVerifyEmail = async ({ queryKey }) => {
 
   try {
     const response = await axiosInstance().get(
-      `/verify/mail?code=${code}&email=${email}`,
+      `/verify/email?code=${code}&email=${email}`,
       {
         headers: {
           "Content-Type": "application/json",

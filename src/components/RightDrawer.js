@@ -27,6 +27,7 @@ import { ReleaseEditForm } from "./Releases/ReleaseEditForm";
 import EditTestCase from "../layouts/TestCase/Edit";
 import EditTestRun from "../layouts/TestRun/Edit";
 import JobDisplayLogs from "../layouts/Workflow/List/JobDisplayLogs";
+import AddStep from "../layouts/Workflow/Create/AddStep";
 
 // import AddStep from "../layouts/CIFlow/Create/AddStep";
 
@@ -96,6 +97,8 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
           return <EditTestRun param={params} />;
         } else if (configTitle === "View Logs") {
           return <JobDisplayLogs params={params} />;
+        } else if (configTitle === "Add Step") {
+          return <AddStep params={params} />;
         }
         // else if (configTitle === "Add step") {
         //   return <AddStep param={params} />;

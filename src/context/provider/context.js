@@ -104,6 +104,8 @@ const AppProvider = ({ children }) => {
       navigate(`${window.location.pathname}/edit/${param[1]}`);
     } else if (configTitle === "View Logs") {
       navigate(`${window.location.pathname}/workflow/logs/${param[1]}`);
+    } else if (configTitle === "Add Step") {
+      navigate(`${window.location.pathname}/step`);
     }
     setConfigTitle(configTitle);
     setState(!state);
@@ -184,6 +186,8 @@ const AppProvider = ({ children }) => {
       navigate(`/project/${params}/ciFlow`);
     } else if (title === "Add Job") {
       navigate(`/project/${params}/ciFlow`);
+    } else if (title === "Add Step") {
+      navigate(`/project/${params}/ciFlow/create`);
     }
   };
   const toggleDrawer = () => (event) => {

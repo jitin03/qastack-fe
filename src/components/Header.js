@@ -76,9 +76,14 @@ const AppBar = styled(MuiAppBar, {
 export default function Header(props) {
   const { open, handleDrawerOpen } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const divRef = React.useRef();
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    event.preventDefault();
+    if (anchorEl === null) {
+      setAnchorEl(event.currentTarget);
+    } else {
+      setAnchorEl(null);
+    }
   };
 
   const handleClose = () => {
@@ -177,6 +182,7 @@ export default function Header(props) {
               <>
                 <Button
                   variant="text"
+                  ref={divRef}
                   size="small"
                   style={{
                     backgroundColor: "rgb(121, 92, 236)",
@@ -206,6 +212,10 @@ export default function Header(props) {
                   anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
                   }}
                 >
                   <Box

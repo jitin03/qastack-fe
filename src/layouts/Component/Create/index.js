@@ -1,4 +1,4 @@
-import { Divider, Grid } from "@mui/material";
+import { Divider, Grid, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { useGlobalContext } from "../../../context/provider/context";
@@ -12,6 +12,8 @@ import {
 } from "../../../constants/actionTypes";
 import { addComponent } from "../../../context/actions/component/api";
 import Toast from "../../../components/controllers/Toast";
+
+import { Controller, useForm } from "react-hook-form";
 
 const useStyles = makeStyles({
   bottomDrawer: {
@@ -38,6 +40,15 @@ export default function CreateComponent(props) {
   const [form, setForm] = useState({});
 
   const [fieldErrors, setFieldErrors] = useState({});
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    mode: "onTouched",
+  });
 
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
     useMutation(addComponent, {
@@ -58,25 +69,27 @@ export default function CreateComponent(props) {
     setForm({ ...form, [name]: value });
   };
   const queryClient = useQueryClient();
-  const handleComponentSubmit = async (e) => {
+  const onSubmit = async (data, e) => {
     e.preventDefault();
-    form.project_id = param;
+    data.project_id = param;
     try {
-      await mutateAsync(form);
+      await mutateAsync(data);
       queryClient.invalidateQueries("component");
-      setForm({});
+
       handleCloseRightDrawer(e, "Add Component", param);
     } catch (error) {
       componentDispatch({
         type: COMPONENT_CREATE_ERROR,
         payload: error.message,
       });
-
-      setForm({});
     }
   };
   return (
-    <Form>
+    <form
+      className={classes.root}
+      autoComplete="off"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Divider />
       <Grid
         container
@@ -84,11 +97,33 @@ export default function CreateComponent(props) {
         style={{ padding: "2rem 1.5rem 1.5rem" }}
       >
         <Grid item style={{ minWidth: "250px" }}>
-          <Controls.Input
+          {/* <Controls.Input
             name="name"
             label="Component"
             value={form.component || ""}
             onChange={(e) => handleInputChange(e)}
+          /> */}
+          <Controller
+            name="name"
+            control={control}
+            render={({ field: { onChange, value, onTouched, onBlur } }) => (
+              <TextField
+                id="Component"
+                label="Component"
+                placeholder="Component"
+                onBlur={(e) => setValue("name", e.target.value.trim())}
+                multiline
+                size="small"
+                variant="outlined"
+                // inputProps={{ className: classes.textarea }}
+                onChange={onChange}
+                value={value}
+                style={{ width: "450px" }}
+                error={!!errors?.name}
+                helperText={errors?.name ? errors?.name.message : null}
+              />
+            )}
+            rules={{ required: "Component is required field!" }}
           />
         </Grid>
       </Grid>
@@ -102,13 +137,13 @@ export default function CreateComponent(props) {
             handleCloseRightDrawer(e, "Add Component", param);
           }}
         />
-        <Controls.Button text="Submit" onClick={handleComponentSubmit} />
+        <Controls.Button text="Submit" />
       </Grid>
       <Toast
         openToast={openToast}
         message={component.error}
         handleCloseToast={handleCloseToast}
       ></Toast>
-    </Form>
+    </form>
   );
 }

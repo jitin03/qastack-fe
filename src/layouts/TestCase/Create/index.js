@@ -44,7 +44,13 @@ export default function CreateTestCase(props) {
 
   const [tabValue, setTabValue] = useState(0);
   const classes = useStyles();
-  const { register, handleSubmit, control } = useForm({
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       Steps: [{ stepDescription: "", expectedResult: "" }],
     },
@@ -84,6 +90,7 @@ export default function CreateTestCase(props) {
     });
 
   const queryClient = useQueryClient();
+  console.log("errors", errors);
   const onSubmit = async (data, e) => {
     try {
       await mutateAsync(data);
@@ -133,6 +140,8 @@ export default function CreateTestCase(props) {
               remove={remove}
               append={append}
               param={param}
+              setValue={setValue}
+              errors={errors}
             />
           </TabPanel>
           <TabPanel value={tabValue} index={1}>

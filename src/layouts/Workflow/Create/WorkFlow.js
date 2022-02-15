@@ -49,7 +49,6 @@ const WorkFlow = ({ elements, setElements }) => {
   //   }, [setElements, transform]);
 
   const onAdd = useCallback(() => {
-    console.log("Hello world");
     const newNode = {
       id: getNodeId(),
       data: { label: "Added node" },

@@ -75,6 +75,7 @@ export default function TestSteps(props) {
     handleSubmit,
     control,
     fields,
+    setValue,
     remove,
     append,
     param,
@@ -154,6 +155,7 @@ export default function TestSteps(props) {
                 control={control}
                 handleAddStep={handleAddStep}
                 fields={fields}
+                setValue={setValue}
                 remove={remove}
                 preloadedData={preloadedData}
               />
@@ -287,7 +289,8 @@ const CustomeAttributes = (props) => {
 };
 
 const TestDetails = (props) => {
-  const { control, handleAddStep, remove, fields, preloadedData } = props;
+  const { control, handleAddStep, remove, fields, preloadedData, setValue } =
+    props;
   console.log("preloadedData", preloadedData);
   let title = preloadedData?.title;
   const classes = {};
@@ -308,12 +311,13 @@ const TestDetails = (props) => {
             defaultValue={title || ""}
             name="title"
             control={control}
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { onChange, value, onBlur } }) => (
               <TextField
                 id="title"
                 label="Enter title"
                 placeholder="Testcase title"
                 multiline
+                onBlur={(e) => setValue("title", e.target.value.trim())}
                 size="small"
                 variant="outlined"
                 // inputProps={{ className: classes.textarea }}
@@ -380,12 +384,18 @@ const TestDetails = (props) => {
                 <Controller
                   name={`Steps[${index}].stepDescription`}
                   control={control}
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, value, onBlur } }) => (
                     <TextField
                       label="Step description"
                       multiline
                       size="small"
                       variant="outlined"
+                      onBlur={(e) =>
+                        setValue(
+                          `Steps[${index}].stepDescription`,
+                          e.target.value.trim()
+                        )
+                      }
                       // inputProps={{ className: classes.textarea }}
                       onChange={onChange}
                       // defaultValue={item.stepDescription}
@@ -399,13 +409,19 @@ const TestDetails = (props) => {
                 <Controller
                   name={`Steps[${index}].expectedResult`}
                   control={control}
-                  render={({ field: { onChange, value } }) => (
+                  render={({ field: { onChange, value, onBlur } }) => (
                     <TextField
                       size="small"
                       //   style={{ width: "150px" }}
                       label="Expected result"
                       multiline
                       variant="outlined"
+                      onBlur={(e) =>
+                        setValue(
+                          `Steps[${index}].expectedResult`,
+                          e.target.value.trim()
+                        )
+                      }
                       onChange={onChange}
                       // defaultValue={item.expectedResult}
                       value={value}

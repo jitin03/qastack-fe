@@ -199,6 +199,7 @@ export default function EditTestCase(props) {
               remove={remove}
               append={append}
               param={param}
+              setValue={setValue}
               preloadedData={testCase}
             />
           </TabPanel>

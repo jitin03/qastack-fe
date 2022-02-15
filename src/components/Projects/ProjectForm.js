@@ -71,7 +71,7 @@ export default function ProjectForm() {
           <Controls.Input
             name="name"
             label="Project"
-            value={projectState.project.name || ""}
+            value={projectState.project.name.trim() || ""}
             onChange={(e) => handleProjectFormInput(e)}
           />
         </Grid>

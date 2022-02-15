@@ -54,7 +54,15 @@ const ForgotPassword = () => {
   const queryClient = useQueryClient();
   let navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const { register, handleSubmit, control } = useForm();
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    mode: "onTouched",
+  });
   const {
     handleCloseToast,
     openToast,
@@ -185,7 +193,7 @@ const ForgotPassword = () => {
                   <Controller
                     name="emailaddress"
                     control={control}
-                    render={({ field: { onChange, value } }) => (
+                    render={({ field: { onChange, value, onBlur } }) => (
                       <TextField
                         id="emailaddress"
                         label="Emailaddress"
@@ -193,6 +201,9 @@ const ForgotPassword = () => {
                         multiline
                         size="small"
                         variant="outlined"
+                        onBlur={(e) =>
+                          setValue("emailaddress", e.target.value.trim())
+                        }
                         // inputProps={{ className: classes.textarea }}
                         onChange={(e) => {
                           // onChange's arg will send value into hook form
@@ -202,8 +213,15 @@ const ForgotPassword = () => {
                         }}
                         value={value}
                         style={{ width: "450px" }}
+                        error={!!errors?.emailaddress}
+                        helperText={
+                          errors?.emailaddress
+                            ? errors?.emailaddress.message
+                            : null
+                        }
                       />
                     )}
+                    rules={{ required: "Emailaddress is required field!" }}
                   />
                 </Grid>
                 <Grid

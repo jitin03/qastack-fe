@@ -7,12 +7,16 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Typography,
   InputLabel,
   MenuItem,
   Select,
   makeStyles,
+  Grid,
+  Tooltip,
 } from "@material-ui/core";
 import { FormControl } from "@mui/material";
 const useStyles = makeStyles((theme) => ({
@@ -38,6 +42,10 @@ export default function AddStep({
   setOpenDialog,
   onSubmitAddStep,
   workFlowState,
+  append,
+  setValue,
+  remove,
+  fields,
   control: parentControl,
 }) {
   const defaultStepName = {
@@ -57,57 +65,20 @@ export default function AddStep({
     ],
   };
 
-  const { register, handleSubmit, control, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm({
+    mode: "onChange",
+  });
   const classes = useStyles();
   const handleClose = () => {
     setOpenDialog(false);
     // setStepName(defaultStepName);
   };
-
-  // const handleChange = (e) => {
-  //   switch (e.target.id) {
-  //     case "name":
-  //       setStepName({ ...stepName, name: e.target.value });
-  //       break;
-  //     case "repository":
-  //       setStepName({ ...stepName, repository: e.target.value });
-  //       break;
-  //     case "branchName":
-  //       setStepName({ ...stepName, branchName: e.target.value });
-  //       break;
-  //     case "token":
-  //       setStepName({ ...stepName, token: e.target.value });
-  //       break;
-  //     case "docker_image":
-  //       setStepName({ ...stepName, docker_image: e.target.value });
-  //       break;
-  //     case "entrypath":
-  //       setStepName({ ...stepName, entrypath: e.target.value });
-  //       break;
-  //     case "input_command":
-  //       setStepName({ ...stepName, input_command: e.target.value });
-  //       break;
-  //     case "dependencies":
-  //       setStepName({ ...stepName, dependencies: e.target.value });
-  //       break;
-  //     case "parameter_name":
-  //       setStepName({
-  //         ...stepName,
-  //         parameters: [
-  //           { value: stepName.parameters[0].value, name: e.target.value },
-  //         ],
-  //       });
-  //       break;
-  //     case "parameter_value":
-  //       setStepName({
-  //         ...stepName,
-  //         parameters: [{ ...stepName.parameters[0], value: e.target.value }],
-  //       });
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -121,251 +92,349 @@ export default function AddStep({
     //   console.log(error.message);
     // }
   };
+  const handleAddParam = () => {
+    append({
+      parameter_name: "",
+      parameter_value: "",
+    });
+  };
+  console.log("errrors", errors);
   return (
     <div>
-      <Dialog
-        open={openDialog}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">Add Step</DialogTitle>
-        <form
-          className={classes.root}
-          autoComplete="off"
-          style={{ height: "100%", width: "100%" }}
-          onSubmit={handleSubmit(onSubmit)}
+      <Grid container justifyContent="center" alignContent="center">
+        <Dialog
+          open={openDialog}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
         >
-          <DialogContent>
-            <Controller
-              name="name"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  id="name"
-                  label="Name"
-                  size="small"
-                  type="text"
-                  onChange={onChange}
-                  value={value}
-                />
-              )}
-            />
-            <Controller
-              name="repository"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  id="repository"
-                  label="Git url"
-                  size="small"
-                  type="text"
-                  onChange={onChange}
-                  value={value}
-                />
-              )}
-            />
-            <Controller
-              name="branchName"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  id="branchName"
-                  label="Branch Name"
-                  size="small"
-                  type="text"
-                  onChange={onChange}
-                  value={value}
-                />
-              )}
-            />
-
-            <Controller
-              name="token"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  id="token"
-                  label="Token"
-                  size="small"
-                  type="text"
-                  onChange={onChange}
-                  value={value}
-                />
-              )}
-            />
-
-            <Controller
-              name="docker_image"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  id="docker_image"
-                  label="Image"
-                  size="small"
-                  type="text"
-                  onChange={onChange}
-                  value={value}
-                />
-              )}
-            />
-
-            <Controller
-              name="entrypath"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  id="entrypath"
-                  label="Entry Path"
-                  size="small"
-                  type="text"
-                  onChange={onChange}
-                  value={value}
-                />
-              )}
-            />
-
-            <Controller
-              name="input_command"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  id="input_command"
-                  label="Input Command"
-                  size="small"
-                  type="text"
-                  onChange={onChange}
-                  value={value}
-                />
-              )}
-            />
-
-            <Controller
-              name="dependencies"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-helper-label">
-                      Dependencies
-                    </InputLabel>
-                    <Select
-                      labelId="dependencies"
-                      id="dependencies"
-                      value={value}
-                      label="Age"
-                      fullWidth
-                      onChange={onChange}
-                    >
-                      {workFlowState.map(item => (
-                        <MenuItem value={item.id} key={item.id}>
-                          { item.name }
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </>
-              )}
-            />
-
-            {/* <InputLabel id="demo-simple-select-label">Dependencies</InputLabel>
-          <Select
-            labelId="dependencies"
-            id="dependencies"
-            value={stepName.dependencies}
-            label="Age"
-            fullWidth
-            onChange={handleChange}
+          <DialogTitle id="form-dialog-title">Add Step</DialogTitle>
+          <form
+            className={classes.root}
+            autoComplete="off"
+            style={{ height: "100%", width: "100%", marginLeft: "10px" }}
+            onSubmit={handleSubmit(onSubmit)}
           >
-            {workFlowState.length > 0 && (
-              <MenuItem value={workFlowState[0].name}>
-                {workFlowState[0].name}
-              </MenuItem>
-            )}
-          </Select> */}
+            <DialogContent>
+              <Controller
+                name="name"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="name"
+                    label="Step Name"
+                    size="small"
+                    type="text"
+                    onChange={onChange}
+                    value={value}
+                    error={!!errors?.name}
+                    helperText={errors?.name ? errors?.name.message : null}
+                  />
+                )}
+                rules={{
+                  required: "Step Name is required field!",
+                  pattern: {
+                    value: /^[a-zA-Z0-9]+(?:[\w -]*[a-zA-Z0-9]+)*$/,
+                    message:
+                      "Only alphanumeric characters and hyphen(-) are allowed",
+                  },
+                }}
+              />
+              <Controller
+                name="repository"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="repository"
+                    label="Repository URL"
+                    size="small"
+                    type="text"
+                    onChange={onChange}
+                    value={value}
+                    error={!!errors?.repository}
+                    helperText={
+                      errors?.repository ? errors?.repository.message : null
+                    }
+                  />
+                )}
+                rules={{ required: "Repository URL is required field!" }}
+              />
+              <Controller
+                name="branchName"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="branchName"
+                    label="Repository Branch"
+                    size="small"
+                    type="text"
+                    onChange={onChange}
+                    value={value}
+                    error={!!errors?.branchName}
+                    helperText={
+                      errors?.branchName ? errors?.branchName.message : null
+                    }
+                  />
+                )}
+                rules={{ required: "Repository Branch is required field!" }}
+              />
 
-            <Typography variant="h6">Additional Parameters</Typography>
+              <Controller
+                name="token"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="token"
+                    label="Token (Optional)"
+                    size="small"
+                    type="text"
+                    onChange={onChange}
+                    value={value}
+                  />
+                )}
+              />
 
-            <Controller
-              name="parameter_name"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  variant="standard"
-                  margin="dense"
-                  id="parameter_name"
-                  label="Name"
-                  size="small"
-                  type="text"
-                  onChange={onChange}
-                  value={value}
-                />
-              )}
-            />
-            {/* <TextField
-            margin="dense"
-            id="parameter_name"
-            label="Name"
-            type="text"
-            value={stepName.parameters[0].name}
-            onChange={handleChange}
-          /> */}
-            <Controller
-              name="parameter_value"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  variant="standard"
-                  margin="dense"
-                  id="parameter_value"
-                  label="Value"
-                  size="small"
-                  type="text"
-                  onChange={onChange}
-                  value={value}
-                />
-              )}
-            />
-            {/* <TextField
-            margin="dense"
-            id="parameter_value"
-            label="Value"
-            type="text"
-            value={stepName.parameters[0].value}
-            onChange={handleChange}
-          /> */}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button
-              // onClick={() => {
-              //   console.log(name);
-              //   onSubmitAddStep(stepName);
-              //   // handleClose();
-              // }}
-              color="primary"
-              type="submit"
-            >
-              Save
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+              <Controller
+                name="docker_image"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="docker_image"
+                    label="Docker Image"
+                    size="small"
+                    type="text"
+                    onChange={onChange}
+                    value={value}
+                    error={!!errors?.docker_image}
+                    helperText={
+                      errors?.docker_image ? errors?.docker_image.message : null
+                    }
+                  />
+                )}
+                rules={{ required: "Image is required field!" }}
+              />
+
+              <Controller
+                name="entrypath"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="entrypath"
+                    label="Shell Path"
+                    size="small"
+                    type="text"
+                    onChange={onChange}
+                    value={value}
+                  />
+                )}
+              />
+
+              <Controller
+                name="input_command"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    id="input_command"
+                    label="Input Command"
+                    size="small"
+                    type="text"
+                    onChange={onChange}
+                    value={value}
+                  />
+                )}
+              />
+
+              <Controller
+                name="dependencies"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-helper-label">
+                        Dependency
+                      </InputLabel>
+                      <Select
+                        labelId="dependencies"
+                        id="dependencies"
+                        value={value}
+                        label="Dependency"
+                        fullWidth
+                        onChange={onChange}
+                      >
+                        {workFlowState.map((item) => (
+                          <MenuItem value={item.id} key={item.id}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </>
+                )}
+              />
+
+              <Grid item style={{ marginTop: "15px" }}>
+                <Typography variant="h6">
+                  Additional Parameters (Optional)
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                container
+                xs={12}
+                justifyContent="center"
+                alignItems="center"
+              >
+                {fields.map((item, index) => (
+                  <>
+                    <Grid
+                      item
+                      container
+                      justifyContent="center"
+                      alignItems="center"
+                      className={classes.inputGroup}
+                      key={item.id}
+                    >
+                      <Grid item xs={4}>
+                        <Controller
+                          name={`parameters[${index}].name`}
+                          control={control}
+                          render={({ field: { onChange, value, onBlur } }) => (
+                            <TextField
+                              label="Name"
+                              multiline
+                              size="small"
+                              variant="outlined"
+                              onBlur={(e) =>
+                                setValue(
+                                  `parameters[${index}].name`,
+                                  e.target.value.trim()
+                                )
+                              }
+                              // inputProps={{ className: classes.textarea }}
+                              onChange={onChange}
+                              // defaultValue={item.stepDescription}
+                              //   style={{ width: "350px" }}
+                              value={value}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Controller
+                          name={`parameters[${index}].value`}
+                          control={control}
+                          render={({ field: { onChange, value, onBlur } }) => (
+                            <TextField
+                              size="small"
+                              //   style={{ width: "150px" }}
+                              label="Value"
+                              multiline
+                              variant="outlined"
+                              onChange={onChange}
+                              onBlur={(e) =>
+                                setValue(
+                                  `parameters[${index}].value`,
+                                  e.target.value.trim()
+                                )
+                              }
+                              // defaultValue={item.expectedResult}
+                              value={value}
+
+                              // inputProps={{ className: classes.textarea }}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={1}>
+                        <Tooltip title="Add param" arrow>
+                          <AddIcon onClick={handleAddParam} />
+                        </Tooltip>
+                      </Grid>
+                      <Grid item xs={1}>
+                        {index !== 0 && (
+                          <Tooltip title="Remove param" arrow>
+                            <DeleteIcon onClick={() => remove(index)} />
+                          </Tooltip>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </>
+                ))}
+
+                {/* <Grid item xs={4}>
+                  <Controller
+                    name="parameter_name"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <TextField
+                        variant="outlined"
+                        margin="dense"
+                        id="parameter_name"
+                        label="Name"
+                        size="small"
+                        type="text"
+                        onChange={onChange}
+                        value={value}
+                      />
+                    )}
+                  />
+                </Grid>
+
+                <Grid item xs={4}>
+                  <Controller
+                    name="parameter_value"
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <TextField
+                        variant="outlined"
+                        margin="dense"
+                        id="parameter_value"
+                        label="Value"
+                        size="small"
+                        type="text"
+                        onChange={onChange}
+                        value={value}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button>Add</Button>
+                </Grid> */}
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button
+                // onClick={() => {
+                //   console.log(name);
+                //   onSubmitAddStep(stepName);
+                //   // handleClose();
+                // }}
+                color="primary"
+                type="submit"
+              >
+                Save
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+      </Grid>
     </div>
   );
 }
