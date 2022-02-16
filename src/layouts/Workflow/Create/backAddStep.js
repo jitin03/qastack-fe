@@ -270,14 +270,7 @@ export default function AddStep({
                 />
               )}
             />
-            {/* <TextField
-            margin="dense"
-            id="parameter_name"
-            label="Name"
-            type="text"
-            value={stepName.parameters[0].name}
-            onChange={handleChange}
-          /> */}
+       
             <Controller
               name="parameter_value"
               control={control}
@@ -294,14 +287,7 @@ export default function AddStep({
                 />
               )}
             />
-            {/* <TextField
-            margin="dense"
-            id="parameter_value"
-            label="Value"
-            type="text"
-            value={stepName.parameters[0].value}
-            onChange={handleChange}
-          /> */}
+         
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">

@@ -48,23 +48,6 @@ export default function AddStep({
   fields,
   control: parentControl,
 }) {
-  const defaultStepName = {
-    name: "",
-    repository: "",
-    branch: "",
-    token: "",
-    docker_image: "",
-    entrypath: [""],
-    input_command: "",
-    dependencies: [""],
-    parameters: [
-      {
-        name: "",
-        value: "",
-      },
-    ],
-  };
-
   const {
     register,
     handleSubmit,
@@ -94,8 +77,8 @@ export default function AddStep({
   };
   const handleAddParam = () => {
     append({
-      parameter_name: "",
-      parameter_value: "",
+      name: "",
+      value: "",
     });
   };
   console.log("errrors", errors);
@@ -317,12 +300,6 @@ export default function AddStep({
                               multiline
                               size="small"
                               variant="outlined"
-                              onBlur={(e) =>
-                                setValue(
-                                  `parameters[${index}].name`,
-                                  e.target.value.trim()
-                                )
-                              }
                               // inputProps={{ className: classes.textarea }}
                               onChange={onChange}
                               // defaultValue={item.stepDescription}
@@ -344,12 +321,6 @@ export default function AddStep({
                               multiline
                               variant="outlined"
                               onChange={onChange}
-                              onBlur={(e) =>
-                                setValue(
-                                  `parameters[${index}].value`,
-                                  e.target.value.trim()
-                                )
-                              }
                               // defaultValue={item.expectedResult}
                               value={value}
 
@@ -373,47 +344,6 @@ export default function AddStep({
                     </Grid>
                   </>
                 ))}
-
-                {/* <Grid item xs={4}>
-                  <Controller
-                    name="parameter_name"
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <TextField
-                        variant="outlined"
-                        margin="dense"
-                        id="parameter_name"
-                        label="Name"
-                        size="small"
-                        type="text"
-                        onChange={onChange}
-                        value={value}
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={4}>
-                  <Controller
-                    name="parameter_value"
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <TextField
-                        variant="outlined"
-                        margin="dense"
-                        id="parameter_value"
-                        label="Value"
-                        size="small"
-                        type="text"
-                        onChange={onChange}
-                        value={value}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <Button>Add</Button>
-                </Grid> */}
               </Grid>
             </DialogContent>
             <DialogActions>
