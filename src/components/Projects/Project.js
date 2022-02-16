@@ -39,8 +39,6 @@ const Project = () => {
   } = useGlobalContext();
   const classes = useStyle();
 
-  const { starProject } = useProjectContext();
-
   console.log(
     "username",
     getUserDetailFromToken(localStorage.getItem("token")).username
@@ -69,15 +67,6 @@ const Project = () => {
 
   setEditId(id);
   let newData;
-  if (projects) {
-    newData = projects.filter(function (item) {
-      if (starProject) {
-        return item.Name == starProject;
-      } else {
-        return item;
-      }
-    });
-  }
 
   if (isLoading) {
     return (

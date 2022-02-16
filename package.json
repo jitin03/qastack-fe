@@ -30,6 +30,7 @@
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.0",
     "react-dom": "^17.0.2",
+    "react-error-overlay": "6.0.9",
     "react-flow-renderer": "^9.7.2",
     "react-hook-form": "^7.20.4",
     "react-jss": "^10.8.0",

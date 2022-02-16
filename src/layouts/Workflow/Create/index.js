@@ -45,7 +45,7 @@ export default function CreateWorkflow() {
     setValue,
   } = useForm({
     defaultValues: {
-      parameters: [{ parameter_name: "", parameter_value: "" }],
+      parameters: [{ name: "", value: "" }],
     },
   });
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(

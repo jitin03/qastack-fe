@@ -126,6 +126,7 @@ export default function Header(props) {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("roles");
+    localStorage.removeItem("starProject");
     navigate("/login");
   };
   useEffect(() => {
