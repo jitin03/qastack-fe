@@ -18,7 +18,7 @@ import {
   Grid,
   Tooltip,
 } from "@material-ui/core";
-import { FormControl } from "@mui/material";
+import { FormControl } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -245,7 +245,7 @@ export default function AddStep({
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth variant="outlined">
                       <InputLabel id="demo-simple-select-helper-label">
                         Dependency
                       </InputLabel>

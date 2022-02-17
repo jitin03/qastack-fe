@@ -106,6 +106,8 @@ const AppProvider = ({ children }) => {
       navigate(`${window.location.pathname}/workflow/logs/${param[1]}`);
     } else if (configTitle === "Add Step") {
       navigate(`${window.location.pathname}/step`);
+    } else if (configTitle === "Test Run Summary") {
+      navigate(`${window.location.pathname}/testSummary/${param.id}`);
     }
     setConfigTitle(configTitle);
     setState(!state);
@@ -158,7 +160,7 @@ const AppProvider = ({ children }) => {
   const handleCloseRightDrawer = (e, title, params) => {
     e.preventDefault();
     setState(!state);
-    if (Array.isArray(params)) {
+    if (Array.isArray(params) && title !== "Test Run Summary") {
       params = params[0];
     }
 
@@ -188,6 +190,8 @@ const AppProvider = ({ children }) => {
       navigate(`/project/${params}/ciFlow`);
     } else if (title === "Add Step") {
       navigate(`/project/${params}/ciFlow/create`);
+    } else if (title === "Test Run Summary") {
+      navigate(-1);
     }
   };
   const toggleDrawer = () => (event) => {

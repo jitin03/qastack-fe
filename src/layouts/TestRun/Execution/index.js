@@ -12,12 +12,15 @@ import { makeStyles } from "@mui/styles";
 import {
   FormControl,
   FormControlLabel,
+  IconButton,
   InputLabel,
   MenuItem,
   NativeSelect,
   Select,
   TextField,
 } from "@material-ui/core";
+import NotesIcon from "@mui/icons-material/Notes";
+import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
@@ -25,6 +28,7 @@ import Chip from "@mui/material/Chip";
 import { useNavigate } from "react-router-dom";
 import Controls from "../../../components/controllers/Controls";
 import AddIcon from "@mui/icons-material/Add";
+import ExplicitIcon from "@mui/icons-material/Explicit";
 import {
   getAllProjectTestRuns,
   getAllTestsTitleTestRuns,
@@ -36,6 +40,9 @@ import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { Controller, useForm } from "react-hook-form";
 import StatusChip from "../../../components/controllers/StatusChip";
 import moment from "moment";
+import CustomizedDialogs from "../../../components/controllers/Dialog";
+import AddResult from "./AddResult";
+import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -49,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 export const TestExecution = (props) => {
   const { id: testRunId, projectKey: projectId } = useParams();
   const [data, setData] = useState({});
-
+  const [openDialog, setOpenDialog] = useState(false);
   const {
     mutateAsync,
     isLoading,
@@ -69,9 +76,32 @@ export const TestExecution = (props) => {
     },
   });
 
-  const handleChange = async (e, id) => {
+  const handleUpdateStatus = async (e, id) => {
+    setOpenDialog(true);
+  };
+  const handleChangeAssignee = async (e, id) => {
+    console.log(e.target.value);
     console.log(id);
-    // console.log(e.target.value);
+    // setValue(e.target.value);
+    // id.api.updateRows([{ id: id.row?.id, status: e.target.value }]);
+    id.api.updateRows([{ ...id.row, status: e.target.value }]);
+    console.log("Assignee has changed");
+    console.log([{ ...id.row, status: e.target.value }]);
+
+    console.log(id.api.getRow(id));
+
+    setData(id.api.getRow(id?.id));
+
+    try {
+      data.projectId = projectId;
+      console.log(data);
+      await mutateAsync(id.api.getRow(id?.id));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const handleChange = async (e, id) => {
+    console.log(e.target.value);
     // setValue(e.target.value);
     // id.api.updateRows([{ id: id.row?.id, status: e.target.value }]);
     id.api.updateRows([{ ...id.row, status: e.target.value }]);
@@ -85,7 +115,8 @@ export const TestExecution = (props) => {
     try {
       data.projectId = projectId;
       console.log(data);
-      await mutateAsync(id.api.getRow(id?.id));
+
+      await mutateAsync([{ ...id.row, status: e.target.value }][0]);
     } catch (error) {
       console.log(error.message);
     }
@@ -121,11 +152,13 @@ export const TestExecution = (props) => {
     componentState: { component },
     setEditId,
   } = useGlobalContext();
+
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
     },
   });
+  const [checkboxSelection, setCheckboxSelection] = React.useState(false);
   const { register, handleSubmit, control } = useForm();
   // const [data, setData] = useState([]);
   let { id } = useParams();
@@ -172,7 +205,7 @@ export const TestExecution = (props) => {
           <Grid
             item
             container
-            justifyContent="center"
+            justifyContent="flex-end"
             justifyItems="center"
             justifySelf="center"
             md={8}
@@ -193,6 +226,16 @@ export const TestExecution = (props) => {
                 />
               </Toolbar>
             </Grid>
+            <Grid item>
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                onClick={() => setCheckboxSelection(!checkboxSelection)}
+                sx={{ m: 1.5 }}
+              >
+                Bulk Update
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
         <Grid
@@ -209,9 +252,19 @@ export const TestExecution = (props) => {
             waitForProjectTestRuns={waitForTestsTitle}
             setData={setData}
             handleChange={handleChange}
+            handleUpdateStatus={handleUpdateStatus}
+            checkboxSelection={checkboxSelection}
+            handleChangeAssignee={handleChangeAssignee}
           />
         </Grid>
       </Grid>
+      <CustomizedDialogs
+        title="Add Result"
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+      >
+        <AddResult openDialog={openDialog} setOpenDialog={setOpenDialog} />
+      </CustomizedDialogs>
     </Box>
   );
 };
@@ -235,8 +288,11 @@ const Tests = (props) => {
     waitForProjectTestRuns,
     setData,
     handleChange,
+    handleUpdateStatus,
+    handleChangeAssignee,
+    checkboxSelection,
   } = props;
-  const { handleRightDrawer } = useGlobalContext();
+  const { handleRightDrawer, handleCloseRightDrawer } = useGlobalContext();
   const { selectionModel, setSelectionModel } = useProjectContext();
   const classes = {};
 
@@ -299,17 +355,18 @@ const Tests = (props) => {
         width: 150,
 
         renderCell: (params) => {
+          console.log(params?.row.status);
           return (
             <FormControl>
               <Select
-                labelId="demo-simple-select-label"
                 id={params?.id}
                 // value={status}
                 disableUnderline
                 defaultValue={params?.row.status}
                 label="Unexecuted"
-                onChange={(e) => {
+                onClick={(e) => {
                   handleChange(e, params);
+                  // handleUpdateStatus(e, params);
                 }}
                 style={{ width: "100%" }}
                 // MenuProps={MenuProps}
@@ -328,44 +385,76 @@ const Tests = (props) => {
           );
         },
       },
-      // {
-      //   field: "Col2",
-      //   headerName: "Col2",
-      //   flex: 1.0,
-      //   disableClickEventBubbling: true,
-      //   sortable: false,
-      //   disableColumnMenu: true,
-      //   renderCell: (params) => {
-      //     return (
-      //       <TextField
-      //         type="date"
-      //         defaultValue={moment(Date.parse(params.row.Col2)).format(
-      //           "YYYY-MM-DD"
-      //         )}
-      //         InputLabelProps={{ shrink: true }}
-      //         onChange={(e) => handleDateChange(e, params)}
-      //       />
-      //     );
-      //   },
-      // },
+
+      {
+        field: "actions",
+        headerName: "Actions",
+        sortable: false,
+        width: 250,
+        headerAlign: "center",
+        disableClickEventBubbling: true,
+        renderCell: (params) => {
+          return (
+            <div
+              className="d-flex justify-content-between align-items-center"
+              style={{ cursor: "pointer" }}
+            >
+              {/* <MatEdit index={params.id} /> */}
+              <FormControlLabel
+                control={
+                  <>
+                    <div style={{ padding: "50px" }}>
+                      <Tooltip title="Add Result" arrow>
+                        <IconButton
+                          color="secondary"
+                          aria-label="Add result"
+                          size="small"
+                          onClick={(e) => handleUpdateStatus(e, params)}
+                          style={{ padding: "15px" }}
+                        >
+                          <ExplicitIcon style={{ color: grey[500] }} />
+                        </IconButton>
+                      </Tooltip>
+
+                      <Tooltip title="Test Summary" arrow>
+                        <IconButton
+                          color="secondary"
+                          size="small"
+                          aria-label="delete the test run"
+                          style={{ padding: "15px" }}
+                          onClick={(e) => {
+                            handleRightDrawer("Test Run Summary", params);
+                          }}
+                        >
+                          <NotesIcon style={{ color: grey[800] }} />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  </>
+                }
+              />
+            </div>
+          );
+        },
+      },
 
       {
         field: "assignee",
         headerName: "Assignee",
-        width: 150,
+        width: 350,
         disableClickEventBubbling: true,
         renderCell: (params) => {
+          console.log(params?.row.assignee);
           return (
             <FormControl>
               <Select
-                labelId="demo-simple-select-label"
                 id={params?.id}
                 disableUnderline
                 // value={status}
                 defaultValue={params?.row.assignee}
-                label="Unexecuted"
+                label="assignee"
                 onChange={(e) => {
-                  handleChange(e, params);
+                  handleChangeAssignee(e, params);
 
                   // updateRows(e.target.value, params?.id, params?.id);
                 }}
@@ -397,7 +486,8 @@ const Tests = (props) => {
       style={{ padding: "16px", flexGrow: 1, display: "flex" }}
     >
       <DataGrid
-        // density="compact"
+        checkboxSelection={checkboxSelection}
+        disableSelectionOnClick
         style={{ height: 600, width: "100%" }}
         columns={baselineProps.columns}
         pagination

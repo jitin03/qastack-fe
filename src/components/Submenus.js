@@ -36,130 +36,121 @@ export const Submenus = () => {
             </Grid>
           </ListItem>
         </Tooltip>
-        <Tooltip title="Components" arrow>
-          <ListItem
-            button
-            key="2"
-            component={Link}
-            to={`/project/${projectKey}/components`}
-          >
-            <Grid container item direction="column">
-              <Grid item xs={6}>
-                <ListItemIcon>
-                  <AssignmentIcon />
-                </ListItemIcon>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  variant="span"
-                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
-                >
-                  Components
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-        </Tooltip>
 
-        <Tooltip title="Releases" arrow>
-          <ListItem
-            button
-            key="2"
-            component={Link}
-            to={`/project/${projectKey}/releases`}
-          >
-            <Grid container item direction="column">
-              <Grid item xs={6}>
-                <ListItemIcon>
-                  <AssignmentIcon />
-                </ListItemIcon>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  variant="span"
-                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
-                >
-                  Release
-                </Typography>
-              </Grid>
+        <ListItem
+          button
+          key="2"
+          component={Link}
+          to={`/project/${projectKey}/components`}
+        >
+          <Grid container item direction="column">
+            <Grid item xs={6}>
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
             </Grid>
-          </ListItem>
-        </Tooltip>
+            <Grid item xs={6}>
+              <Typography
+                variant="span"
+                sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+              >
+                Components
+              </Typography>
+            </Grid>
+          </Grid>
+        </ListItem>
 
-        <Tooltip title="Test Cases" arrow>
-          <ListItem
-            button
-            key="2"
-            component={Link}
-            to={`/project/${projectKey}/components/testcases`}
-          >
-            <Grid container item direction="column">
-              <Grid item xs={6}>
-                <ListItemIcon>
-                  <AssignmentIcon />
-                </ListItemIcon>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  variant="span"
-                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
-                >
-                  Test Cases
-                </Typography>
-              </Grid>
+        <ListItem
+          button
+          key="2"
+          component={Link}
+          to={`/project/${projectKey}/releases`}
+        >
+          <Grid container item direction="column">
+            <Grid item xs={6}>
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
             </Grid>
-          </ListItem>
-        </Tooltip>
+            <Grid item xs={6}>
+              <Typography
+                variant="span"
+                sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+              >
+                Release
+              </Typography>
+            </Grid>
+          </Grid>
+        </ListItem>
 
-        <Tooltip title="Test Runs" arrow>
-          <ListItem
-            button
-            key="2"
-            component={Link}
-            to={`/project/${projectKey}/testruns`}
-          >
-            <Grid container direction="column">
-              <Grid item xs={6}>
-                <ListItemIcon>
-                  <AssignmentIcon />
-                </ListItemIcon>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  variant="span"
-                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
-                >
-                  Test Runs
-                </Typography>
-              </Grid>
+        <ListItem
+          button
+          key="2"
+          component={Link}
+          to={`/project/${projectKey}/components/testcases`}
+        >
+          <Grid container item direction="column">
+            <Grid item xs={6}>
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
             </Grid>
-          </ListItem>
-        </Tooltip>
+            <Grid item xs={6}>
+              <Typography
+                variant="span"
+                sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+              >
+                Test Cases
+              </Typography>
+            </Grid>
+          </Grid>
+        </ListItem>
 
-        <Tooltip title="CI Flow" arrow>
-          <ListItem
-            button
-            key="2"
-            component={Link}
-            to={`/project/${projectKey}/ciFlow`}
-          >
-            <Grid container item direction="column">
-              <Grid item xs={6}>
-                <ListItemIcon>
-                  <AssignmentIcon />
-                </ListItemIcon>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  variant="span"
-                  sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
-                >
-                  CI FLow
-                </Typography>
-              </Grid>
+        <ListItem
+          button
+          key="2"
+          component={Link}
+          to={`/project/${projectKey}/testruns`}
+        >
+          <Grid container direction="column">
+            <Grid item xs={6}>
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
             </Grid>
-          </ListItem>
-        </Tooltip>
+            <Grid item xs={6}>
+              <Typography
+                variant="span"
+                sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+              >
+                Test Runs
+              </Typography>
+            </Grid>
+          </Grid>
+        </ListItem>
+
+        <ListItem
+          button
+          key="2"
+          component={Link}
+          to={`/project/${projectKey}/ciFlow`}
+        >
+          <Grid container item direction="column">
+            <Grid item xs={6}>
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                variant="span"
+                sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+              >
+                CI FLow
+              </Typography>
+            </Grid>
+          </Grid>
+        </ListItem>
       </Grid>
     </>
   );

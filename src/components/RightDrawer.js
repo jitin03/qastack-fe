@@ -28,6 +28,7 @@ import EditTestCase from "../layouts/TestCase/Edit";
 import EditTestRun from "../layouts/TestRun/Edit";
 import JobDisplayLogs from "../layouts/Workflow/List/JobDisplayLogs";
 import AddStep from "../layouts/Workflow/Create/AddStep";
+import { TestRunSummary } from "../layouts/TestRun/Execution/TestRunSummary";
 
 // import AddStep from "../layouts/CIFlow/Create/AddStep";
 
@@ -59,7 +60,7 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
           style={{ padding: "2px 10px" }}
         >
           <Grid item>
-            <Typography variant="h4" component="h4">
+            <Typography variant="h5" component="h4">
               {configTitle}
             </Typography>
           </Grid>
@@ -99,6 +100,8 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
           return <JobDisplayLogs params={params} />;
         } else if (configTitle === "Add Step") {
           return <AddStep params={params} />;
+        } else if (configTitle === "Test Run Summary") {
+          return <TestRunSummary params={params} />;
         }
         // else if (configTitle === "Add step") {
         //   return <AddStep param={params} />;
@@ -119,7 +122,8 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
         {configTitle === "Add TestCase" ||
         configTitle === "Add TestRun" ||
         configTitle === "Edit TestCase" ||
-        configTitle === "Edit TestRun"
+        configTitle === "Edit TestRun" ||
+        configTitle === "Test Run Summary"
           ? list((width = "1300px"))
           : list(width)}
       </Drawer>

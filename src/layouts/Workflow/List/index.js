@@ -444,6 +444,7 @@ const WorkflowList = (props) => {
       style={{ padding: "16px", flexGrow: 1, display: "flex" }}
     >
       <DataGrid
+        disableSelectionOnClick
         style={{ height: 400, width: "100%" }}
         columns={baselineProps.columns}
         pagination

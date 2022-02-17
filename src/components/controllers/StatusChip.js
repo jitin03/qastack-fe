@@ -23,7 +23,12 @@ const StatusChip = (props) => {
   return (
     <Chip
       label={label}
-      style={{ backgroundColor: colorForStatus(label)[500], color: "white" }}
+      size="small"
+      style={{
+        backgroundColor: colorForStatus(label)[500],
+        color: "white",
+        minWidth: "60px",
+      }}
     />
   );
 };
