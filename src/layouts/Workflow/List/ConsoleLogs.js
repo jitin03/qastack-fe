@@ -1,15 +1,39 @@
 import { Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
+import { XTerm } from 'xterm-for-react';
+// import { FitAddon } from 'xterm-addon-fit';
+import { isEmpty } from "../../../helper/appHelper";
 
 export const ConsoleLogs = (props) => {
-  const { logs } = props;
+  let { logs } = props;
+  let logString = 'Fetching...';
 
-  console.log(logs);
+  if (!isEmpty(logs)) {
+    logs = JSON.parse(logs);
+    logString = !isEmpty(logs.result.content) ? logs.result.content : '';
+  }
+
+  const xtermRef = React.useRef(null);
+  /* const fitAddon = new FitAddon();
+  setTimeout(() => {
+    fitAddon.fit();
+  }, 0); */
+
+  useEffect(() => {
+    xtermRef.current.terminal.writeln(logString);
+  }, [logString]);
+
   return (
-    <>
-      {/* {logs.map((log) => (
-        <Typography>{log}</Typography>
-      ))} */}
-    </>
+    <XTerm
+      options={{
+        disableStdin: true,
+        rows: 39
+      }} 
+      ref={xtermRef}
+      // addons={[fitAddon]}
+      onData={(data) => {
+        console.log('data', data);
+      }}
+    />
   );
 };

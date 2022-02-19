@@ -3,7 +3,7 @@ import { fetchWorkflowLogs } from "../../../context/actions/workflow/sseClient";
 import { ConsoleLogs } from "./ConsoleLogs";
 
 const JobDisplayLogs = (props) => {
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState({});
   const { params } = props;
   function handleFetchEvent(message, id) {
     if (message.trim()) {
@@ -21,9 +21,7 @@ const JobDisplayLogs = (props) => {
   }, []);
 
   return (
-    <>
-      <ConsoleLogs logs={logs} />
-    </>
+    <ConsoleLogs logs={logs} />
   );
 };
 

@@ -5,7 +5,7 @@ import { deleteWorkflow } from "../../../context/actions/workflow/api";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { grey } from "@material-ui/core/colors";
 const DeleteWorkflow = (props) => {
-  const { params } = props;
+  const { params, workflowTriggeredStatus } = props;
   const queryClient = useQueryClient();
   const { mutateAsync, isLoading: waitForDeleteWorkflow } = useMutation(
     deleteWorkflow,
@@ -28,12 +28,13 @@ const DeleteWorkflow = (props) => {
         color="secondary"
         aria-label="delete the test run"
         style={{ padding: "10px" }}
+        disabled={workflowTriggeredStatus}
         onClick={() => handleDeleteWorkflow(params.id)}
       >
         <DeleteIcon style={{ color: grey[800] }} />
-        {waitForDeleteWorkflow && (
+        {/* waitForDeleteWorkflow && (
           <CircularProgress key={params?.id} size={20} />
-        )}
+        ) */}
       </IconButton>
     </>
   );
