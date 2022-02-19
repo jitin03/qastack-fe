@@ -212,6 +212,7 @@ const WorkflowList = (props) => {
   const [pageSize, setPageSize] = useState(20);
   const [loading, setLoading] = useState(false);
   const [workflowTriggeredStatus, setTriggeredWorkflowStatus] = useState(false);
+  const [currentWorkflowId, setCurrentWorkflowId] = useState('');
   const [rowsState, setRowsState] = useState({
     page: 0,
     pageSize: 5,
@@ -279,6 +280,7 @@ const WorkflowList = (props) => {
       queryClient.invalidateQueries("workflows");
       updateWorkflowStatus(workflowStatus);
       setTriggeredWorkflowStatus(false);
+      setCurrentWorkflowId('');
     }
     // }
   }
@@ -287,11 +289,13 @@ const WorkflowList = (props) => {
     let data = {};
     if (status === "Build Now") {
       setTriggeredWorkflowStatus(true);
+      setCurrentWorkflowId(id);
       await runNowWorkflow(id, userId);
 
       let response = await fetchData(name, id, handleFetchEvent);
     } else if (status === "Succeeded") {
       setTriggeredWorkflowStatus(true);
+      setCurrentWorkflowId(id);
       data.workflowName = name;
       data.userId = userId;
       let response = await reSubmitNowWorkflow(data);
@@ -299,6 +303,7 @@ const WorkflowList = (props) => {
       await fetchData(response?.workflow_run_name, id, handleFetchEvent);
     } else if (status === "Build Again") {
       setTriggeredWorkflowStatus(true);
+      setCurrentWorkflowId(id);
       data.workflowName = name;
       data.userId = userId;
       data.id = id;
@@ -327,7 +332,7 @@ const WorkflowList = (props) => {
       },
       {
         field: "username",
-        headerName: "Create by",
+        headerName: "Created by",
         width: 150,
       },
       {
@@ -350,12 +355,12 @@ const WorkflowList = (props) => {
               params={params}
               waitForWorkflowRun={waitForWorkflowRun}
               workflowEventStatus={workflowTriggeredStatus}
+              currentWorkflowId={currentWorkflowId}
               key={params?.id}
             />
           </Typography>
         ),
       },
-
       {
         field: "actions",
         headerName: "Actions",
@@ -367,33 +372,32 @@ const WorkflowList = (props) => {
           return (
             <div
               className="d-flex justify-content-between align-items-center"
-              style={{ cursor: "pointer" }}
             >
               {/* <MatEdit index={params.id} /> */}
               <FormControlLabel
                 control={
                   <>
-                    <div style={{ padding: "80px" }}>
-                      {!workflowTriggeredStatus && (
-                        <Tooltip title="Run" arrow>
-                          <IconButton
-                            aria-label="Run"
-                            style={{ padding: "10px" }}
-                            onClick={() =>
-                              handleRunNowWorkflow(
-                                params?.id,
-                                params?.row.workflow_run_name,
-                                userId,
-                                params?.row.workflow_status
-                              )
-                            }
-                          >
-                            <PlayCircleOutlineIcon />
-                          </IconButton>
-                        </Tooltip>
-                      )}
+                    <div style={{ paddingLeft: "80px" }}>
+                      <Tooltip title="Run" arrow>
+                        <IconButton
+                          aria-label="Run"
+                          style={{ padding: "10px" }}
+                          disabled={workflowTriggeredStatus && currentWorkflowId === params?.id}
+                          onClick={() =>
+                            handleRunNowWorkflow(
+                              params?.id,
+                              params?.row.workflow_run_name,
+                              userId,
+                              params?.row.workflow_status
+                            )
+                          }
+                        >
+                          <PlayCircleOutlineIcon />
+                        </IconButton>
+                      </Tooltip>
 
                       <StopWorkflow params={params} />
+
                       <IconButton
                         color="secondary"
                         aria-label="edit the test run"
@@ -403,9 +407,9 @@ const WorkflowList = (props) => {
                       >
                         <EditIcon style={{ color: grey[500] }} />
                       </IconButton>
-                      {!workflowTriggeredStatus && (
-                        <DeleteWorkflow params={params} />
-                      )}
+
+                      <DeleteWorkflow params={params} workflowTriggeredStatus={workflowTriggeredStatus} />
+
                       <WorkflowLogs params={params} projectId={projectId} />
                       {/* <Tooltip title="View Logs" arrow>
                         <IconButton
@@ -459,7 +463,7 @@ const WorkflowList = (props) => {
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         rowsPerPageOptions={[20, 50, 100, 150]}
-        loading={waitForAllWorkflows}
+        // loading={waitForAllWorkflows}
       />
     </Grid>
   );
