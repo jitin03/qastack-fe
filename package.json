@@ -46,7 +46,9 @@
     "web-vitals": "^1.0.1",
     "xterm-addon-fit": "^0.5.0",
     "xterm-for-react": "^1.0.4",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "formik": "2.2.6",
+    "formik-material-ui": "3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
