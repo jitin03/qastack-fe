@@ -22,7 +22,7 @@ import {
 import NotesIcon from "@mui/icons-material/Notes";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import React, { useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import Chip from "@mui/material/Chip";
 import { useNavigate } from "react-router-dom";
@@ -78,6 +78,7 @@ export const TestExecution = (props) => {
 
   const handleUpdateStatus = async (e, id) => {
     setOpenDialog(true);
+    setData(id.api.getRow(id?.id));
   };
   const handleChangeAssignee = async (e, id) => {
     console.log(e.target.value);
@@ -172,7 +173,7 @@ export const TestExecution = (props) => {
   ];
 
   let navigate = useNavigate();
-
+  const queryClient = useQueryClient();
   const {
     data: testCasesTitle,
     error: projectTestRunsError,
@@ -263,7 +264,14 @@ export const TestExecution = (props) => {
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
       >
-        <AddResult openDialog={openDialog} setOpenDialog={setOpenDialog} />
+        <AddResult
+          openDialog={openDialog}
+          setOpenDialog={setOpenDialog}
+          projectId={projectId}
+          setData={setData}
+          data={data}
+          queryClient={queryClient}
+        />
       </CustomizedDialogs>
     </Box>
   );
@@ -420,10 +428,12 @@ const Tests = (props) => {
                         <IconButton
                           color="secondary"
                           size="small"
-                          aria-label="delete the test run"
                           style={{ padding: "15px" }}
                           onClick={(e) => {
-                            handleRightDrawer("Test Run Summary", params);
+                            handleRightDrawer(
+                              "Test Run Summary",
+                              params.api.getRow(params?.id)
+                            );
                           }}
                         >
                           <NotesIcon style={{ color: grey[800] }} />
@@ -443,37 +453,34 @@ const Tests = (props) => {
         headerName: "Assignee",
         width: 350,
         disableClickEventBubbling: true,
-        renderCell: (params) => {
-          console.log(params?.row.assignee);
-          return (
-            <FormControl>
-              <Select
-                id={params?.id}
-                disableUnderline
-                // value={status}
-                defaultValue={params?.row.assignee}
-                label="assignee"
-                onChange={(e) => {
-                  handleChangeAssignee(e, params);
-
-                  // updateRows(e.target.value, params?.id, params?.id);
-                }}
-                // onChange={(e) => setValue("name", e.target.value, true)}
-                style={{ width: "100%" }}
-                // MenuProps={MenuProps}
-                renderValue={(selected) => (
-                  // console.log("selected", selected)
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.2 }}>
-                    <StatusChip key={selected} label={selected} />
-                  </Box>
-                )}
-              >
-                <MenuItem value="Jitin">Jitin</MenuItem>
-                <MenuItem value="Client">Client</MenuItem>
-              </Select>
-            </FormControl>
-          );
-        },
+        // renderCell: (params) => {
+        //   console.log(params?.row.assignee);
+        //   return (
+        //     <FormControl>
+        //       <Select
+        //         id={params?.id}
+        //         disableUnderline
+        //         // value={status}
+        //         defaultValue={params?.row.assignee}
+        //         label="assignee"
+        //         onChange={(e) => {
+        //           handleChangeAssignee(e, params);
+        //         }}
+        //         style={{ width: "100%" }}
+        //         // MenuProps={MenuProps}
+        //         renderValue={(selected) => (
+        //           // console.log("selected", selected)
+        //           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.2 }}>
+        //             <StatusChip key={selected} label={selected} />
+        //           </Box>
+        //         )}
+        //       >
+        //         <MenuItem value="Jitin">Jitin</MenuItem>
+        //         <MenuItem value="Client">Client</MenuItem>
+        //       </Select>
+        //     </FormControl>
+        //   );
+        // },
       },
     ],
   };
@@ -496,9 +503,8 @@ const Tests = (props) => {
         getRowId={getRowId}
         {...rowsState}
         {...baselineProps}
-        // paginationMode="server"
+        paginationMode="server"
         onPageChange={(newPage) => {
-          // prevSelectionModel.current = selectionModel;
           setPage(newPage);
         }}
         pageSize={pageSize}
@@ -507,7 +513,6 @@ const Tests = (props) => {
         loading={waitForProjectTestRuns}
         selectionModel={selectionModel}
         onSelectionModelChange={(newSelectionModel) => {
-          // prevSelectionModel.current = selectionModel;
           setSelectionModel(newSelectionModel);
         }}
       />

@@ -90,6 +90,21 @@ export const getAllTestCases = async ({ queryKey }) => {
   return response.data;
 };
 
+export const getTestCaseRunHistory = async ({ queryKey }) => {
+  const [_key, testCaseRunId] = queryKey;
+
+  const response = await axiosAppTestcaseInstance().get(
+    `/api/testrun/testcase-history?testCaseRunId=${testCaseRunId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export const getTestCase = async ({ queryKey }) => {
   const [_key, testCaseId, pageId] = queryKey;
 
@@ -163,4 +178,25 @@ export const getProjectTestRun = async ({ queryKey }) => {
   );
 
   return response.data;
+};
+
+export const UploadFile = async (file, onUploadProgress) => {
+  let formData = new FormData();
+
+  formData.append("file", file);
+
+  return axiosAppTestcaseInstance().post(
+    "/api/testrun/result/upload",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress,
+    }
+  );
+};
+
+export const GetFiles = async () => {
+  return axiosAppTestcaseInstance().get("/files");
 };

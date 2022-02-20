@@ -107,7 +107,9 @@ const AppProvider = ({ children }) => {
     } else if (configTitle === "Add Step") {
       navigate(`${window.location.pathname}/step`);
     } else if (configTitle === "Test Run Summary") {
-      navigate(`${window.location.pathname}/testSummary/${param.id}`);
+      navigate(
+        `${window.location.pathname}/testSummary/${param?.testcase_run_id}`
+      );
     }
     setConfigTitle(configTitle);
     setState(!state);
