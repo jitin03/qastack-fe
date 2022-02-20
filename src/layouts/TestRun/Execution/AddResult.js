@@ -9,6 +9,8 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { array, object, string } from "yup";
+import { Form, Formik } from "formik";
 import {
   Typography,
   InputLabel,
@@ -18,9 +20,11 @@ import {
   Grid,
   Tooltip,
   Divider,
+  Input,
 } from "@material-ui/core";
 import { Box, FormControl, Paper } from "@material-ui/core";
 import Controls from "../../../components/controllers/Controls";
+import { MultipleFileUploadField } from "../../../components/Shared/upload/MultipleFileUploadField";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -192,16 +196,43 @@ export default function AddResult({
                 <Divider style={{ marginLeft: "16px" }} />
               </Grid>
             </Grid>
-            <Grid item xs={2} style={{ minHeight: "200px" }}></Grid>
             <Grid
               item
-              container
-              justifyContent="flex-end"
               xs={12}
-              style={{ position: "sticky" }}
+              style={{ minHeight: "200px", maxHeight: "200px" }}
             >
+              <Typography style={{ fontSize: ".8em" }}>
+                Max 5 files of 15 MB each.
+              </Typography>
+
+              <Grid item style={{ marginTop: "5px" }}>
+                <Formik
+                  initialValues={{ files: [] }}
+                  validationSchema={object({
+                    files: array(
+                      object({
+                        url: string().required(),
+                      })
+                    ),
+                  })}
+                  onSubmit={(values) => {
+                    console.log("values", values);
+                    return new Promise((res) => setTimeout(res, 2000));
+                  }}
+                >
+                  {({ values, errors, isValid, isSubmitting }) => (
+                    <Form>
+                      <Grid container direction="column">
+                        <MultipleFileUploadField name="files" />
+                      </Grid>
+                    </Form>
+                  )}
+                </Formik>
+              </Grid>
+            </Grid>
+            <Grid item container justifyContent="flex-end" xs={12}>
               <Grid item>
-                <Controls.Button text="Save" />
+                <Controls.Button size="small" text="Save" />
               </Grid>
             </Grid>
           </form>

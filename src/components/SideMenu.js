@@ -1,32 +1,20 @@
 import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
-import { Grid, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
+import { Grid, Toolbar, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import {
-  useNavigate,
   useParams,
-  Link,
   NavLink,
   Routes,
 } from "react-router-dom";
-import Divider from "@mui/material/Divider";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import { makeStyles } from "@mui/styles";
-import { menus, submenus } from "../data/data";
+import { submenus } from "../data/data";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import {
-  BrowserRouter as Router,
-  Switch,
   Route,
-  useRouteMatch,
 } from "react-router-dom";
 const drawerWidth = 240;
 

@@ -11,10 +11,16 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import { styled } from "@mui/material/styles";
+import { Button, Stack } from "@mui/material";
+import { Form, Formik } from "formik";
+import { array, object, string } from "yup";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import Controls from "../../../components/controllers/Controls";
 import StatusChip from "../../../components/controllers/StatusChip";
+import UploadFiles from "../../../components/Shared/UploadFile";
+import { MultipleFileUploadField } from "../../../components/Shared/upload/MultipleFileUploadField";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -33,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgb(255, 255, 255)",
   },
 }));
+const Input = styled("input")({
+  display: "none",
+});
 export const TestRunSummary = () => {
   const classes = useStyles();
   const {
@@ -319,7 +328,79 @@ export const TestRunSummary = () => {
                         <Divider style={{ marginLeft: "16px" }} />
                       </Grid>
                     </Grid>
-                    <Grid item xs={2} style={{ minHeight: "200px" }}></Grid>
+                    <Grid
+                      item
+                      container
+                      xs={12}
+                      style={{ minHeight: "200px" }}
+                      justifyContent="center"
+                    >
+                      <Typography style={{ fontSize: ".8em" }}>
+                        Max 5 files of 15 MB each.
+                      </Typography>
+
+                      <Grid item xs={12} style={{ padding: "10px" }}>
+                        {/* <Stack direction="row" alignItems="center" spacing={2}>
+                          <label htmlFor="contained-button-file">
+                            <Input
+                              accept="image/*"
+                              id="contained-button-file"
+                              multiple
+                              type="file"
+                            />
+                            <Button
+                              variant="contained"
+                              size="small"
+                              component="span"
+                            >
+                              Upload
+                            </Button>
+                          </label>
+                        </Stack> */}
+                        <Formik
+                          initialValues={{ files: [] }}
+                          validationSchema={object({
+                            files: array(
+                              object({
+                                url: string().required(),
+                              })
+                            ),
+                          })}
+                          onSubmit={(values) => {
+                            console.log("values", values);
+                            return new Promise((res) => setTimeout(res, 2000));
+                          }}
+                        >
+                          {({ values, errors, isValid, isSubmitting }) => (
+                            <Form>
+                              <Grid container direction="column">
+                                <MultipleFileUploadField name="files" />
+
+                                {/* <Grid item>
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={
+                                      !isValid ||
+                                      isSubmitting ||
+                                      !values.files.length
+                                    }
+                                    type="submit"
+                                    size="small"
+                                  >
+                                    Upload
+                                  </Button>
+                                </Grid> */}
+                              </Grid>
+
+                              {/* <pre>
+                                {JSON.stringify({ values, errors }, null, 4)}
+                              </pre> */}
+                            </Form>
+                          )}
+                        </Formik>
+                      </Grid>
+                    </Grid>
                     <Grid
                       item
                       container

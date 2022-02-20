@@ -164,3 +164,24 @@ export const getProjectTestRun = async ({ queryKey }) => {
 
   return response.data;
 };
+
+export const UploadFile = async (file, onUploadProgress) => {
+  let formData = new FormData();
+
+  formData.append("file", file);
+
+  return axiosAppTestcaseInstance().post(
+    "/api/testrun/result/upload",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress,
+    }
+  );
+};
+
+export const GetFiles = async () => {
+  return axiosAppTestcaseInstance().get("/files");
+};
