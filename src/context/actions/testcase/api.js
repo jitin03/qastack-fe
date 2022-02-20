@@ -90,6 +90,21 @@ export const getAllTestCases = async ({ queryKey }) => {
   return response.data;
 };
 
+export const getTestCaseRunHistory = async ({ queryKey }) => {
+  const [_key, testCaseRunId] = queryKey;
+
+  const response = await axiosAppTestcaseInstance().get(
+    `/api/testrun/testcase-history?testCaseRunId=${testCaseRunId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 export const getTestCase = async ({ queryKey }) => {
   const [_key, testCaseId, pageId] = queryKey;
 

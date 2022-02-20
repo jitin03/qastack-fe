@@ -25,6 +25,8 @@ import {
 import { Box, FormControl, Paper } from "@material-ui/core";
 import Controls from "../../../components/controllers/Controls";
 import { MultipleFileUploadField } from "../../../components/Shared/upload/MultipleFileUploadField";
+import { useMutation, useQueryClient } from "react-query";
+import { updateTestStatus } from "../../../context/actions/testcase/api";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -49,7 +51,9 @@ export default function AddResult({
   onSubmitAddStep,
   selectedStatus,
   setValue,
-
+  projectId,
+  queryClient,
+  data: testDetails,
   control: parentControl,
 }) {
   const {
@@ -67,12 +71,40 @@ export default function AddResult({
     setOpenDialog(false);
     // setStepName(defaultStepName);
   };
+  const {
+    mutateAsync,
+    isLoading,
+    isError,
+    error,
+    data: updateTestStatusForm,
+    isSuccess,
+  } = useMutation(updateTestStatus, {
+    onError: (error) => {
+      // setOpenToast(true);
+    },
+    onSuccess: (data) => {
+      // componentDispatch({
+      //   type: COMPONENT_CREATE_SUCCESS,
+      //   payload: data,
+      // });
+    },
+  });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data, e) => {
     console.log(data);
-    setOpenDialog(false);
-    onSubmitAddStep(data);
-    reset();
+    console.log(testDetails);
+    console.log({ ...testDetails, ...data });
+    try {
+      data.projectId = projectId;
+      console.log(data);
+      await mutateAsync({ ...testDetails, ...data });
+      setOpenDialog(false);
+      reset();
+      queryClient.invalidateQueries("testcaseTitles");
+    } catch (error) {
+      console.log(error.message);
+      reset();
+    }
   };
 
   return (
@@ -101,7 +133,7 @@ export default function AddResult({
             <Grid item xs={12}>
               <Controller
                 name="status"
-                defaultValue={selectedStatus || ""}
+                defaultValue={testDetails?.status || ""}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <FormControl
@@ -136,7 +168,7 @@ export default function AddResult({
             <Grid item xs={12}>
               <Controller
                 name="assignee"
-                defaultValue={selectedStatus || ""}
+                defaultValue={testDetails?.assignee || ""}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <FormControl
@@ -163,8 +195,9 @@ export default function AddResult({
             </Grid>
             <Grid item xs={12}>
               <Controller
-                name="Comment"
+                name="comments"
                 control={control}
+                defaultValue={""}
                 render={({ field: { onChange, value } }) => (
                   <TextField
                     id="Comment"

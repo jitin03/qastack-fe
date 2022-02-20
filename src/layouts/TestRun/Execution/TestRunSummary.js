@@ -1,5 +1,7 @@
 import {
   Box,
+  CircularProgress,
+  Container,
   Divider,
   FormControl,
   Grid,
@@ -21,6 +23,10 @@ import Controls from "../../../components/controllers/Controls";
 import StatusChip from "../../../components/controllers/StatusChip";
 import UploadFiles from "../../../components/Shared/UploadFile";
 import { MultipleFileUploadField } from "../../../components/Shared/upload/MultipleFileUploadField";
+import { useParams } from "react-router-dom";
+import { getTestCaseRunHistory } from "../../../context/actions/testcase/api";
+import { useQuery } from "react-query";
+import { TestRunHistory } from "./TestRunHistory";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -42,8 +48,10 @@ const useStyles = makeStyles((theme) => ({
 const Input = styled("input")({
   display: "none",
 });
-export const TestRunSummary = () => {
+export const TestRunSummary = (props) => {
   const classes = useStyles();
+  const { params } = props;
+  console.log(params);
   const {
     register,
     handleSubmit,
@@ -57,6 +65,55 @@ export const TestRunSummary = () => {
     console.log(data);
   };
 
+  const {
+    data: testCaseRunHistory,
+    error: testCaseRunHistoryError,
+    isLoading: waitForTestCaseRunHistory,
+  } = useQuery(
+    ["testCaseRunHistory", params?.testcase_run_id],
+    getTestCaseRunHistory,
+    {
+      onError: (error) => {
+        // setOpenToast(true);
+        // componentDispatch({
+        //   type: COMPONENT_LIST_ERROR,
+        //   payload: error.message,
+        // });
+      },
+      enabled: !!params,
+    }
+  );
+
+  if (waitForTestCaseRunHistory) {
+    return (
+      <>
+        <Grid container>
+          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ padding: "50px 10px" }}
+          >
+            <Container sx={{ display: "flex" }}>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+            </Container>
+            <Grid item></Grid>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
+
   return (
     <>
       <Divider />
@@ -64,9 +121,17 @@ export const TestRunSummary = () => {
         sx={{ borderTop: "1px solid rgb(232, 232, 232)", minHeight: "80vh" }}
       >
         <Grid container justifyContent="center" alignContent="center">
-          <Grid item container xs={8} style={{ marginTop: "10px" }}>
+          <Grid
+            item
+            container
+            xs={8}
+            style={{ marginTop: "10px", paddingLeft: "15px" }}
+          >
             <Grid item xs={12}>
-              <Typography variant="h6"> Latest Result</Typography>
+              <Typography variant="h6" style={{ fontSize: "1.2em" }}>
+                {" "}
+                Latest Result
+              </Typography>
               <Grid item container xs={12}>
                 <Grid item xs={12}>
                   <Paper
@@ -125,7 +190,9 @@ export const TestRunSummary = () => {
                     </Grid>
                     <Grid item container>
                       <Grid item xs={12}>
-                        <Typography variant="h6">Steps</Typography>
+                        <Typography variant="h6" style={{ fontSize: "1em" }}>
+                          Steps
+                        </Typography>
                       </Grid>
                       <Grid item container>
                         123123
@@ -136,15 +203,25 @@ export const TestRunSummary = () => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h6">Execution History</Typography>
-              <Grid item xs={12}>
+              <Typography variant="h6" style={{ fontSize: "1.2em" }}>
+                Execution History
+              </Typography>
+              <Grid
+                item
+                xs={12}
+                style={{
+                  minHeight: "350px",
+                  maxHeight: "350px",
+                  overflow: "auto",
+                }}
+              >
                 <Grid item xs={12}>
                   <Paper
                     style={{
                       border: "1px solid rgb(232, 232, 232)",
                       marginLeft: "15px",
-                      maxHeight: 350,
-                      minHeight: 250,
+                      // maxHeight: 250,
+                      // minHeight: 250,
 
                       backgroundColor: (theme) =>
                         theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -156,7 +233,15 @@ export const TestRunSummary = () => {
                       alignContent="center"
                       alignItems="center"
                       //   style={{ paddingLeft: "10px" }}
-                    ></Grid>
+                    >
+                      {testCaseRunHistory?.length ? (
+                        <TestRunHistory
+                          testCaseRunHistory={testCaseRunHistory}
+                        />
+                      ) : (
+                        <Typography>No Result</Typography>
+                      )}
+                    </Grid>
                   </Paper>
                 </Grid>
               </Grid>
@@ -170,11 +255,14 @@ export const TestRunSummary = () => {
             justifyContent="flex-start"
             style={{
               marginTop: "10px",
+
               paddingLeft: "50px",
               paddingRight: "50px",
             }}
           >
-            <Typography variant="h6">Add Result</Typography>
+            <Typography variant="h6" style={{ fontSize: "1.2em" }}>
+              Add Result
+            </Typography>
             <Grid item container xs={12}>
               <Paper
                 style={{
@@ -213,7 +301,7 @@ export const TestRunSummary = () => {
                     >
                       <Controller
                         name="status"
-                        defaultValue={""}
+                        defaultValue={params?.status || ""}
                         control={control}
                         render={({ field: { onChange, value } }) => (
                           <FormControl
@@ -256,7 +344,7 @@ export const TestRunSummary = () => {
                     >
                       <Controller
                         name="assignee"
-                        defaultValue={""}
+                        defaultValue={params?.assignee || ""}
                         control={control}
                         render={({ field: { onChange, value } }) => (
                           <FormControl
@@ -293,6 +381,7 @@ export const TestRunSummary = () => {
                       <Controller
                         name="Comment"
                         control={control}
+                        defaultValue={""}
                         render={({ field: { onChange, value } }) => (
                           <TextField
                             id="Comment"
