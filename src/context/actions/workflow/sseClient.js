@@ -1,5 +1,5 @@
 import { fetchEventSource } from "@microsoft/fetch-event-source";
-import { EventSourcePolyfill } from 'event-source-polyfill';
+import { EventSourcePolyfill } from "event-source-polyfill";
 import axiosAppWorkflowInstance from "../../../helper/workflowAppAxios";
 
 export async function fetchData(workflowName, id, onMessage) {
@@ -53,24 +53,23 @@ export async function fetchWorkflowLogs(workflowName, id, onMessage) {
     token = localStorage.token;
   }
 
-  let evtSource = new EventSourcePolyfill(`https://test.qastack.io/api/event/logs?workflowName=${workflowName}`, {
-    method: "GET",
-    headers: {
-      Accept: "text/event-stream",
-      Authorization: `Bearer ${token}`,
-    },
-    openWhenHidden: false,
-    lastEventIdQueryParameterName: 'Last-Event-Id',
-    heartbeatTimeout: 45000, // no activity timeout
-  });
+  let evtSource = new EventSourcePolyfill(
+    `https://test.qastack.io/api/event/logs?workflowName=${workflowName}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "text/event-stream",
+        Authorization: `Bearer ${token}`,
+      },
+      openWhenHidden: false,
+      lastEventIdQueryParameterName: "Last-Event-Id",
+      heartbeatTimeout: 45000, // no activity timeout
+    }
+  );
   evtSource.onopen = (res) => {
     if (res.ok && res.status === 200) {
       console.log("Connection made ", res);
-    } else if (
-      res.status >= 400 &&
-      res.status < 500 &&
-      res.status !== 429
-    ) {
+    } else if (res.status >= 400 && res.status < 500 && res.status !== 429) {
       console.log("Client side error ", res);
     }
   };
