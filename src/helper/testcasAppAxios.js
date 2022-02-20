@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default (history = null) => {
-  const baseURL = process.env.REACT_APP_TEST_CASE_SERVER;
+  const baseURL = process.env.REACT_APP_API_SERVER;
 
   let headers = {};
 
