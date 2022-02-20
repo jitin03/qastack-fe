@@ -63,7 +63,7 @@ export async function fetchWorkflowLogs(workflowName, id, onMessage) {
       },
       openWhenHidden: false,
       lastEventIdQueryParameterName: "Last-Event-Id",
-      heartbeatTimeout: 45000, // no activity timeout
+      heartbeatTimeout: 25000, // no activity timeout
     }
   );
   evtSource.onopen = (res) => {
