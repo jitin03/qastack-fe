@@ -157,7 +157,7 @@ const Records = (props) => {
         <Grid item>
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
-              disableSelectionOnClick
+              // disableSelectionOnClick
               columns={baselineProps.columns}
               pagination
               rowCount={baselineProps.rows?.length}
@@ -246,7 +246,7 @@ const TestCaseList = (props) => {
   return (
     <Grid item container style={{ padding: "16px" }}>
       <DataGrid
-        disableSelectionOnClick
+        // disableSelectionOnClick
         style={{ height: 400, width: "100%" }}
         columns={baselineProps.columns}
         pagination
