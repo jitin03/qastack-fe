@@ -20,6 +20,7 @@ import { useParams, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { ReactQueryDevtools } from "react-query/devtools";
 import isAuthenticated from "../context/actions/auth/isAuthenticated";
+import RoutesComp from "./RoutesComp";
 const drawerWidth = 240;
 const useStyles = makeStyles({
   appMain: {
@@ -110,37 +111,9 @@ function App() {
     <QueryClientProvider client={queryClient} contextSharing={true}>
       <Box sx={{ display: "flex" }}>
         <Header open={open} handleDrawerOpen={handleDrawerOpen} />
-        {isAuthenticated() && (
-          <SideMenu open={open} handleDrawerClose={handleDrawerClose} />
-        )}
-
-        <Box component="main" sx={{ flexGrow: 1, p: 3, minHeight: "100vh" }}>
-          <DrawerHeader />
-          {/* <Switch>
-            {routes.map((route, index) => (
-              <RenderRoute {...route} key={index} />
-            ))}
-          </Switch> */}
-          <Switch>
-            {routes.map((route, index) => {
-              const { path, component } = route;
-
-              return (
-                <Route key={index} exact path={path} component={component} />
-              );
-            })}
-          </Switch>
-        </Box>
+        <RoutesComp />
       </Box>
-      <RightDrawer
-        open={open}
-        // width="1300px"
-        configTitle={configTitle}
-        handleDrawerClose={handleDrawerClose}
-        params={drawerParam}
-      />
       <CssBaseline />
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
 }

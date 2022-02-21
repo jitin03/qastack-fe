@@ -188,4 +188,14 @@ const routes = [
   },
 ];
 
+const openRoutes = [
+  "/register",
+  "/forgot-password",
+  "/verify/mail",
+  "/reset-password",
+  "/login",
+  "/",
+];
+
+export { openRoutes };
 export default routes;
