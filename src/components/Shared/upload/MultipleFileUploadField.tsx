@@ -2,6 +2,7 @@ import { Grid, makeStyles } from "@material-ui/core";
 import { useField } from "formik";
 import React, { useCallback, useEffect, useState } from "react";
 import { FileError, FileRejection, useDropzone } from "react-dropzone";
+import AddResult from "../../../layouts/TestRun/Execution/AddResult";
 import { SingleFileUploadWithProgress } from "./SingleFileUploadWithProgress";
 import { UploadError } from "./UploadError";
 
@@ -21,6 +22,15 @@ export interface UploadableFile {
   errors: FileError[];
   url?: string;
 }
+type rows = {
+  data: any;
+  meta: any;
+  fields: any;
+};
+
+export interface ImportData {
+  data: any;
+}
 
 const useStyles = makeStyles((theme) => ({
   dropzone: {
@@ -34,12 +44,21 @@ const useStyles = makeStyles((theme) => ({
     outline: "none",
   },
 }));
-
-export function MultipleFileUploadField({ name }: { name: string }) {
+const Papa = require("papaparse");
+export function MultipleFileUploadField({
+  name,
+  importData,
+  setImportData,
+}: {
+  name: string;
+  importData: any;
+  setImportData: any;
+}) {
   const [_, __, helpers] = useField(name);
   const classes = useStyles();
 
   const [files, setFiles] = useState<UploadableFile[]>([]);
+  // const [importData, setImportDate] = useState<ImportData>();
   const onDrop = useCallback((accFiles: File[], rejFiles: FileRejection[]) => {
     const mappedAcc = accFiles.map((file) => ({
       file,
@@ -48,6 +67,32 @@ export function MultipleFileUploadField({ name }: { name: string }) {
     }));
     const mappedRej = rejFiles.map((r) => ({ ...r, id: getNewId() }));
     setFiles((curr) => [...curr, ...mappedAcc, ...mappedRej]);
+    console.log(mappedAcc[0].file);
+    let fileType = mappedAcc[0].file.type;
+    if (fileType === "text/csv") {
+      Papa.parse(mappedAcc[0].file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function (results: any) {
+          console.log("Row:", results.meta.fields);
+          const row: rows = {
+            data: results.data,
+            meta: results.meta,
+            fields: results.meta,
+          };
+          // rows.data = rows.errors = results.errors;
+          // rows.meta = results.meta;
+          // rows.fields = results.fields;
+          setImportData(row);
+        },
+        // worker: true,
+        // step: function (results: any) {
+        //   console.log("Row:", results.data);
+        //   // rows.data = results.data;
+        //   setImportData(results);
+        // },
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -72,8 +117,8 @@ export function MultipleFileUploadField({ name }: { name: string }) {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: ["image/*", "video/*", ".pdf"],
-    maxSize: 300 * 1024, // 300KB
+    accept: ["image/*", "video/*", ".pdf", ".csv"],
+    maxSize: 10000 * 1024, // 300KB
   });
 
   return (
