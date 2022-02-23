@@ -1,23 +1,35 @@
-import { Grid, LinearProgress } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import { FileHeader } from './FileHeader';
+import { Grid, LinearProgress } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { FileHeader } from "./FileHeader";
 
 export interface SingleFileUploadWithProgressProps {
   file: File;
   onDelete: (file: File) => void;
   onUpload: (file: File, url: string) => void;
+  projectId: String;
+  testRunId: String;
+  testCaseId: String;
 }
 
 export function SingleFileUploadWithProgress({
   file,
   onDelete,
   onUpload,
+  projectId,
+  testRunId,
+  testCaseId,
 }: SingleFileUploadWithProgressProps) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     async function upload() {
-      const url = await uploadFile(file, setProgress);
+      const url = await uploadFile(
+        file,
+        setProgress,
+        projectId,
+        testRunId,
+        testCaseId
+      );
       onUpload(file, url);
     }
 
@@ -32,13 +44,20 @@ export function SingleFileUploadWithProgress({
   );
 }
 
-function uploadFile(file: File, onProgress: (percentage: number) => void) {
-  const url = 'https://api.cloudinary.com/v1_1/demo/image/upload';
-  const key = 'docs_upload_example_us_preset';
+function uploadFile(
+  file: File,
+  onProgress: (percentage: number) => void,
+  projectId: String,
+  testRunId: String,
+  testCaseId: String
+) {
+  const url = `https://test.qastack.io/api/testrun/result/upload?projectId=${projectId}&testRunId=${testRunId}&testCaseId=${testCaseId}`;
+  const key = "docs_upload_example_us_preset";
 
   return new Promise<string>((res, rej) => {
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', url);
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Authorization", `Bearer ${localStorage.token}`);
 
     xhr.onload = () => {
       const resp = JSON.parse(xhr.responseText);
@@ -53,8 +72,8 @@ function uploadFile(file: File, onProgress: (percentage: number) => void) {
     };
 
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', key);
+    formData.append("file", file);
+    formData.append("upload_preset", key);
 
     xhr.send(formData);
   });

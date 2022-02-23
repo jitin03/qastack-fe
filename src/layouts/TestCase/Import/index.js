@@ -53,7 +53,7 @@ export const ImportTestCases = () => {
 
   const onSubmit = async (data, e) => {
     console.log(Object.values(data));
-  
+
     const newArray = importData.data.map((row) => {
       // console.log(row);
       // const container={}
