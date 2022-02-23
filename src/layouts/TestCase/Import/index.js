@@ -18,6 +18,7 @@ import { Form, Formik } from "formik";
 import { makeStyles } from "@mui/styles";
 import { Controller, useForm } from "react-hook-form";
 import Controls from "../../../components/controllers/Controls";
+import { importedFieldsMapping } from "../../../constants/appConstants";
 const Papa = require("papaparse");
 const fs = require("fs");
 const useStyles = makeStyles((theme) => ({
@@ -52,17 +53,15 @@ export const ImportTestCases = () => {
   } = useForm({});
 
   const onSubmit = async (data, e) => {
-    console.log(Object.values(data));
+    const mappingFieldsKey = Object.keys(data);
   
-    const newArray = importData.data.map((row) => {
-      // console.log(row);
-      // const container={}
-      const { FirstName } = row;
-
-      return { name: FirstName };
+    const importedMappedData = importData.data.map((row) => {
+      const importedRowMapping = {};
+      mappingFieldsKey.map(keyName => importedRowMapping[importedFieldsMapping[keyName]] = row[data[keyName]]);
+      return importedRowMapping;
     });
 
-    console.log(newArray);
+    console.log('--importedMappedData--', importedMappedData);
 
     // fs.writeFileSync("./testCase.csv", testCase, (err) => {
     //   if (err) throw err;
