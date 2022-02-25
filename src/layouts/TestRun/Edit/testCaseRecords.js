@@ -224,6 +224,7 @@ const TestCases = (props) => {
   });
 
   console.log("selectedModel", selectedModel);
+  let projectKey = projectId;
   const {
     data: testcases,
     error: testcaseErrors,
