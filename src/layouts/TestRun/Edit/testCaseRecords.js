@@ -228,17 +228,21 @@ const TestCases = (props) => {
     data: testcases,
     error: testcaseErrors,
     loading: waitForTests,
-  } = useQuery(["testcases", componentId, pageSize], getAllTestCases, {
-    onSuccess: (testcases) => {
-      // if (selectedModel?.length === 0) {
-      //   console.log("call me");
-      //   console.log("testRunDetails", testRunDetails.testcases);
-      //   setSelectedModel(testRunDetails?.testcases);
-      // }
-    },
-    onError: (error) => {},
-    enabled: !!componentId,
-  });
+  } = useQuery(
+    ["testcases", componentId, projectKey, pageSize],
+    getAllTestCases,
+    {
+      onSuccess: (testcases) => {
+        // if (selectedModel?.length === 0) {
+        //   console.log("call me");
+        //   console.log("testRunDetails", testRunDetails.testcases);
+        //   setSelectedModel(testRunDetails?.testcases);
+        // }
+      },
+      onError: (error) => {},
+      enabled: !!componentId,
+    }
+  );
 
   const baselineProps = {
     rows: testcases || [],

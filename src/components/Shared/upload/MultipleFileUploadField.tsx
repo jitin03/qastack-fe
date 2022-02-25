@@ -49,10 +49,16 @@ export function MultipleFileUploadField({
   name,
   importData,
   setImportData,
+  projectId,
+  testRunId,
+  testCaseId,
 }: {
   name: string;
   importData: any;
   setImportData: any;
+  projectId: String;
+  testRunId: String;
+  testCaseId: String;
 }) {
   const [_, __, helpers] = useField(name);
   const classes = useStyles();
@@ -124,11 +130,11 @@ export function MultipleFileUploadField({
   return (
     <React.Fragment>
       <Grid item style={{ cursor: "pointer" }}>
-        <div {...getRootProps({ className: classes.dropzone })}>
+        <Grid item container {...getRootProps({ className: classes.dropzone })}>
           <input {...getInputProps()} />
 
           <p>Drag 'n' drop some files here, or click to select files</p>
-        </div>
+        </Grid>
       </Grid>
 
       {files.map((fileWrapper) => (
@@ -144,6 +150,9 @@ export function MultipleFileUploadField({
               onDelete={onDelete}
               onUpload={onUpload}
               file={fileWrapper.file}
+              projectId={projectId}
+              testRunId={testRunId}
+              testCaseId={testCaseId}
             />
           )}
         </Grid>

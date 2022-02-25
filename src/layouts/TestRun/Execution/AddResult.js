@@ -54,6 +54,7 @@ export default function AddResult({
   projectId,
   queryClient,
   data: testDetails,
+  testRunId,
   control: parentControl,
 }) {
   const {
@@ -65,6 +66,7 @@ export default function AddResult({
   } = useForm({
     mode: "onChange",
   });
+  console.log(testDetails);
 
   const classes = useStyles();
   const handleClose = () => {
@@ -92,6 +94,7 @@ export default function AddResult({
 
   const onSubmit = async (data, e) => {
     console.log(data);
+
     console.log(testDetails);
     console.log({ ...testDetails, ...data });
     try {
@@ -195,7 +198,7 @@ export default function AddResult({
             </Grid>
             <Grid item xs={12}>
               <Controller
-                name="comments"
+                name="comments.String"
                 control={control}
                 defaultValue={""}
                 render={({ field: { onChange, value } }) => (
@@ -210,8 +213,13 @@ export default function AddResult({
                     variant="outlined"
                     onChange={onChange}
                     value={value}
+                    error={!!errors?.comments}
+                    helperText={
+                      errors?.comments ? errors?.comments.message : null
+                    }
                   />
                 )}
+                rules={{ required: "Please add comments" }}
               />
             </Grid>
             <Grid
@@ -256,7 +264,12 @@ export default function AddResult({
                   {({ values, errors, isValid, isSubmitting }) => (
                     <Form>
                       <Grid container direction="column">
-                        <MultipleFileUploadField name="files" />
+                        <MultipleFileUploadField
+                          name="files"
+                          projectId={projectId}
+                          testRunId={testRunId}
+                          testCaseId={testDetails?.testcase_id}
+                        />
                       </Grid>
                     </Form>
                   )}

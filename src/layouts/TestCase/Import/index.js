@@ -9,9 +9,11 @@ import {
   MenuItem,
   FormHelperText,
   Paper,
+  Container,
+  CircularProgress,
 } from "@material-ui/core";
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { MultipleFileUploadField } from "../../../components/Shared/upload/MultipleFileUploadField";
 import { array, object, string } from "yup";
 import { Form, Formik } from "formik";
@@ -19,6 +21,9 @@ import { makeStyles } from "@mui/styles";
 import { Controller, useForm } from "react-hook-form";
 import Controls from "../../../components/controllers/Controls";
 import { importedFieldsMapping } from "../../../constants/appConstants";
+import { addRawTestcase } from "../../../context/actions/testcase/api";
+import { useMutation } from "react-query";
+import { useGlobalContext } from "../../../context/provider/context";
 const Papa = require("papaparse");
 const fs = require("fs");
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +46,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 export const ImportTestCases = () => {
   const [importData, setImportData] = useState({});
+  const { testResult } = useGlobalContext();
   const classes = useStyles();
+  const { projectKey } = useParams();
   const location = useLocation();
   console.log(importData.meta?.fields);
   const {
@@ -51,23 +58,89 @@ export const ImportTestCases = () => {
     setValue,
     formState: { errors },
   } = useForm({});
-
+  const {
+    mutateAsync,
+    isLoading,
+    isError,
+    error,
+    data: uploadResult,
+    isSuccess,
+  } = useMutation(addRawTestcase, {
+    onError: (error) => {
+      // setOpenToast(true);
+    },
+    onSuccess: (data) => {
+      // componentDispatch({
+      //   type: COMPONENT_CREATE_SUCCESS,
+      //   payload: data,
+      // });
+    },
+  });
   const onSubmit = async (data, e) => {
     const mappingFieldsKey = Object.keys(data);
-  
+
     const importedMappedData = importData.data.map((row) => {
       const importedRowMapping = {};
-      mappingFieldsKey.map(keyName => importedRowMapping[importedFieldsMapping[keyName]] = row[data[keyName]]);
+      mappingFieldsKey.map(
+        (keyName) =>
+          (importedRowMapping[importedFieldsMapping[keyName]] =
+            row[data[keyName]])
+      );
       return importedRowMapping;
     });
 
-    console.log('--importedMappedData--', importedMappedData);
+    console.log("--importedMappedData--", importedMappedData);
 
-    // fs.writeFileSync("./testCase.csv", testCase, (err) => {
-    //   if (err) throw err;
-    //   console.log("testcase saved");
-    // });
+    importedMappedData.map((row) => {
+      Object.keys(row).forEach((key) => {
+        if (row[key] === undefined) {
+          delete row[key];
+        }
+      });
+    });
+
+    console.log("--newMappedData--", importedMappedData);
+    let payload = importedMappedData;
+    payload.projectId = projectKey;
+    console.log(JSON.stringify(payload));
+
+    try {
+      await mutateAsync(payload);
+    } catch (error) {}
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Grid container>
+          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ padding: "50px 10px" }}
+          >
+            <Container sx={{ display: "flex" }}>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item>
+                  <Typography>Data ingestion is in progress!!</Typography>
+                </Grid>
+                <Grid item>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+            </Container>
+            <Grid item></Grid>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
   return (
     <>
       <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
@@ -311,9 +384,15 @@ export const ImportTestCases = () => {
                                     )
                                   )}
                                 </Select>
+                                <FormHelperText error={true}>
+                                  {errors?.priority
+                                    ? errors?.priority.message
+                                    : null}
+                                </FormHelperText>
                               </FormControl>
                             </>
                           )}
+                          rules={{ required: "Priority is required field!" }}
                         />
                       </Grid>
                       <Grid item md={12}>
@@ -343,9 +422,13 @@ export const ImportTestCases = () => {
                                     )
                                   )}
                                 </Select>
+                                <FormHelperText error={true}>
+                                  {errors?.type ? errors?.type.message : null}
+                                </FormHelperText>
                               </FormControl>
                             </>
                           )}
+                          rules={{ required: "Type is required field!" }}
                         />
                       </Grid>
                     </Grid>
@@ -362,7 +445,7 @@ export const ImportTestCases = () => {
                     >
                       <Grid item md={12}>
                         <Controller
-                          name="type"
+                          name="category"
                           defaultValue=""
                           control={control}
                           render={({ field: { onChange, value } }) => (
@@ -372,11 +455,11 @@ export const ImportTestCases = () => {
                                 variant="outlined"
                                 size="small"
                               >
-                                <InputLabel>Type</InputLabel>
+                                <InputLabel>Category</InputLabel>
                                 <Select
-                                  id="type-select"
+                                  id="category-select"
                                   value={value}
-                                  label="Type"
+                                  label="Category"
                                   onChange={onChange}
                                 >
                                   {importData.meta?.fields.map(
@@ -387,9 +470,15 @@ export const ImportTestCases = () => {
                                     )
                                   )}
                                 </Select>
+                                <FormHelperText error={true}>
+                                  {errors?.category
+                                    ? errors?.category.message
+                                    : null}
+                                </FormHelperText>
                               </FormControl>
                             </>
                           )}
+                          rules={{ required: "Category is required field!" }}
                         />
                       </Grid>
                       <Grid item md={12}>
@@ -419,9 +508,17 @@ export const ImportTestCases = () => {
                                     )
                                   )}
                                 </Select>
+                                <FormHelperText error={true}>
+                                  {errors?.expectedResult
+                                    ? errors?.expectedResult.message
+                                    : null}
+                                </FormHelperText>
                               </FormControl>
                             </>
                           )}
+                          rules={{
+                            required: "Expected Result is required field!",
+                          }}
                         />
                       </Grid>
                       <Grid item md={12}>
@@ -451,9 +548,13 @@ export const ImportTestCases = () => {
                                     )
                                   )}
                                 </Select>
+                                <FormHelperText error={true}>
+                                  {errors?.steps ? errors?.steps.message : null}
+                                </FormHelperText>
                               </FormControl>
                             </>
                           )}
+                          rules={{ required: "Category is required field!" }}
                         />
                       </Grid>
                       <Grid item md={12}>
@@ -483,9 +584,13 @@ export const ImportTestCases = () => {
                                     )
                                   )}
                                 </Select>
+                                <FormHelperText error={true}>
+                                  {errors?.mode ? errors?.mode.message : null}
+                                </FormHelperText>
                               </FormControl>
                             </>
                           )}
+                          rules={{ required: "Mode is required field!" }}
                         />
                       </Grid>
                       <Grid item md={12}>
@@ -515,9 +620,17 @@ export const ImportTestCases = () => {
                                     )
                                   )}
                                 </Select>
+                                <FormHelperText error={true}>
+                                  {errors?.prerequisite
+                                    ? errors?.prerequisite.message
+                                    : null}
+                                </FormHelperText>
                               </FormControl>
                             </>
                           )}
+                          rules={{
+                            required: "Prerequisite is required field!",
+                          }}
                         />
                       </Grid>
                     </Grid>

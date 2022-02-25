@@ -211,27 +211,27 @@ export default function EditTestCase(props) {
             <Divider />
             <LinkJiraIssue />
           </TabPanel>
+          <Grid
+            container
+            className={classes.bottomDrawer}
+            justifyContent="flex-end"
+            alignContent="center"
+          >
+            <Grid item>
+              <Controls.Button
+                color="inherit"
+                type="cancel"
+                text="Cancel"
+                style={{ marginRight: "10px" }}
+                onClick={(e) => {
+                  handleCloseRightDrawer(e, "Edit TestCase", param);
+                }}
+              />
+              <Controls.Button text="Update" />
+            </Grid>
+          </Grid>
         </form>
       </FormProvider>
-      <Grid
-        container
-        className={classes.bottomDrawer}
-        justifyContent="flex-end"
-        alignContent="center"
-      >
-        <Grid item>
-          <Controls.Button
-            color="inherit"
-            type="cancel"
-            text="Cancel"
-            style={{ marginRight: "10px" }}
-            onClick={(e) => {
-              handleCloseRightDrawer(e, "Edit TestCase", param);
-            }}
-          />
-          <Controls.Button text="Update" />
-        </Grid>
-      </Grid>
     </>
   );
 }

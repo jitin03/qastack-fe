@@ -92,6 +92,8 @@ export default function TestCaseList() {
     setOpenToast,
     componentDispatch,
     testCaseDispatcg,
+    setTestResult,
+    testResult,
   } = useGlobalContext();
   const { projectKey } = useParams();
   const pages = [5, 10, 25];
@@ -120,15 +122,19 @@ export default function TestCaseList() {
     error: componentError,
     isLoading: isComponentLoading,
     isError: isComponentsError,
-  } = useQuery(["testcases", componentId, rowsPerPage], getAllTestCases, {
-    onError: (error) => {
-      setOpenToast(true);
-      componentDispatch({
-        type: COMPONENT_LIST_ERROR,
-        payload: error.message,
-      });
-    },
-  });
+  } = useQuery(
+    ["testcases", componentId, projectKey, rowsPerPage],
+    getAllTestCases,
+    {
+      onError: (error) => {
+        setOpenToast(true);
+        componentDispatch({
+          type: COMPONENT_LIST_ERROR,
+          payload: error.message,
+        });
+      },
+    }
+  );
 
   const classes = useStyles();
 
@@ -205,9 +211,11 @@ export default function TestCaseList() {
                   <Button
                     variant="outlined"
                     startIcon={<BackupIcon />}
-                    onClick={() =>
-                      navigate(`${window.location.pathname}/import`)
-                    }
+                    onClick={() => {
+                      navigate(
+                        `/project/${projectKey}/components/testcases/import`
+                      );
+                    }}
                     sx={{ m: 1.5 }}
                   >
                     Import
@@ -374,10 +382,14 @@ const Tests = (props) => {
     data: testcases,
     error: testcaseErrors,
     loading: waitForTests,
-  } = useQuery(["testcases", componentId, pageSize], getAllTestCases, {
-    enabled: !!componentId,
-    cacheTime: 0,
-  });
+  } = useQuery(
+    ["testcases", componentId, projectKey, pageSize],
+    getAllTestCases,
+    {
+      enabled: !!componentId,
+      cacheTime: 0,
+    }
+  );
   const handleEditTestCase = (id, projectKey) => {
     let params = [];
     params.push(projectKey);

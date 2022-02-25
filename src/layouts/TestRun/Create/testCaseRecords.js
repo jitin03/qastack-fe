@@ -220,10 +220,14 @@ const TestCaseList = (props) => {
     data: testcases,
     error: testcaseErrors,
     loading: waitForTests,
-  } = useQuery(["testcases", componentId, pageSize], getAllTestCases, {
-    onError: (error) => {},
-    enabled: !!componentId,
-  });
+  } = useQuery(
+    ["testcases", componentId, projectId, pageSize],
+    getAllTestCases,
+    {
+      onError: (error) => {},
+      enabled: !!componentId,
+    }
+  );
 
   const baselineProps = {
     rows: testcases || [],

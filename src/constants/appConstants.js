@@ -8,5 +8,6 @@ export const importedFieldsMapping = {
   priority: "priority",
   steps: "steps",
   title: "test_case_title",
-  type: "type"
+  type: "type",
+  category: "category",
 };

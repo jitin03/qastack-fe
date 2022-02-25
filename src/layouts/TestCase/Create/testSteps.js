@@ -114,50 +114,33 @@ export default function TestSteps(props) {
   const onSubmit = (data) => console.log(data);
   return (
     <>
-      <div style={{ height: 400, width: "100%" }}>
-        {/* <form
-          className={classes.root}
-          autoComplete="off"
-          style={{ height: "100%" }}
-        > */}
-        <Grid
-          container
-          spacing={3}
-          direction="row"
-          justify="center"
-          alignItems="stretch"
-          style={{ height: 200, width: "100%" }}
-        >
-          {/* <Grid item xs={12}>
+      <Grid item container md={12}>
+        {/* <Grid item xs={12}>
               <Paper className={classes.paper}>xs=12</Paper>
             </Grid> */}
 
-          <Grid item xs={9}>
-            <Grid>
-              {/* <YourCard /> */}
-              <TestDetails
+        <Grid item container xs={9}>
+          <TestDetails
+            control={control}
+            handleAddStep={handleAddStep}
+            fields={fields}
+            remove={remove}
+            setValue={setValue}
+            errors={errors}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <CustomeAttributes
                 control={control}
-                handleAddStep={handleAddStep}
-                fields={fields}
-                remove={remove}
-                setValue={setValue}
+                components={components}
                 errors={errors}
               />
             </Grid>
           </Grid>
-          <Grid item xs={3}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <CustomeAttributes
-                  control={control}
-                  components={components}
-                  errors={errors}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
         </Grid>
-      </div>
+      </Grid>
     </>
   );
 }
@@ -294,6 +277,7 @@ const TestDetails = (props) => {
         height: "100%",
         border: "none",
         boxShadow: "none",
+        width: "100%",
         // backgroundColor: "rgb(248, 248, 248)",
       }}
     >
