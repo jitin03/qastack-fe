@@ -1,5 +1,6 @@
 import {
   Box,
+  Chip,
   CircularProgress,
   Container,
   Divider,
@@ -18,6 +19,12 @@ import { Button, Stack } from "@mui/material";
 import { Form, Formik } from "formik";
 import { array, object, string } from "yup";
 import React from "react";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import { Controller, useForm } from "react-hook-form";
 import Controls from "../../../components/controllers/Controls";
 import StatusChip from "../../../components/controllers/StatusChip";
@@ -25,12 +32,14 @@ import UploadFiles from "../../../components/Shared/UploadFile";
 import { MultipleFileUploadField } from "../../../components/Shared/upload/MultipleFileUploadField";
 import { useParams } from "react-router-dom";
 import {
+  getTestCase,
   getTestCaseRunHistory,
   updateTestStatus,
 } from "../../../context/actions/testcase/api";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestRunHistory } from "./TestRunHistory";
 import { useGlobalContext } from "../../../context/provider/context";
+import { blue } from "@material-ui/core/colors";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -128,6 +137,22 @@ export const TestRunSummary = (props) => {
       enabled: !!params,
     }
   );
+  const {
+    data: testCase,
+    error: testCaseError,
+    isLoading: waitForTestCase,
+    isError: isTestCaseError,
+  } = useQuery(["testcase", params?.testcase_id], getTestCase, {
+    onSuccess: (testCase) => {},
+    onError: (error) => {
+      //   setOpenToast(true);
+      //   componentDispatch({
+      //     type: COMPONENT_LIST_ERROR,
+      //     payload: error.message,
+      //   });
+    },
+    enabled: !!params,
+  });
 
   if (waitForTestCaseRunHistory) {
     return (
@@ -174,7 +199,6 @@ export const TestRunSummary = (props) => {
           >
             <Grid item xs={12}>
               <Typography variant="h6" style={{ fontSize: "1.2em" }}>
-                {" "}
                 Latest Result
               </Typography>
               <Grid item container xs={12}>
@@ -183,8 +207,8 @@ export const TestRunSummary = (props) => {
                     style={{
                       border: "1px solid rgb(232, 232, 232)",
                       marginLeft: "15px",
-                      height: 140,
-
+                      maxHeight: 1050,
+                      overflow: "scroll",
                       backgroundColor: (theme) =>
                         theme.palette.mode === "dark" ? "#1A2027" : "#fff",
                     }}
@@ -219,7 +243,7 @@ export const TestRunSummary = (props) => {
                         container
                         justifyContent="flex-start"
                         alignContent="center"
-                        style={{ paddingLeft: "10px" }}
+                        style={{ paddingLeft: "10px", marginTop: "10px" }}
                       >
                         <Grid item xs={12}>
                           <Typography>Estimated time</Typography>
@@ -235,19 +259,71 @@ export const TestRunSummary = (props) => {
                     </Grid>
                     <Grid item container>
                       <Grid item xs={12}>
-                        <Typography variant="h6" style={{ fontSize: "1em" }}>
+                        <Typography
+                          variant="h6"
+                          style={{ fontSize: "1em", paddingLeft: "10px" }}
+                        >
                           Steps
                         </Typography>
                       </Grid>
                       <Grid item container>
-                        123123
+                        <TableContainer>
+                          <Table
+                            sx={{ minWidth: 150 }}
+                            size="small"
+                            aria-label="a dense table"
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell>Step Description</TableCell>
+                                <TableCell align="right">
+                                  Expected Result
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {testCase?.steps.map((row, index) => (
+                                <TableRow
+                                  key={index}
+                                  sx={{
+                                    "&:last-child td, &:last-child th": {
+                                      border: 0,
+                                    },
+                                  }}
+                                >
+                                  <TableCell component="th" scope="row">
+                                    <Chip
+                                      label={index + 1}
+                                      size="small"
+                                      style={{
+                                        backgroundColor: blue[500],
+                                        color: "white",
+                                        minWidth: "24px",
+                                      }}
+                                    />
+                                  </TableCell>
+                                  <TableCell component="th" scope="row">
+                                    {row.stepDescription || "N/A"}
+                                  </TableCell>
+                                  <TableCell
+                                    align="right"
+                                    style={{ marginRight: "5px" }}
+                                  >
+                                    {row.expectedResult || "N/A"}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
                       </Grid>
                     </Grid>
                   </Paper>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{ marginTop: "10px" }}>
               <Typography variant="h6" style={{ fontSize: "1.2em" }}>
                 Execution History
               </Typography>
@@ -479,23 +555,6 @@ export const TestRunSummary = (props) => {
                       </Typography>
 
                       <Grid item xs={12} style={{ padding: "10px" }}>
-                        {/* <Stack direction="row" alignItems="center" spacing={2}>
-                          <label htmlFor="contained-button-file">
-                            <Input
-                              accept="image/*"
-                              id="contained-button-file"
-                              multiple
-                              type="file"
-                            />
-                            <Button
-                              variant="contained"
-                              size="small"
-                              component="span"
-                            >
-                              Upload
-                            </Button>
-                          </label>
-                        </Stack> */}
                         <Formik
                           initialValues={{ files: [] }}
                           validationSchema={object({
