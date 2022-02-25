@@ -152,6 +152,8 @@ export const TestExecution = (props) => {
     componentDispatch,
     componentState: { component },
     setEditId,
+    setTestResult,
+    testResult,
   } = useGlobalContext();
 
   const [filterFn, setFilterFn] = useState({
@@ -250,6 +252,7 @@ export const TestExecution = (props) => {
             control={control}
             preloadedData={testCasesTitle}
             testRunId={testRunId}
+            projectId={projectId}
             waitForProjectTestRuns={waitForTestsTitle}
             setData={setData}
             handleChange={handleChange}
@@ -271,6 +274,7 @@ export const TestExecution = (props) => {
           setData={setData}
           data={data}
           queryClient={queryClient}
+          testRunId={testRunId}
         />
       </CustomizedDialogs>
     </Box>
@@ -291,6 +295,7 @@ const Tests = (props) => {
   const apiRef = useGridApiRef();
   const {
     control,
+    projectId,
     preloadedData,
     testRunId,
     waitForProjectTestRuns,
@@ -300,7 +305,12 @@ const Tests = (props) => {
     handleChangeAssignee,
     checkboxSelection,
   } = props;
-  const { handleRightDrawer, handleCloseRightDrawer } = useGlobalContext();
+  const {
+    handleRightDrawer,
+    handleCloseRightDrawer,
+    setTestResult,
+    testResult,
+  } = useGlobalContext();
   const { selectionModel, setSelectionModel } = useProjectContext();
   const classes = {};
 
@@ -430,6 +440,11 @@ const Tests = (props) => {
                           size="small"
                           style={{ padding: "15px" }}
                           onClick={(e) => {
+                            setTestResult({
+                              ...testResult,
+                              projectId: projectId,
+                              testRunId: testRunId,
+                            });
                             handleRightDrawer(
                               "Test Run Summary",
                               params.api.getRow(params?.id)

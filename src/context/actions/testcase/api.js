@@ -3,7 +3,24 @@ import axiosAppTestcaseInstance from "../../../helper/testcasAppAxios";
 export const addTestcase = async ({ ...data }) => {
   let payload = JSON.stringify(data);
   const response = await axiosAppTestcaseInstance().post(
-    `/api/testcase/add`,
+    `/api/testcase/add?projectId=${data?.projectId}`,
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+//
+
+export const addRawTestcase = async (data) => {
+  let payload = JSON.stringify(data);
+  console.log("--rawdata--", payload);
+  const response = await axiosAppTestcaseInstance().post(
+    `/api/testcase/upload?projectId=${data.projectId}`,
     payload,
     {
       headers: {
@@ -76,10 +93,11 @@ export const updateTestStatus = async ({ ...data }) => {
 };
 
 export const getAllTestCases = async ({ queryKey }) => {
-  const [_key, componentId, pageId] = queryKey;
+  const [_key, componentId, projectKey, pageId] = queryKey;
 
+  console.log("--projectKey--", projectKey);
   const response = await axiosAppTestcaseInstance().get(
-    `/api/testcases?componentId=${componentId}&page=${pageId}`,
+    `/api/testcases?componentId=${componentId}&projectId=${projectKey}&page=${pageId}`,
     {
       headers: {
         "Content-Type": "application/json",

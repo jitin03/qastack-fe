@@ -123,10 +123,11 @@ export default function Header(props) {
 
   let navigate = useNavigate();
   const handleUserLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("roles");
-    localStorage.removeItem("starProject");
+    localStorage.clear();
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("user");
+    // localStorage.removeItem("roles");
+    // localStorage.removeItem("starProject");
     navigate("/login");
   };
   useEffect(() => {

@@ -24,9 +24,13 @@ import StatusChip from "../../../components/controllers/StatusChip";
 import UploadFiles from "../../../components/Shared/UploadFile";
 import { MultipleFileUploadField } from "../../../components/Shared/upload/MultipleFileUploadField";
 import { useParams } from "react-router-dom";
-import { getTestCaseRunHistory } from "../../../context/actions/testcase/api";
-import { useQuery } from "react-query";
+import {
+  getTestCaseRunHistory,
+  updateTestStatus,
+} from "../../../context/actions/testcase/api";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestRunHistory } from "./TestRunHistory";
+import { useGlobalContext } from "../../../context/provider/context";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -49,20 +53,61 @@ const Input = styled("input")({
   display: "none",
 });
 export const TestRunSummary = (props) => {
+  const { testResult, handleCloseRightDrawer } = useGlobalContext();
   const classes = useStyles();
-  const { params } = props;
+  const { params, testRunId } = props;
   console.log(params);
+  console.log(testResult);
   const {
     register,
     handleSubmit,
     control,
     setValue,
     getValues,
+    reset,
     formState: { errors },
   } = useForm({ mode: "onTouched" });
+  const queryClient = useQueryClient();
+  const {
+    mutateAsync,
+    isLoading,
+    isError,
+    error,
+    data: updateTestStatusForm,
+    isSuccess,
+  } = useMutation(updateTestStatus, {
+    onError: (error) => {
+      // setOpenToast(true);
+    },
+    onSuccess: (data) => {
+      // componentDispatch({
+      //   type: COMPONENT_CREATE_SUCCESS,
+      //   payload: data,
+      // });
+    },
+  });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data, e) => {
     console.log(data);
+
+    try {
+      data.projectId = testResult?.projectId;
+      console.log(data);
+      data.testcase_id = params?.testcase_id;
+      data.testcase_run_id = params?.testcase_run_id;
+
+      await mutateAsync(data);
+      queryClient.invalidateQueries("testcaseTitles");
+      let closeParam = [];
+      closeParam.push(testResult?.projectId);
+      closeParam.push(testResult?.testRunId);
+      console.log("close called");
+      handleCloseRightDrawer(e, "Close Run Summary", closeParam);
+      reset();
+    } catch (error) {
+      // console.log(error.message);
+      reset();
+    }
   };
 
   const {
@@ -379,7 +424,7 @@ export const TestRunSummary = (props) => {
                       }}
                     >
                       <Controller
-                        name="Comment"
+                        name="comments.String"
                         control={control}
                         defaultValue={""}
                         render={({ field: { onChange, value } }) => (
@@ -394,8 +439,13 @@ export const TestRunSummary = (props) => {
                             variant="outlined"
                             onChange={onChange}
                             value={value}
+                            error={!!errors?.comments}
+                            helperText={
+                              errors?.comments ? errors?.comments.message : null
+                            }
                           />
                         )}
+                        rules={{ required: "Please add comments" }}
                       />
                     </Grid>
                     <Grid
@@ -463,7 +513,12 @@ export const TestRunSummary = (props) => {
                           {({ values, errors, isValid, isSubmitting }) => (
                             <Form>
                               <Grid container direction="column">
-                                <MultipleFileUploadField name="files" />
+                                <MultipleFileUploadField
+                                  name="files"
+                                  projectId={testResult?.projectId}
+                                  testRunId={testResult?.testRunId}
+                                  testCaseId={params?.testcase_id}
+                                />
 
                                 {/* <Grid item>
                                   <Button

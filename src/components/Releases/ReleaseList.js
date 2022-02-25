@@ -32,6 +32,7 @@ import {
 import { EDIT_RELEASE } from "../../constants/actionTypes";
 import release from "../../context/reducers/release";
 import DeleteRelease from "./DeleteRelease";
+const dayjs = require("dayjs");
 export default function ReleaseList(props) {
   const { releases, projectId } = props;
   const {
@@ -140,7 +141,7 @@ export default function ReleaseList(props) {
                         Opacity: "0.5",
                       }}
                     >
-                      Start date:{item.StartDate}
+                      Start date: {dayjs(item.StartDate).format("MM/DD/YYYY")}
                     </Typography>
                     <Typography
                       style={{
@@ -148,7 +149,7 @@ export default function ReleaseList(props) {
                         Opacity: "0.5",
                       }}
                     >
-                      End date:{item.EndDate}
+                      End date:{dayjs(item.EndDate).format("MM/DD/YYYY")}
                     </Typography>
                   </Grid>
                   <Grid

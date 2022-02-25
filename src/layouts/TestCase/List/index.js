@@ -27,6 +27,8 @@ import {
   TablePagination,
   TableSortLabel,
 } from "@material-ui/core";
+
+import BackupIcon from "@mui/icons-material/Backup";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -50,7 +52,7 @@ import {
 } from "../../../constants/actionTypes";
 import { getAllTestCases } from "../../../context/actions/testcase/api";
 import useTable from "../../../components/Shared/useTable";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import { useProjectContext } from "../../../context/provider/projectContext";
 import Controls from "../../../components/controllers/Controls";
@@ -83,12 +85,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function TestCaseList() {
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  let navigate = useNavigate();
   const [selectedComponent, setSelectedComponent] = useState("");
   const {
     handleRightDrawer,
     setOpenToast,
     componentDispatch,
     testCaseDispatcg,
+    setTestResult,
+    testResult,
   } = useGlobalContext();
   const { projectKey } = useParams();
   const pages = [5, 10, 25];
@@ -117,15 +122,19 @@ export default function TestCaseList() {
     error: componentError,
     isLoading: isComponentLoading,
     isError: isComponentsError,
-  } = useQuery(["testcases", componentId, rowsPerPage], getAllTestCases, {
-    onError: (error) => {
-      setOpenToast(true);
-      componentDispatch({
-        type: COMPONENT_LIST_ERROR,
-        payload: error.message,
-      });
-    },
-  });
+  } = useQuery(
+    ["testcases", componentId, projectKey, rowsPerPage],
+    getAllTestCases,
+    {
+      onError: (error) => {
+        setOpenToast(true);
+        componentDispatch({
+          type: COMPONENT_LIST_ERROR,
+          payload: error.message,
+        });
+      },
+    }
+  );
 
   const classes = useStyles();
 
@@ -197,6 +206,20 @@ export default function TestCaseList() {
                       }}
                     />
                   </Toolbar>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="outlined"
+                    startIcon={<BackupIcon />}
+                    onClick={() => {
+                      navigate(
+                        `/project/${projectKey}/components/testcases/import`
+                      );
+                    }}
+                    sx={{ m: 1.5 }}
+                  >
+                    Import
+                  </Button>
                 </Grid>
                 <Grid item>
                   <Button
@@ -359,10 +382,14 @@ const Tests = (props) => {
     data: testcases,
     error: testcaseErrors,
     loading: waitForTests,
-  } = useQuery(["testcases", componentId, pageSize], getAllTestCases, {
-    enabled: !!componentId,
-    cacheTime: 0,
-  });
+  } = useQuery(
+    ["testcases", componentId, projectKey, pageSize],
+    getAllTestCases,
+    {
+      enabled: !!componentId,
+      cacheTime: 0,
+    }
+  );
   const handleEditTestCase = (id, projectKey) => {
     let params = [];
     params.push(projectKey);

@@ -20,7 +20,7 @@ import ProjectOverview from "./ProjectOverview";
 import { Link } from "@material-ui/core";
 import Toast from "../controllers/Toast";
 import DeleteProject from "./DeleteProject";
-
+const dayjs = require("dayjs");
 const useStyles = makeStyles((theme) => ({
   divider: {
     margin: `${theme.spacing.unit * 3}px 0`,
@@ -137,7 +137,8 @@ export default function ProjectList(props) {
                           Opacity: "0.5",
                         }}
                       >
-                        Created on data:
+                        Created on date:
+                        {dayjs(item?.CreatedAt).format("MM/DD/YYYY")}
                       </Typography>
                     </Grid>
                     <Grid

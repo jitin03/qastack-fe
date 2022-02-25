@@ -92,6 +92,7 @@ export default function CreateTestCase(props) {
   const queryClient = useQueryClient();
   console.log("errors", errors);
   const onSubmit = async (data, e) => {
+    data.projectId = param;
     try {
       await mutateAsync(data);
 
@@ -127,49 +128,63 @@ export default function CreateTestCase(props) {
         <form
           className={classes.root}
           autoComplete="off"
-          style={{ maxHeight: "100%", overflowY: "scroll" }}
           onSubmit={handleSubmit(onSubmit)}
         >
-          <TabPanel value={tabValue} index={0}>
-            <Divider />
-            <TestSteps
-              register={register}
-              control={control}
-              handleSubmit={handleSubmit}
-              fields={fields}
-              remove={remove}
-              append={append}
-              param={param}
-              setValue={setValue}
-              errors={errors}
-            />
-          </TabPanel>
-          <TabPanel value={tabValue} index={1}>
-            <Divider />
-            Item Two
-          </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            <Divider />
-            <LinkJiraIssue />
-          </TabPanel>
-
-          <Grid
-            container
-            className={classes.bottomDrawer}
-            justifyContent="flex-end"
-            alignContent="center"
-          >
-            <Grid item>
-              <Controls.Button
-                color="inherit"
-                type="cancel"
-                text="Cancel"
-                style={{ marginRight: "10px" }}
-                onClick={(e) => {
-                  handleCloseRightDrawer(e, "Add TestCase", param);
-                }}
-              />
-              <Controls.Button text="Submit" />
+          <Grid container>
+            <Grid
+              item
+              xs={12}
+              style={{
+                width: "100%",
+                maxHeight: "100%",
+                overflowY: "scroll",
+                minHeight: "750px",
+              }}
+            >
+              <TabPanel value={tabValue} index={0}>
+                <Divider />
+                <TestSteps
+                  register={register}
+                  control={control}
+                  handleSubmit={handleSubmit}
+                  fields={fields}
+                  remove={remove}
+                  append={append}
+                  param={param}
+                  setValue={setValue}
+                  errors={errors}
+                />
+              </TabPanel>
+              <TabPanel value={tabValue} index={1}>
+                <Divider />
+                Item Two
+              </TabPanel>
+              <TabPanel value={tabValue} index={2}>
+                <Divider />
+                <LinkJiraIssue />
+              </TabPanel>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              container
+              justifyContent="flex-end"
+              style={{ marginRight: "15px", bottom: "0px" }}
+              spacing={2}
+            >
+              <Grid item>
+                <Controls.Button
+                  color="inherit"
+                  type="cancel"
+                  text="Cancel"
+                  onClick={(e) => {
+                    handleCloseRightDrawer(e, "Add TestCase", param);
+                  }}
+                />
+              </Grid>
+              <Grid item>
+                <Controls.Button text="Submit" />
+              </Grid>
             </Grid>
           </Grid>
         </form>

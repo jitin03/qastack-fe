@@ -20,6 +20,7 @@ import CreateWorkflow from "../layouts/Workflow/Create";
 import VerifyUserEmail from "../layouts/VerifyUserEmail";
 import ForgotPassword from "../layouts/ForgotPassword";
 import ResetPassword from "../layouts/ForgotPassword/resetPassword";
+import { ImportTestCases } from "../layouts/TestCase/Import";
 
 const routes = [
   // {
@@ -190,6 +191,12 @@ const routes = [
     path: "/project/:projectKey/ciFlow/:workflowName",
     component: <WorkflowInfo />,
     title: "CI Flow Logs",
+    needsAuth: true,
+  },
+  {
+    path: "/project/:projectKey/components/testcases/import",
+    component: <ImportTestCases />,
+    title: "Import Test Cases",
     needsAuth: true,
   },
 ];

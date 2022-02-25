@@ -189,16 +189,16 @@ const LoginUI = () => {
                       field: { onChange, value, onTouched, onBlur },
                     }) => (
                       <TextField
-                        id="username"
-                        label="Username"
-                        placeholder="Username"
+                        id="emailaddress"
+                        label="Email"
+                        placeholder="Email"
                         size="small"
                         variant="outlined"
                         // inputProps={{ className: classes.textarea }}
                         onChange={onChange}
                         value={value}
                         onBlur={(e) =>
-                          setValue("username", e.target.value.trim())
+                          setValue("emailaddress", e.target.value.trim())
                         }
                         style={{ width: "100%" }}
                         error={!!errors?.username}
@@ -208,7 +208,7 @@ const LoginUI = () => {
                       />
                     )}
                     rules={{
-                      required: "Username is required field!",
+                      required: "Email is required field!",
                     }}
                   />
 

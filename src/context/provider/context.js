@@ -26,6 +26,11 @@ const AppProvider = ({ children }) => {
   const [authState, authDispatch] = useReducer(auth, authInitialState);
   const [configTitle, setConfigTitle] = useState("");
   const [drawerParam, setDrawerParam] = useState("");
+  const [testResult, setTestResult] = useState({
+    projectId: "",
+    testRunId: "",
+  });
+  
 
   const [registerPasswordIsMasked, setRegisterPasswordIsMasked] =
     useState(true);
@@ -160,6 +165,7 @@ const AppProvider = ({ children }) => {
     setModule(newModules);
   };
   const handleCloseRightDrawer = (e, title, params) => {
+    console.log(params);
     e.preventDefault();
     setState(!state);
     if (Array.isArray(params) && title !== "Test Run Summary") {
@@ -194,6 +200,10 @@ const AppProvider = ({ children }) => {
       navigate(`/project/${params}/ciFlow/create`);
     } else if (title === "Test Run Summary") {
       navigate(-1);
+    } else if (title === "Close Run Summary") {
+      console.log("close called");
+      navigate(-1);
+      // navigate(`/project/${params[0]}/testrun/${params[1]}`);
     }
   };
   const toggleDrawer = () => (event) => {
@@ -226,7 +236,8 @@ const AppProvider = ({ children }) => {
         setProjects,
         setModuleName,
         toggleDrawer,
-
+        testResult,
+        setTestResult,
         setState,
         subModule,
         setSubModule,

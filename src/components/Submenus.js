@@ -12,12 +12,7 @@ export const Submenus = () => {
     <>
       <Grid container>
         <Tooltip title="Project Overview" arrow>
-          <ListItem
-            button
-            key="1"
-            component={Link}
-            to={`/project/${projectKey}`}
-          >
+          <ListItem button component={Link} to={`/project/${projectKey}`}>
             <Grid container item direction="column">
               <Grid item xs={6}>
                 <ListItemIcon>
@@ -39,7 +34,6 @@ export const Submenus = () => {
 
         <ListItem
           button
-          key="2"
           component={Link}
           to={`/project/${projectKey}/components`}
         >
@@ -62,7 +56,6 @@ export const Submenus = () => {
 
         <ListItem
           button
-          key="2"
           component={Link}
           to={`/project/${projectKey}/releases`}
         >
@@ -85,7 +78,6 @@ export const Submenus = () => {
 
         <ListItem
           button
-          key="2"
           component={Link}
           to={`/project/${projectKey}/components/testcases`}
         >
@@ -108,7 +100,6 @@ export const Submenus = () => {
 
         <ListItem
           button
-          key="2"
           component={Link}
           to={`/project/${projectKey}/testruns`}
         >
@@ -129,12 +120,7 @@ export const Submenus = () => {
           </Grid>
         </ListItem>
 
-        <ListItem
-          button
-          key="2"
-          component={Link}
-          to={`/project/${projectKey}/ciFlow`}
-        >
+        <ListItem button component={Link} to={`/project/${projectKey}/ciFlow`}>
           <Grid container item direction="column">
             <Grid item xs={6}>
               <ListItemIcon>
