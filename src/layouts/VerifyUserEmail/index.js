@@ -59,6 +59,7 @@ function getQueryVariable(variable) {
 const VerifyUserEmail = () => {
   const queryClient = useQueryClient();
   let navigate = useNavigate();
+  const [success, setSuccess] = useState(false);
 
   let code = getQueryVariable("code");
   let email = getQueryVariable("email");
@@ -85,44 +86,10 @@ const VerifyUserEmail = () => {
       //   payload: error.message,
       // });
     },
+    onSuccess: (data) => {
+      setSuccess(!success);
+    },
   });
-
-  if (isSuccess) {
-    return (
-      <>
-        <Grid container>
-          <Grid
-            item
-            container
-            justifyContent="center"
-            style={{ padding: "50px 10px" }}
-          >
-            <Container sx={{ display: "flex" }}>
-              <Grid
-                container
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Grid item container justifyContent="center">
-                  <Grid item>
-                    <Typography variant="h3" style={{ fontWeight: "600" }}>
-                      Awesome! Your verificaton is done !
-                    </Typography>
-                    <br></br>
-                    <Link underline="none" href={`/login`}>
-                      <Typography>Please Sign In</Typography>
-                    </Link>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Container>
-            <Grid item></Grid>
-          </Grid>
-        </Grid>
-      </>
-    );
-  }
 
   if (isLoading) {
     return (
@@ -155,18 +122,51 @@ const VerifyUserEmail = () => {
 
   return (
     <>
-      <Grid
-        container
-        justifyItems="center"
-        alignContent="center"
-        alignSelf="center"
-        textAlign="center"
-        marginTop="80px"
-      >
-        <Grid item md={4}></Grid>
-        <Typography>Verification is in-progress !!</Typography>
-        <Grid item md={4}></Grid>
-      </Grid>
+      {success ? (
+        <Grid container>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ padding: "50px 10px" }}
+          >
+            <Container sx={{ display: "flex" }}>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item container justifyContent="center">
+                  <Grid item>
+                    <Typography variant="h3" style={{ fontWeight: "600" }}>
+                      Awesome! Your verificaton is done !
+                    </Typography>
+                    <br></br>
+                    <Link underline="none" href={`/login`}>
+                      <Typography>Please Sign In</Typography>
+                    </Link>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Container>
+            <Grid item></Grid>
+          </Grid>
+        </Grid>
+      ) : (
+        <Grid
+          container
+          justifyItems="center"
+          alignContent="center"
+          alignSelf="center"
+          textAlign="center"
+          marginTop="80px"
+        >
+          <Grid item md={4}></Grid>
+          <Typography>Verification is in-progress !!</Typography>
+          <Grid item md={4}></Grid>
+        </Grid>
+      )}
     </>
   );
 };
