@@ -107,12 +107,14 @@ export default function EditComponent(props) {
           color="inherit"
           type="cancel"
           text="Cancel"
+          size="small"
           style={{ marginRight: "10px" }}
           onClick={(e) => {
             handleCloseRightDrawer(e, "Edit Component", param[0]);
           }}
         />
         <Controls.Button
+          size="small"
           text="Submit"
           onClick={(e) => handleComponentSubmit(e)}
         />

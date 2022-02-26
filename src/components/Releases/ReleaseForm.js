@@ -180,12 +180,13 @@ export default function ReleaseForm(props) {
           color="inherit"
           type="cancel"
           text="Cancel"
+          size="small"
           style={{ marginRight: "10px" }}
           onClick={(e) => {
             handleCloseRightDrawer(e, "Add Release", param);
           }}
         />
-        <Controls.Button text="Submit" />
+        <Controls.Button text="Submit" size="small" />
       </Grid>
     </form>
   );

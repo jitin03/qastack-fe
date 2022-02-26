@@ -148,12 +148,13 @@ export const ReleaseEditForm = (props) => {
           color="inherit"
           type="cancel"
           text="Cancel"
+          size="small"
           style={{ marginRight: "10px" }}
           onClick={(e) => {
             handleCloseRightDrawer(e, "Edit Release", param[0]);
           }}
         />
-        <Controls.Button text="Submit" />
+        <Controls.Button size="small" text="Submit" />
       </Grid>
     </form>
   );

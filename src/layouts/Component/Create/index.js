@@ -131,13 +131,14 @@ export default function CreateComponent(props) {
         <Controls.Button
           color="inherit"
           type="cancel"
+          size="small"
           text="Cancel"
           style={{ marginRight: "10px" }}
           onClick={(e) => {
             handleCloseRightDrawer(e, "Add Component", param);
           }}
         />
-        <Controls.Button text="Submit" />
+        <Controls.Button size="small" text="Submit" />
       </Grid>
       <Toast
         openToast={openToast}

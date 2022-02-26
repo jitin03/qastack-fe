@@ -66,13 +66,18 @@ export default function ProjectEditForm() {
         <Controls.Button
           color="inherit"
           type="cancel"
+          size="small"
           text="Cancel"
           style={{ marginRight: "10px" }}
           onClick={(e) => {
             handleCloseRightDrawer(e, "Edit Project");
           }}
         />
-        <Controls.Button text="Save" onClick={handleProjectFormSave} />
+        <Controls.Button
+          size="small"
+          text="Save"
+          onClick={handleProjectFormSave}
+        />
       </Grid>
     </Form>
   );

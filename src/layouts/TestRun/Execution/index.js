@@ -197,12 +197,19 @@ export const TestExecution = (props) => {
           item
           container
           justifyContent="center"
-          justifyItems="center"
+          alignItems="center"
+          alignContent="center"
           style={{
             backgroundColor: "rgb(248, 248, 248)",
           }}
         >
-          <Grid item md={4} style={{ padding: "15px" }}>
+          <Grid
+            item
+            xs={6}
+            container
+            justifyContent="flex-start"
+            style={{ paddingLeft: "10px" }}
+          >
             <Typography variant="h6">Test Runs & Results</Typography>
           </Grid>
           <Grid
@@ -211,34 +218,17 @@ export const TestExecution = (props) => {
             justifyContent="flex-end"
             justifyItems="center"
             justifySelf="center"
-            md={8}
+            style={{ paddingRight: "10px" }}
+            xs={6}
           >
-            <Grid item>
-              <Toolbar>
-                <Controls.Input
-                  label="Search Test by title "
-                  className={classes.searchInput}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Search />
-                      </InputAdornment>
-                    ),
-                  }}
-                  // onChange={handleSearch}
-                />
-              </Toolbar>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="outlined"
-                startIcon={<AddIcon />}
-                onClick={() => setCheckboxSelection(!checkboxSelection)}
-                sx={{ m: 1.5 }}
-              >
-                Bulk Update
-              </Button>
-            </Grid>
+            <Button
+              variant="outlined"
+              startIcon={<AddIcon />}
+              onClick={() => setCheckboxSelection(!checkboxSelection)}
+              size="small"
+            >
+              Bulk Update
+            </Button>
           </Grid>
         </Grid>
         <Grid
