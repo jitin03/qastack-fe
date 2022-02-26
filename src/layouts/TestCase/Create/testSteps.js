@@ -336,6 +336,7 @@ const TestDetails = (props) => {
                 startIcon={<AddIcon />}
                 onClick={handleAddStep}
                 sx={{ m: 1 }}
+                size="small"
               >
                 Add
               </Button>

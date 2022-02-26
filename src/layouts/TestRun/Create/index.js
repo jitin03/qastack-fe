@@ -155,6 +155,7 @@ export default function CreateTestRun(props) {
           >
             <Grid item>
               <Controls.Button
+                size="small"
                 color="inherit"
                 type="cancel"
                 text="Cancel"
@@ -163,7 +164,7 @@ export default function CreateTestRun(props) {
                   handleCloseRightDrawer(e, "Add TestRun", param);
                 }}
               />
-              <Controls.Button text="Submit" />
+              <Controls.Button size="small" text="Submit" />
             </Grid>
           </Grid>
         </form>

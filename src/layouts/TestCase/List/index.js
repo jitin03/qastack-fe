@@ -171,98 +171,92 @@ export default function TestCaseList() {
     <>
       <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
         <Grid container justifyItems="center" alignItems="center">
-          <Grid container direction="row" justify="center" alignItems="stretch">
+          <Grid
+            item
+            container
+            justifyContent="center"
+            alignItems="center"
+            alignContent="center"
+            style={{
+              backgroundColor: "rgb(248, 248, 248)",
+            }}
+          >
+            <Grid
+              item
+              xs={6}
+              container
+              justifyContent="flex-start"
+              style={{ paddingLeft: "10px" }}
+            >
+              <Typography variant="h6">Test Cases</Typography>
+            </Grid>
             <Grid
               item
               container
-              justifyContent="center"
-              justifyItems="center"
-              style={{
-                backgroundColor: "rgb(248, 248, 248)",
-              }}
+              justifyContent="flex-end"
+              alignContent="center"
+              xs={6}
             >
-              <Grid item md={4} style={{ padding: "15px" }}>
-                <Typography variant="h6">Test Cases</Typography>
+              <Grid item container xs={3}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<BackupIcon />}
+                  onClick={() => {
+                    navigate(
+                      `/project/${projectKey}/components/testcases/import`
+                    );
+                  }}
+                >
+                  Import
+                </Button>
               </Grid>
               <Grid
                 item
                 container
+                xs={3}
                 justifyContent="flex-end"
-                justifyItems="center"
-                justifySelf="center"
-                md={8}
+                style={{ paddingRight: "10px" }}
               >
-                <Grid item>
-                  <Toolbar>
-                    <Controls.Input
-                      label="Search By Title "
-                      className={classes.searchInput}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment>
-                            <Search />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Toolbar>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="outlined"
-                    startIcon={<BackupIcon />}
-                    onClick={() => {
-                      navigate(
-                        `/project/${projectKey}/components/testcases/import`
-                      );
-                    }}
-                    sx={{ m: 1.5 }}
-                  >
-                    Import
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="outlined"
-                    startIcon={<AddIcon />}
-                    onClick={() =>
-                      handleRightDrawer("Add TestCase", projectKey)
-                    }
-                    sx={{ m: 1.5 }}
-                  >
-                    Add Test Case
-                  </Button>
-                </Grid>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<AddIcon />}
+                  onClick={() => handleRightDrawer("Add TestCase", projectKey)}
+                  // sx={{ m: 1.5 }}
+                >
+                  Add Test Case
+                </Button>
               </Grid>
             </Grid>
+          </Grid>
 
-            <Grid
-              item
-              container
-              justifyContent="center"
-              justifyItems="center"
-              style={{
-                backgroundColor: "rgb(248, 248, 248)",
-                //   padding: "2px",
-              }}
-              xs={3}
-            >
-              <Grid item container>
-                <Records
-                  setSelectedComponent={setSelectedComponent}
-                  projectKey={projectKey}
-                />
-              </Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            justifyItems="center"
+            style={{
+              backgroundColor: "rgb(248, 248, 248)",
+              //   padding: "2px",
+            }}
+            xs={3}
+          >
+            <Grid item container>
+              <Records
+                setSelectedComponent={setSelectedComponent}
+                projectKey={projectKey}
+              />
             </Grid>
-            <Grid
-              item
-              container
-              justifyContent="center"
-              justifyItems="center"
-              xs={9}
-            >
-              <Tests component={selectedComponent} projectKey={projectKey} />
-            </Grid>
+          </Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            justifyItems="center"
+            xs={9}
+          >
+            <Tests component={selectedComponent} projectKey={projectKey} />
           </Grid>
         </Grid>
       </Box>

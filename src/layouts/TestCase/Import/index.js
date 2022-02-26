@@ -113,7 +113,6 @@ export const ImportTestCases = () => {
     return (
       <>
         <Grid container>
-          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
           <Grid
             item
             container

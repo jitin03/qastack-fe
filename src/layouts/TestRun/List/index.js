@@ -107,12 +107,19 @@ export default function TestRunList() {
           item
           container
           justifyContent="center"
-          justifyItems="center"
+          alignItems="center"
+          alignContent="center"
           style={{
             backgroundColor: "rgb(248, 248, 248)",
           }}
         >
-          <Grid item md={4} style={{ padding: "15px" }}>
+          <Grid
+            item
+            xs={6}
+            container
+            justifyContent="flex-start"
+            style={{ paddingLeft: "10px" }}
+          >
             <Typography variant="h6">Test Runs & Results</Typography>
           </Grid>
           <Grid
@@ -120,38 +127,19 @@ export default function TestRunList() {
             container
             justifyContent="flex-end"
             justifyItems="center"
-            justifySelf="center"
-            md={8}
+            style={{ paddingRight: "10px" }}
+            xs={6}
           >
-            <Grid item>
-              <Toolbar>
-                <Controls.Input
-                  label="Search TestRun "
-                  className={classes.searchInput}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Search />
-                      </InputAdornment>
-                    ),
-                  }}
-                  // onChange={handleSearch}
-                />
-              </Toolbar>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Add TestRun" arrow>
-                <Button
-                  variant="outlined"
-                  startIcon={<AddIcon />}
-                  // onClick={() => setState(!state)}
-                  onClick={() => handleRightDrawer("Add TestRun", projectKey)}
-                  sx={{ m: 1.5 }}
-                >
-                  Add TestRun
-                </Button>
-              </Tooltip>
-            </Grid>
+            <Tooltip title="Add TestRun" arrow>
+              <Button
+                size="small"
+                variant="outlined"
+                startIcon={<AddIcon />}
+                onClick={() => handleRightDrawer("Add TestRun", projectKey)}
+              >
+                Add TestRun
+              </Button>
+            </Tooltip>
           </Grid>
         </Grid>
         <Grid

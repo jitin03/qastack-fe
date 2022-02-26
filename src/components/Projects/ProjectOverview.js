@@ -92,7 +92,7 @@ const ProjectOverview = () => {
             alignItems="center"
             style={{
               backgroundColor: "rgb(248, 248, 248)",
-              padding: "20px",
+              paddingLeft: "20px",
             }}
           >
             <Typography variant="h6">
@@ -157,8 +157,10 @@ const ProjectOverview = () => {
                     <>
                       <List dense="true" key={item.index}>
                         <ListItemButton>
-                          <ListItemIcon></ListItemIcon>
-                          <ListItemText primary={item.title} />
+                          <ListItemText
+                            sx={{ fontSize: "0.7em" }}
+                            primary={item.title}
+                          />
                         </ListItemButton>
                       </List>
                     </>

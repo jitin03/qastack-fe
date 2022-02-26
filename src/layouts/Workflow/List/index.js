@@ -136,12 +136,13 @@ export default function WorfklowCreate() {
           item
           container
           justifyContent="center"
-          justifyItems="center"
+          alignItems="center"
+          alignContent="center"
           style={{
             backgroundColor: "rgb(248, 248, 248)",
           }}
         >
-          <Grid item md={4} style={{ padding: "15px" }}>
+          <Grid item xs={6} container style={{ paddingLeft: "10px" }}>
             <Typography variant="h6">Test Jobs</Typography>
           </Grid>
           <Grid
@@ -150,32 +151,16 @@ export default function WorfklowCreate() {
             justifyContent="flex-end"
             justifyItems="center"
             justifySelf="center"
-            md={8}
+            style={{ paddingRight: "10px" }}
+            xs={6}
           >
-            <Grid item>
-              <Toolbar>
-                <Controls.Input
-                  label="Search Workflow "
-                  className={classes.searchInput}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Search />
-                      </InputAdornment>
-                    ),
-                  }}
-                  // onChange={handleSearch}
-                />
-              </Toolbar>
-            </Grid>
             <Grid item>
               <Tooltip title="Add new Job" arrow>
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
-                  // onClick={() => setState(!state)}
                   onClick={() => handleAddNewFlow(projectId)}
-                  sx={{ m: 1.5 }}
+                  size="small"
                 >
                   Add new job
                 </Button>
@@ -212,7 +197,7 @@ const WorkflowList = (props) => {
   const [pageSize, setPageSize] = useState(20);
   const [loading, setLoading] = useState(false);
   const [workflowTriggeredStatus, setTriggeredWorkflowStatus] = useState(false);
-  const [currentWorkflowId, setCurrentWorkflowId] = useState('');
+  const [currentWorkflowId, setCurrentWorkflowId] = useState("");
   const [rowsState, setRowsState] = useState({
     page: 0,
     pageSize: 5,
@@ -280,7 +265,7 @@ const WorkflowList = (props) => {
       queryClient.invalidateQueries("workflows");
       updateWorkflowStatus(workflowStatus);
       setTriggeredWorkflowStatus(false);
-      setCurrentWorkflowId('');
+      setCurrentWorkflowId("");
     }
     // }
   }
@@ -370,9 +355,7 @@ const WorkflowList = (props) => {
         disableClickEventBubbling: true,
         renderCell: (params) => {
           return (
-            <div
-              className="d-flex justify-content-between align-items-center"
-            >
+            <div className="d-flex justify-content-between align-items-center">
               {/* <MatEdit index={params.id} /> */}
               <FormControlLabel
                 control={
@@ -382,7 +365,10 @@ const WorkflowList = (props) => {
                         <IconButton
                           aria-label="Run"
                           style={{ padding: "10px" }}
-                          disabled={workflowTriggeredStatus && currentWorkflowId === params?.id}
+                          disabled={
+                            workflowTriggeredStatus &&
+                            currentWorkflowId === params?.id
+                          }
                           onClick={() =>
                             handleRunNowWorkflow(
                               params?.id,
@@ -408,7 +394,10 @@ const WorkflowList = (props) => {
                         <EditIcon style={{ color: grey[500] }} />
                       </IconButton>
 
-                      <DeleteWorkflow params={params} workflowTriggeredStatus={workflowTriggeredStatus} />
+                      <DeleteWorkflow
+                        params={params}
+                        workflowTriggeredStatus={workflowTriggeredStatus}
+                      />
 
                       <WorkflowLogs params={params} projectId={projectId} />
                       {/* <Tooltip title="View Logs" arrow>

@@ -74,7 +74,6 @@ export default function ReleaseList(props) {
         alignItems="center"
         style={{ flex: "1" }}
       >
-        {" "}
         <Grid
           item
           md={3}

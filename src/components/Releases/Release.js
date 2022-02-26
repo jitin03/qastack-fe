@@ -72,16 +72,33 @@ const Release = () => {
           <Grid
             item
             container
-            justifyContent="flex-end"
+            justifyContent="center"
             alignItems="center"
+            alignContent="center"
             style={{
               backgroundColor: "rgb(248, 248, 248)",
             }}
           >
-            <Grid item>
+            <Grid
+              item
+              xs={6}
+              justifyContent="flex-start"
+              style={{ paddingLeft: "10px" }}
+              container
+            >
+              <Typography variant="h6">Releases</Typography>
+            </Grid>
+            <Grid
+              item
+              container
+              justifyContent="flex-end"
+              xs={6}
+              style={{ paddingRight: "10px" }}
+            >
               <Tooltip title="Add Release" arrow>
                 <Button
                   variant="outlined"
+                  size="small"
                   startIcon={<AddIcon />}
                   onClick={() => handleRightDrawer("Add Release", projectId)}
                 >
@@ -100,12 +117,13 @@ const Release = () => {
               <ReleaseList releases={releases} projectId={projectId} />
             ) : (
               <Grid item>
-                <Typography>No Project avaiable</Typography>
+                <Typography>No Release avaiable</Typography>
                 <Tooltip title="Add Release" arrow>
                   <Button
                     variant="outlined"
                     startIcon={<AddIcon />}
                     onClick={() => handleRightDrawer("Add Release", projectId)}
+                    size="small"
                   >
                     Add Release
                   </Button>

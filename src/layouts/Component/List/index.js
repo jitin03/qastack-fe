@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   searchInput: {
-    width: "75%",
+    width: "100%",
   },
 }));
 const ComponentList = () => {
@@ -135,7 +135,6 @@ const ComponentList = () => {
     return (
       <>
         <Grid container>
-          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
           <Grid
             item
             container
@@ -176,36 +175,57 @@ const ComponentList = () => {
         <Grid
           item
           container
-          justifyContent="flex-end"
+          justifyContent="center"
           alignItems="center"
+          alignContent="center"
           style={{
             backgroundColor: "rgb(248, 248, 248)",
           }}
         >
-          <Grid item>
-            <Toolbar>
-              <Controls.Input
-                label="Search Component "
-                className={classes.searchInput}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-                onChange={handleSearch}
-              />
-            </Toolbar>
+          <Grid
+            item
+            container
+            xs={6}
+            justifyContent="flex-start"
+            style={{ paddingLeft: "10px" }}
+          >
+            <Typography variant="h6">Component</Typography>
           </Grid>
-          <Grid item>
+          <Grid
+            item
+            container
+            justifyContent="flex-end"
+            xs={3}
+            style={{ margin: "2px 0" }}
+          >
+            <Controls.Input
+              label="Search Component "
+              className={classes.searchInput}
+              size="small"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={handleSearch}
+            />
+          </Grid>
+          <Grid
+            item
+            container
+            xs={3}
+            justifyContent="flex-end"
+            style={{ paddingRight: "10px" }}
+          >
             <Tooltip title="Add new component" arrow>
               <Button
                 variant="outlined"
+                size="small"
                 startIcon={<AddIcon />}
                 // onClick={() => setState(!state)}
                 onClick={() => handleRightDrawer("Add Component", projectKey)}
-                sx={{ m: 1 }}
               >
                 Add Component
               </Button>

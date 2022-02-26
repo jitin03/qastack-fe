@@ -119,38 +119,41 @@ export default function CreateWorkflow() {
           item
           container
           justifyContent="center"
-          justifyItems="center"
+          alignItems="center"
+          alignContent="center"
           style={{
             backgroundColor: "rgb(248, 248, 248)",
           }}
         >
-          <Grid item md={4} style={{ padding: "15px" }}>
+          <Grid
+            item
+            xs={6}
+            container
+            justifyContent="flex-start"
+            style={{ paddingLeft: "10px" }}
+          >
             <Typography variant="h6">Create Job</Typography>
           </Grid>
           <Grid
             item
             container
-            md={8}
-            style={{ padding: "15px" }}
+            xs={6}
+            style={{ paddingRight: "10px" }}
             justifyContent="flex-end"
           >
-            <Grid item>
-              <Tooltip title="Close" arrow>
-                <Button>
-                  <CancelIcon
-                    variant="outlined"
-                    startIcon={<AddIcon />}
-                    // onClick={() => setState(!state)}
-                    onClick={(e) => {
-                      navigate(`/project/${projectId}/ciFlow`);
-                    }}
-                    sx={{ m: 1, textAlign: "right" }}
-                  >
-                    Close
-                  </CancelIcon>
-                </Button>
-              </Tooltip>
-            </Grid>
+            <Tooltip title="Close" arrow>
+              <Button size="small">
+                <CancelIcon
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  onClick={(e) => {
+                    navigate(`/project/${projectId}/ciFlow`);
+                  }}
+                >
+                  Close
+                </CancelIcon>
+              </Button>
+            </Tooltip>
           </Grid>
           <Grid
             item

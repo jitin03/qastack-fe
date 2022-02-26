@@ -104,16 +104,33 @@ const Project = () => {
           <Grid
             item
             container
-            justifyContent="flex-end"
+            justifyContent="center"
             alignItems="center"
+            alignContent="center"
             style={{
               backgroundColor: "rgb(248, 248, 248)",
             }}
           >
-            <Grid item>
+            <Grid
+              item
+              container
+              xs={6}
+              justifyContent="flex-start"
+              style={{ paddingLeft: "10px" }}
+            >
+              <Typography variant="h6">Projects</Typography>
+            </Grid>
+            <Grid
+              item
+              container
+              xs={6}
+              justifyContent="flex-end"
+              style={{ paddingRight: "10px" }}
+            >
               <Tooltip title="Add new project" arrow>
                 <Button
                   variant="outlined"
+                  size="small"
                   startIcon={<AddIcon />}
                   onClick={() => handleRightDrawer("Add Project")}
                 >

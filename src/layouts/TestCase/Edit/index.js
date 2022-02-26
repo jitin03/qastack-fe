@@ -221,13 +221,14 @@ export default function EditTestCase(props) {
               <Controls.Button
                 color="inherit"
                 type="cancel"
+                size="small"
                 text="Cancel"
                 style={{ marginRight: "10px" }}
                 onClick={(e) => {
                   handleCloseRightDrawer(e, "Edit TestCase", param);
                 }}
               />
-              <Controls.Button text="Update" />
+              <Controls.Button size="small" text="Update" />
             </Grid>
           </Grid>
         </form>

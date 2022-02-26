@@ -175,6 +175,7 @@ export default function CreateTestCase(props) {
               <Grid item>
                 <Controls.Button
                   color="inherit"
+                  size="small"
                   type="cancel"
                   text="Cancel"
                   onClick={(e) => {
@@ -183,7 +184,7 @@ export default function CreateTestCase(props) {
                 />
               </Grid>
               <Grid item>
-                <Controls.Button text="Submit" />
+                <Controls.Button size="small" text="Submit" />
               </Grid>
             </Grid>
           </Grid>

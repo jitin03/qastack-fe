@@ -132,7 +132,7 @@ export const Submenus = () => {
                 variant="span"
                 sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
               >
-                CI FLow
+                Jobs
               </Typography>
             </Grid>
           </Grid>
