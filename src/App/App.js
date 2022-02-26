@@ -29,7 +29,7 @@ import ResetPassword from "../layouts/ForgotPassword/resetPassword";
 import VerifyUserEmail from "../layouts/VerifyUserEmail";
 import ProjectList from "../components/Projects/ProjectList";
 import Missing from "../components/Missing";
-const drawerWidth = 240;
+const drawerWidth = 280;
 const useStyles = makeStyles({
   appMain: {
     paddingLeft: "150px",

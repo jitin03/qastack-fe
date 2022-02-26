@@ -21,6 +21,8 @@ import VerifyUserEmail from "../layouts/VerifyUserEmail";
 import ForgotPassword from "../layouts/ForgotPassword";
 import ResetPassword from "../layouts/ForgotPassword/resetPassword";
 import { ImportTestCases } from "../layouts/TestCase/Import";
+import { UserManagement } from "../layouts/Admin/AddUser";
+import { UserManagementList } from "../layouts/Admin";
 
 const routes = [
   // {
@@ -63,7 +65,12 @@ const routes = [
   //   title: "Login",
   //   needsAuth: false,
   // },
-
+  {
+    path: "/users",
+    component: <UserManagementList />,
+    title: "User Management",
+    needsAuth: true,
+  },
   {
     path: "/project/edit/:id",
     component: <Project />,

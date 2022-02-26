@@ -16,7 +16,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import { makeStyles } from "@mui/styles";
-import ProjectOverview from "./ProjectOverview";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import { Link } from "@material-ui/core";
 import Toast from "../controllers/Toast";
 import DeleteProject from "./DeleteProject";
@@ -166,9 +166,9 @@ export default function ProjectList(props) {
                   justifyContent: "flex-end",
                 }}
               >
-                <Tooltip title="Bookmark project" arrow>
-                  <IconButton aria-label="add to favorites">
-                    <BookmarkBorderIcon />
+                <Tooltip title="Assign user" arrow>
+                  <IconButton aria-label="assign user">
+                    <AssignmentIndIcon />
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Edit project" arrow>

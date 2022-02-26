@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& tbody td": {
       textAlign: "center",
-      fontWeight: "300",
+      fontWeight: "150",
     },
     "& tbody tr:hover": {
       backgroundColor: "rgb(232, 232, 232)",

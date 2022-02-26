@@ -2,20 +2,24 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
-import { Grid, Toolbar, Typography } from "@mui/material";
-import List from "@mui/material/List";
 import {
-  useParams,
-  NavLink,
-  Routes,
-} from "react-router-dom";
+  Grid,
+  ListItemButton,
+  ListItemText,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import List from "@mui/material/List";
+import { useParams, NavLink, Routes } from "react-router-dom";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { submenus } from "../data/data";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import {
-  Route,
-} from "react-router-dom";
+import { Route } from "react-router-dom";
+import { ExpandLess } from "@material-ui/icons";
+import { ExpandMore } from "@mui/icons-material";
+import { Collapse } from "@material-ui/core";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -58,6 +62,10 @@ const Drawer = styled(MuiDrawer, {
 
 export default function SideMenu(props) {
   const { projectKey } = useParams();
+  const [open, setOpen] = React.useState(true);
+  const handleClick = () => {
+    setOpen(!open);
+  };
   return (
     <>
       <Drawer variant="permanent">
@@ -82,6 +90,40 @@ export default function SideMenu(props) {
               </Grid>
             </ListItem>
 
+            <ListItem button key="1" component={NavLink} to={`/users`}>
+              <Grid item container direction="column">
+                <Grid item xs={6}>
+                  <ListItemIcon sx={{ pt: 2 }}>
+                    <AssignmentIcon />
+                  </ListItemIcon>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="span"
+                    sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+                  >
+                    User Management
+                  </Typography>
+                </Grid>
+
+                {/* <Grid item xs={6}>
+                  <Collapse in={open} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      <Typography
+                        variant="span"
+                        sx={{
+                          lineHeight: 2,
+                          fontWeight: "light",
+                          fontSize: 11,
+                        }}
+                      >
+                        User Management
+                      </Typography>
+                    </List>
+                  </Collapse>
+                </Grid> */}
+              </Grid>
+            </ListItem>
             <Routes>
               {submenus.map((route, index) => (
                 // You can render a <Route> in as many places

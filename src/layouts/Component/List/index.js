@@ -236,20 +236,6 @@ const ComponentList = () => {
                         </IconButton>
                       </Tooltip>
                       <DeleteComponent item={item} />
-                      {/* <Tooltip
-                        title="Delete component"
-                        arrow
-                        
-                      >
-                        <IconButton aria-label="delete component">
-                          <DeleteIcon
-                            onClick={() =>
-                              handleDeleteComponent(item.component_id)
-                            }
-                          />
-                          {deleteComponentLoading && <CircularProgress />}
-                        </IconButton>
-                      </Tooltip> */}
                     </TableCell>
                   </TableRow>
                 ))}
