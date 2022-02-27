@@ -209,6 +209,11 @@ const LoginUI = () => {
                     )}
                     rules={{
                       required: "Email is required field!",
+                      pattern: {
+                        value:
+                          /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                        message: "Please enter a valid email address!",
+                      },
                     }}
                   />
 

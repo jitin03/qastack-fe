@@ -5,7 +5,21 @@ axios.defaults.baseURL = process.env.REACT_APP_COMPONENT_SERVER;
 export const getAllComponents = async ({ queryKey }) => {
   const [_key, componentId, pageId] = queryKey;
   const response = await axiosAppInstance().get(
-    `/api/components?projectKey=${componentId}&page=${pageId}`,
+    `/api/components?projectId=${componentId}&page=${pageId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const getComponent = async ({ queryKey }) => {
+  const [_key, componentId] = queryKey;
+  const response = await axiosAppInstance().get(
+    `/api/component/${componentId}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -45,11 +59,9 @@ export const deleteComponent = async (id) => {
 };
 
 export const updateComponent = async ({ ...data }) => {
-  let payload = JSON.stringify(data.editPayload);
-  console.log("data.editPayload", data.editPayload);
-
+  let payload = JSON.stringify(data);
   const response = await axiosAppInstance().put(
-    `/api/component/update/${data?.editPayload.editId}`,
+    `/api/component/update/${data?.id}`,
     payload,
     {
       headers: {

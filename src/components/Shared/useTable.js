@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& tbody td": {
       textAlign: "center",
-      fontWeight: "300",
+      fontWeight: "100",
     },
     "& tbody tr:hover": {
       backgroundColor: "rgb(232, 232, 232)",
@@ -40,7 +40,9 @@ export default function useTable(records, headCells, filterFn) {
   const [orderBy, setOrderBy] = useState();
 
   const TblContainer = (props) => (
-    <Table className={classes.table}>{props.children}</Table>
+    <Table sx={{ minWidth: 650 }} size="small" className={classes.table}>
+      {props.children}
+    </Table>
   );
 
   const TblHead = (props) => {

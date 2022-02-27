@@ -5,7 +5,7 @@ import { deleteComponent } from "../../../context/actions/component/api";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useGlobalContext } from "../../../context/provider/context";
 const DeleteComponent = (props) => {
-  const { item } = props;
+  const { params, item } = props;
   const {
     setOpenToast,
     openToast,
@@ -17,6 +17,7 @@ const DeleteComponent = (props) => {
     setMessage,
     handleCloseToast,
   } = useGlobalContext();
+  console.log("---param---", params);
   const queryClient = useQueryClient();
   const { mutateAsync, isLoading: deleteComponentLoading } =
     useMutation(deleteComponent);
@@ -37,9 +38,7 @@ const DeleteComponent = (props) => {
     <>
       <Tooltip title="Delete component" arrow>
         <IconButton aria-label="delete component">
-          <DeleteIcon
-            onClick={() => handleDeleteComponent(item.component_id)}
-          />
+          <DeleteIcon onClick={() => handleDeleteComponent(params?.id)} />
           {deleteComponentLoading && <CircularProgress size={20} />}
         </IconButton>
       </Tooltip>

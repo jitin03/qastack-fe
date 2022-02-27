@@ -152,17 +152,6 @@ export default function CreateComponent(props) {
         />
         <Controls.Button size="small" text="Submit" />
       </Grid>
-      <Grid item>
-        {message && (
-          <>
-            <Toast
-              openToast={openToast}
-              message={JSON.stringify(toastMessage)}
-              handleCloseToast={handleCloseToast}
-            ></Toast>
-          </>
-        )}
-      </Grid>
     </form>
   );
 }

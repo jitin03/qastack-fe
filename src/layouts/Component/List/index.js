@@ -36,21 +36,27 @@ import {
   EDIT_COMPONENT,
 } from "../../../constants/actionTypes";
 import DeleteComponent from "./DeleteComponent";
+import { DataGrid } from "@mui/x-data-grid";
+import { useProjectContext } from "../../../context/provider/projectContext";
+import { grey } from "@mui/material/colors";
+import { FormControlLabel } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
+    margin: theme.spacing(3),
+    padding: theme.spacing(1),
   },
   searchInput: {
     width: "100%",
   },
 }));
-const ComponentList = () => {
+export default function ComponentList() {
   const classes = useStyles();
   const {
     handleCloseToast,
     openToast,
     setOpenToast,
+    toastMessage,
+    message,
     setState,
     state,
     handleRightDrawer,
@@ -58,78 +64,34 @@ const ComponentList = () => {
     componentState: { component },
     setEditId,
   } = useGlobalContext();
-  const [filterFn, setFilterFn] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
-  const pages = [5, 10, 25];
-  const [page, setPage] = useState(2);
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
-  const [data, setData] = useState([]);
-  let { id } = useParams();
-  let { projectKey } = useParams();
 
-  setEditId(id);
+  let { id } = useParams();
+  let { projectKey: projectId } = useParams();
+  const pages = [10, 20, 50];
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
+
   const headCells = [
     { id: "component_id", label: "Id" },
     { id: "component_name", label: "Component Name" },
     { id: "action", label: "Action" },
   ];
+  console.log("--rowsPerPage--", rowsPerPage);
   const {
     data: components,
     error,
     isLoading: waitForComponents,
     isError,
-  } = useQuery(["component", projectKey, rowsPerPage], getAllComponents, {
-    onError: (error) => {
-      setOpenToast(true);
-      componentDispatch({
-        type: COMPONENT_CREATE_ERROR,
-        payload: error.message,
-      });
-    },
-    onSuccess: (components) => {
-      setData(components);
-    },
-  });
+  } = useQuery(["component", projectId, rowsPerPage], getAllComponents);
   let navigate = useNavigate();
   const { mutateAsync, isLoading: deleteComponentLoading } =
     useMutation(deleteComponent);
 
-  const handleEditComponent = (name, id, projectKey) => {
-    componentDispatch({
-      type: EDIT_COMPONENT,
-      payload: name,
-    });
-    let params = [];
-    params.push(projectKey);
-    params.push(id);
-    handleRightDrawer("Edit Component", params);
-  };
   const queryClient = useQueryClient();
   const handleDeleteComponent = async (id) => {
     await mutateAsync(id);
     queryClient.invalidateQueries("component");
   };
-
-  if (isError) {
-    console.log(error);
-  }
-  const handleSearch = (e) => {
-    let target = e.target;
-    setFilterFn({
-      fn: (items) => {
-        if (target.value == "") return items;
-        else
-          return items.filter((x) =>
-            x.component_name.toLowerCase().includes(target.value.toLowerCase())
-          );
-      },
-    });
-  };
-  const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(data, headCells, filterFn);
 
   if (waitForComponents) {
     return (
@@ -159,15 +121,6 @@ const ComponentList = () => {
       </>
     );
   }
-  const handleChangePage = (event, newPage) => {
-    console.log(newPage, "newPage");
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
 
   return (
     <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
@@ -197,21 +150,7 @@ const ComponentList = () => {
             justifyContent="flex-end"
             xs={3}
             style={{ margin: "2px 0" }}
-          >
-            <Controls.Input
-              label="Search Component "
-              className={classes.searchInput}
-              size="small"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-              onChange={handleSearch}
-            />
-          </Grid>
+          ></Grid>
           <Grid
             item
             container
@@ -225,82 +164,154 @@ const ComponentList = () => {
                 size="small"
                 startIcon={<AddIcon />}
                 // onClick={() => setState(!state)}
-                onClick={() => handleRightDrawer("Add Component", projectKey)}
+                onClick={() => handleRightDrawer("Add Component", projectId)}
               >
                 Add Component
               </Button>
             </Tooltip>
           </Grid>
         </Grid>
-        {data?.length ? (
-          <Grid item container justifyContent="flex-end">
-            <TblContainer>
-              <TblHead />
-              <TableBody>
-                {recordsAfterPagingAndSorting().map((item, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{item.component_id}</TableCell>
-                    <TableCell>{item.component_name}</TableCell>
-                    <TableCell>
-                      <Tooltip title="Edit component" arrow>
-                        <IconButton aria-label="Edit component">
-                          <EditIcon
-                            onClick={() =>
-                              handleEditComponent(
-                                item.component_name,
-                                item.component_id,
-                                projectKey
-                              )
-                            }
-                          />
-                        </IconButton>
-                      </Tooltip>
-                      <DeleteComponent item={item} />
-                      {/* <Tooltip
-                        title="Delete component"
-                        arrow
-                        
-                      >
-                        <IconButton aria-label="delete component">
-                          <DeleteIcon
-                            onClick={() =>
-                              handleDeleteComponent(item.component_id)
-                            }
-                          />
-                          {deleteComponentLoading && <CircularProgress />}
-                        </IconButton>
-                      </Tooltip> */}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </TblContainer>
-            <TblPagination />
-          </Grid>
-        ) : (
-          <Grid
-            item
-            container
-            justifyContent="center"
-            alignItems="center"
-            sx={{ m: 5 }}
-          >
-            <Typography>No component avaiable</Typography>
-          </Grid>
-        )}
-        {isError && (
-          <>
-            <Toast
-              openToast={openToast}
-              message={component.error}
-              handleCloseToast={handleCloseToast}
-            ></Toast>
-          </>
-        )}
-        <Grid item md={8}></Grid>
+        <Grid
+          item
+          container
+          justifyContent="center"
+          justifyItems="center"
+          xs={12}
+        >
+          <Components
+            preloadedData={components}
+            projectKey={projectId}
+            waitForComponents={waitForComponents}
+            setRowsPerPage={setRowsPerPage}
+          />
+        </Grid>
+        <Grid item>
+          {message && (
+            <>
+              <Toast
+                openToast={openToast}
+                message={JSON.stringify(toastMessage)}
+                handleCloseToast={handleCloseToast}
+              ></Toast>
+            </>
+          )}
+        </Grid>
       </Grid>
     </Box>
   );
-};
+}
 
-export default ComponentList;
+const Components = (props) => {
+  const { preloadedData, projectKey, waitForComponents, setRowsPerPage } =
+    props;
+  const { handleRightDrawer } = useGlobalContext();
+  const { selectionModel, setSelectionModel } = useProjectContext();
+  const classes = {};
+
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [loading, setLoading] = useState(false);
+
+  const [rowsState, setRowsState] = useState({
+    page: 0,
+    pageSize: 5,
+
+    loading: false,
+  });
+
+  const handleEditComponent = (param, projectKey) => {
+    console.log(param?.id);
+    let params = [];
+
+    params.push(projectKey);
+    params.push(param?.id);
+    handleRightDrawer("Edit Component", params);
+    setSelectionModel([]);
+  };
+
+  const baselineProps = {
+    rows: preloadedData || [],
+    columns: [
+      {
+        field: "component_name",
+        headerName: "Component",
+        width: 450,
+      },
+
+      {
+        field: "actions",
+        headerName: "Actions",
+        sortable: false,
+        width: 350,
+        headerAlign: "center",
+        disableClickEventBubbling: true,
+        renderCell: (params) => {
+          return (
+            <div
+              className="d-flex justify-content-between align-items-center"
+              style={{ cursor: "pointer" }}
+            >
+              {/* <MatEdit index={params.id} /> */}
+              <FormControlLabel
+                control={
+                  <>
+                    <div style={{ padding: "50px" }}>
+                      <IconButton
+                        color="secondary"
+                        aria-label="edit the test run"
+                        onClick={() => handleEditComponent(params, projectKey)}
+                        style={{ padding: "20px" }}
+                      >
+                        <EditIcon style={{ color: grey[800] }} />
+                      </IconButton>
+                      <DeleteComponent params={params} projectId={projectKey} />
+                    </div>
+                  </>
+                }
+              />
+            </div>
+          );
+        },
+      },
+      {
+        field: "create_date",
+        headerName: "Create Date",
+        width: 150,
+      },
+    ],
+  };
+
+  const getRowId = (row) => `${row?.component_id}`;
+  return (
+    <Grid
+      item
+      container
+      style={{ padding: "16px", flexGrow: 1, display: "flex" }}
+    >
+      <DataGrid
+        style={{ height: 400, width: "100%" }}
+        columns={baselineProps.columns}
+        pagination
+        rowCount={baselineProps.rows?.length}
+        getRowId={getRowId}
+        {...rowsState}
+        {...baselineProps}
+        paginationMode="server"
+        onPageChange={(newPage) => {
+          setPage(newPage);
+        }}
+        pageSize={pageSize}
+        onPageSizeChange={(newPageSize) => {
+          setPageSize(newPageSize);
+          setRowsPerPage(newPageSize);
+        }}
+        rowsPerPageOptions={[10, 15, 25]}
+        loading={waitForComponents}
+        selectionModel={selectionModel}
+        onSelectionModelChange={(newSelectionModel) => {
+          setSelectionModel(newSelectionModel);
+        }}
+      />
+    </Grid>
+  );
+};

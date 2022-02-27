@@ -1,4 +1,4 @@
-import { Divider, Grid } from "@mui/material";
+import { CircularProgress, Container, Divider, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { useGlobalContext } from "../../../context/provider/context";
@@ -6,7 +6,7 @@ import Controls from "../../../components/controllers/Controls";
 import { Form } from "../../../components/useForm";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   COMPONENT_CREATE_ERROR,
   COMPONENT_CREATE_SUCCESS,
@@ -14,9 +14,12 @@ import {
 } from "../../../constants/actionTypes";
 import {
   addComponent,
+  getComponent,
   updateComponent,
 } from "../../../context/actions/component/api";
 import Toast from "../../../components/controllers/Toast";
+import { Controller, useForm } from "react-hook-form";
+import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles({
   bottomDrawer: {
@@ -46,59 +49,85 @@ export default function EditComponent(props) {
     handleCloseToast,
   } = useGlobalContext();
 
-  const [form, setForm] = useState({});
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    mode: "onTouched",
+  });
+  let componentId = param[1];
+  const {
+    data: editComponent,
 
-  const [fieldErrors, setFieldErrors] = useState({});
+    isLoading: waitForGetComponent,
+  } = useQuery(["component", componentId], getComponent);
 
+  console.log("---editComponent---", editComponent);
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
-    useMutation(updateComponent, {
-      onError: (error) => {
-        setOpenToast(true);
-      },
-      onSuccess: (data) => {
-        componentDispatch({
-          type: COMPONENT_CREATE_SUCCESS,
-          payload: data,
-        });
-      },
-    });
+    useMutation(updateComponent);
 
-  const handleEditChange = (e) => {
-    componentDispatch({
-      type: HANDLE_COMPONENT_EDIT_INPUT,
-      field: e.target.name,
-      payload: e.target.value,
-    });
-  };
   const queryClient = useQueryClient();
-  const handleComponentSubmit = async (e) => {
+  const onSubmit = async (data, e) => {
     e.preventDefault();
-    component.data.project_id = param[0];
-    component.data.editId = param[1];
-    let editPayload = component.data;
-    console.log("editPayload", editPayload);
+    data.project_id = param[0];
+    data.id = param[1];
+
+    console.log("editPayload", data);
     try {
-      await mutateAsync({ editId, editPayload });
+      await mutateAsync(data);
       queryClient.invalidateQueries("component");
-      setForm({});
+
       handleCloseRightDrawer(e, "Edit Component", param[0]);
       setOpenToast(!openToast);
       setMessage(true);
       settoastMessage("Component has updated");
     } catch (error) {
-      componentDispatch({
-        type: COMPONENT_CREATE_ERROR,
-        payload: error.message,
-      });
-      handleCloseRightDrawer(e, "Edit Component", param[0]);
-      setForm({});
+      // handleCloseRightDrawer(e, "Edit Component", param[0]);
+
       setOpenToast(!openToast);
       setMessage(true);
       settoastMessage("Something went wrong!!");
     }
   };
+
+  if (waitForGetComponent) {
+    return (
+      <>
+        <Grid container>
+          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ padding: "50px 10px" }}
+          >
+            <Container sx={{ display: "flex" }}>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+            </Container>
+            <Grid item></Grid>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
   return (
-    <Form>
+    <form
+      className={classes.root}
+      autoComplete="off"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Divider />
       <Grid
         container
@@ -106,11 +135,28 @@ export default function EditComponent(props) {
         style={{ padding: "2rem 1.5rem 1.5rem" }}
       >
         <Grid item style={{ minWidth: "250px" }}>
-          <Controls.Input
+          <Controller
             name="name"
-            label="Component"
-            value={component.data.name || ""}
-            onChange={(e) => handleEditChange(e)}
+            control={control}
+            defaultValue={editComponent?.component_name || ""}
+            render={({ field: { onChange, value, onTouched, onBlur } }) => (
+              <TextField
+                id="Component"
+                label="Component"
+                placeholder="Component"
+                onBlur={(e) => setValue("name", e.target.value.trim())}
+                multiline
+                size="small"
+                variant="outlined"
+                // inputProps={{ className: classes.textarea }}
+                onChange={onChange}
+                value={value}
+                style={{ width: "450px" }}
+                error={!!errors?.name}
+                helperText={errors?.name ? errors?.name.message : null}
+              />
+            )}
+            rules={{ required: "Component is required field!" }}
           />
         </Grid>
       </Grid>
@@ -118,24 +164,15 @@ export default function EditComponent(props) {
         <Controls.Button
           color="inherit"
           type="cancel"
-          text="Cancel"
           size="small"
+          text="Cancel"
           style={{ marginRight: "10px" }}
           onClick={(e) => {
-            handleCloseRightDrawer(e, "Edit Component", param[0]);
+            handleCloseRightDrawer(e, "Add Component", param);
           }}
         />
-        <Controls.Button
-          size="small"
-          text="Submit"
-          onClick={(e) => handleComponentSubmit(e)}
-        />
+        <Controls.Button size="small" text="Submit" />
       </Grid>
-      <Toast
-        openToast={openToast}
-        message={component.error}
-        handleCloseToast={handleCloseToast}
-      ></Toast>
-    </Form>
+    </form>
   );
 }

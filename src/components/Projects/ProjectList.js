@@ -133,19 +133,41 @@ export default function ProjectList(props) {
                       fontSize: "1.2rem",
                     }}
                   >
-                    <Grid item>
+                    <Grid item xs={12}>
                       <Typography gutterBottom variant="h5" component="div">
                         {item.Name}
                       </Typography>
-                      <Typography
-                        style={{
-                          fontSize: "12px",
-                          Opacity: "0.5",
-                        }}
+                      <Grid
+                        item
+                        container
+                        justifyContent="space-between"
+                        alignItems="center"
+                        alignContent="center"
+                        xs={12}
                       >
-                        Created on date:
-                        {dayjs(item?.CreatedAt).format("MM/DD/YYYY")}
-                      </Typography>
+                        <Grid item xs={6}>
+                          <Typography
+                            style={{
+                              fontSize: "12px",
+                              Opacity: "0.5",
+                            }}
+                            variant="h5"
+                          >
+                            Created on date:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6} container justifyContent="flex-end">
+                          <Typography
+                            style={{
+                              fontSize: "12px",
+                              Opacity: "0.5",
+                            }}
+                            variant="h5"
+                          >
+                            {dayjs(item?.CreatedAt).format("MM/DD/YYYY")}
+                          </Typography>
+                        </Grid>
+                      </Grid>
                     </Grid>
                     <Grid
                       item
@@ -172,11 +194,11 @@ export default function ProjectList(props) {
                   justifyContent: "flex-end",
                 }}
               >
-                <Tooltip title="Bookmark project" arrow>
+                {/* <Tooltip title="Bookmark project" arrow>
                   <IconButton aria-label="add to favorites">
                     <BookmarkBorderIcon />
                   </IconButton>
-                </Tooltip>
+                </Tooltip> */}
                 <Tooltip title="Edit project" arrow>
                   <IconButton
                     edge="start"
