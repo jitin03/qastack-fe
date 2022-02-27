@@ -32,6 +32,12 @@ export default function CreateComponent(props) {
     handleCloseRightDrawer,
     setOpenToast,
     openToast,
+    toastMessage,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
     handleCloseToast,
   } = useGlobalContext();
   let navigate = useNavigate();
@@ -77,11 +83,17 @@ export default function CreateComponent(props) {
       queryClient.invalidateQueries("component");
 
       handleCloseRightDrawer(e, "Add Component", param);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Component is created");
     } catch (error) {
       componentDispatch({
         type: COMPONENT_CREATE_ERROR,
         payload: error.message,
       });
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
     }
   };
   return (
@@ -140,11 +152,17 @@ export default function CreateComponent(props) {
         />
         <Controls.Button size="small" text="Submit" />
       </Grid>
-      <Toast
-        openToast={openToast}
-        message={component.error}
-        handleCloseToast={handleCloseToast}
-      ></Toast>
+      <Grid item>
+        {message && (
+          <>
+            <Toast
+              openToast={openToast}
+              message={JSON.stringify(toastMessage)}
+              handleCloseToast={handleCloseToast}
+            ></Toast>
+          </>
+        )}
+      </Grid>
     </form>
   );
 }

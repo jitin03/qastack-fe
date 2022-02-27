@@ -27,6 +27,7 @@ import Controls from "../../../components/controllers/Controls";
 import { MultipleFileUploadField } from "../../../components/Shared/upload/MultipleFileUploadField";
 import { useMutation, useQueryClient } from "react-query";
 import { updateTestStatus } from "../../../context/actions/testcase/api";
+import { useGlobalContext } from "../../../context/provider/context";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -66,7 +67,17 @@ export default function AddResult({
   } = useForm({
     mode: "onChange",
   });
-  console.log(testDetails);
+  const {
+    setOpenToast,
+    openToast,
+    toastMessage,
+    handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
+  } = useGlobalContext();
 
   const classes = useStyles();
   const handleClose = () => {
@@ -104,8 +115,13 @@ export default function AddResult({
       setOpenDialog(false);
       reset();
       queryClient.invalidateQueries("testcaseTitles");
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Status has updated");
     } catch (error) {
-      console.log(error.message);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
       reset();
     }
   };

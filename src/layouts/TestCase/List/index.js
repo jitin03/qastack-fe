@@ -56,6 +56,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import { useProjectContext } from "../../../context/provider/projectContext";
 import Controls from "../../../components/controllers/Controls";
+import Toast from "../../../components/controllers/Toast";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -89,11 +90,20 @@ export default function TestCaseList() {
   const [selectedComponent, setSelectedComponent] = useState("");
   const {
     handleRightDrawer,
-    setOpenToast,
+
     componentDispatch,
     testCaseDispatcg,
     setTestResult,
     testResult,
+    setOpenToast,
+    openToast,
+    toastMessage,
+    handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
   } = useGlobalContext();
   const { projectKey } = useParams();
   const pages = [5, 10, 25];
@@ -257,6 +267,17 @@ export default function TestCaseList() {
             xs={9}
           >
             <Tests component={selectedComponent} projectKey={projectKey} />
+          </Grid>
+          <Grid item>
+            {message && (
+              <>
+                <Toast
+                  openToast={openToast}
+                  message={JSON.stringify(toastMessage)}
+                  handleCloseToast={handleCloseToast}
+                ></Toast>
+              </>
+            )}
           </Grid>
         </Grid>
       </Box>

@@ -64,11 +64,17 @@ export default function CreateTestCase(props) {
   const {
     componentDispatch,
     handleCloseRightDrawer,
-    setOpenToast,
-    openToast,
+
     setState,
     state,
-    handleCloseToast,
+    setOpenToast,
+    openToast,
+    toastMessage,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
   } = useGlobalContext();
   let navigate = useNavigate();
 
@@ -97,9 +103,14 @@ export default function CreateTestCase(props) {
       await mutateAsync(data);
 
       handleCloseRightDrawer(e, "Add TestCase", param);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Test Case is created");
     } catch (error) {
       handleCloseRightDrawer(e, "Add TestCase", param);
-      console.log(error.message);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
     }
   };
 

@@ -2,9 +2,20 @@ import { IconButton } from "@material-ui/core";
 import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { grey } from "@material-ui/core/colors";
+import { useGlobalContext } from "../../../context/provider/context";
 const DeleteTestRun = (props) => {
   const { params, projectId } = props;
 
+  const {
+    setOpenToast,
+    openToast,
+    toastMessage,
+    handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+  } = useGlobalContext();
   const handleDeleteTestRun = (id, projectId) => {
     let params = [];
     params.push(projectId);

@@ -30,7 +30,6 @@ const AppProvider = ({ children }) => {
     projectId: "",
     testRunId: "",
   });
-  
 
   const [registerPasswordIsMasked, setRegisterPasswordIsMasked] =
     useState(true);
@@ -50,6 +49,10 @@ const AppProvider = ({ children }) => {
   const [moduleName, setModuleName] = useState("");
   const [moduleType, setModuleType] = useState("Module");
 
+  const [message, setMessage] = useState(false);
+  const [successAtProject, setSuccessAtProject] = useState(false);
+  const [toastMessage, settoastMessage] = useState("");
+  const [projectSuccessMessage, setProjectSuccessMessage] = useState("");
   // Reducer for Release component
   const [releaseState, releaseDispatch] = useReducer(
     release,
@@ -83,7 +86,8 @@ const AppProvider = ({ children }) => {
   };
 
   const handleCloseToast = () => {
-    setOpenToast(false);
+    console.log(openToast);
+    setOpenToast(!openToast);
   };
 
   const handleCloseModal = () => {
@@ -267,6 +271,8 @@ const AppProvider = ({ children }) => {
         releaseState,
         componentState,
         componentDispatch,
+        toastMessage,
+        settoastMessage,
         projectState,
         releases,
         projectList,
@@ -277,6 +283,12 @@ const AppProvider = ({ children }) => {
         handleProjectFormInput,
         projectDispatch,
         drawerParam,
+        message,
+        setMessage,
+        projectSuccessMessage,
+        setProjectSuccessMessage,
+        successAtProject,
+        setSuccessAtProject,
       }}
     >
       {children}

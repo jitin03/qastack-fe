@@ -2,6 +2,7 @@ import { Search } from "@material-ui/icons";
 import {
   Box,
   Button,
+  CircularProgress,
   Grid,
   InputAdornment,
   Toolbar,
@@ -10,6 +11,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import {
+  Container,
   FormControl,
   FormControlLabel,
   IconButton,
@@ -32,6 +34,7 @@ import ExplicitIcon from "@mui/icons-material/Explicit";
 import {
   getAllProjectTestRuns,
   getAllTestsTitleTestRuns,
+  getProjectTestRun,
   updateTestStatus,
 } from "../../../context/actions/testcase/api";
 import { useGlobalContext } from "../../../context/provider/context";
@@ -43,6 +46,7 @@ import moment from "moment";
 import CustomizedDialogs from "../../../components/controllers/Dialog";
 import AddResult from "./AddResult";
 import { grey } from "@material-ui/core/colors";
+import Toast from "../../../components/controllers/Toast";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -56,7 +60,36 @@ const useStyles = makeStyles((theme) => ({
 export const TestExecution = (props) => {
   const { id: testRunId, projectKey: projectId } = useParams();
   const [data, setData] = useState({});
+  const {
+    setOpenToast,
+    openToast,
+    toastMessage,
+    handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
+    setState,
+    state,
+    handleRightDrawer,
+    componentDispatch,
+    componentState: { component },
+    setEditId,
+    setTestResult,
+    testResult,
+  } = useGlobalContext();
   const [openDialog, setOpenDialog] = useState(false);
+
+  const {
+    data: testRunDetails,
+    error: testRunError,
+    isLoading: waitForTestRunDetails,
+    isError: isTestRunError,
+  } = useQuery(["testRunDetails", projectId, testRunId], getProjectTestRun, {
+    enabled: !!testRunId,
+    onSuccess: (testRunDetails) => {},
+  });
   const {
     mutateAsync,
     isLoading,
@@ -97,8 +130,13 @@ export const TestExecution = (props) => {
       data.projectId = projectId;
       console.log(data);
       await mutateAsync(id.api.getRow(id?.id));
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Assignee has updated");
     } catch (error) {
-      console.log(error.message);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
     }
   };
   const handleChange = async (e, id) => {
@@ -118,8 +156,13 @@ export const TestExecution = (props) => {
       console.log(data);
 
       await mutateAsync([{ ...id.row, status: e.target.value }][0]);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Status has updated");
     } catch (error) {
-      console.log(error.message);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
     }
 
     // let x;
@@ -142,19 +185,6 @@ export const TestExecution = (props) => {
     // setValue(event.target.value);
   };
   const classes = useStyles();
-  const {
-    handleCloseToast,
-    openToast,
-    setOpenToast,
-    setState,
-    state,
-    handleRightDrawer,
-    componentDispatch,
-    componentState: { component },
-    setEditId,
-    setTestResult,
-    testResult,
-  } = useGlobalContext();
 
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
@@ -189,6 +219,35 @@ export const TestExecution = (props) => {
       enabled: !!testRunId,
     }
   );
+  if (waitForTestRunDetails) {
+    return (
+      <>
+        <Grid container>
+          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ padding: "50px 10px" }}
+          >
+            <Container sx={{ display: "flex" }}>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+            </Container>
+            <Grid item></Grid>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
 
   return (
     <Box sx={{ border: "1px solid rgb(232, 232, 232)" }}>
@@ -210,7 +269,7 @@ export const TestExecution = (props) => {
             justifyContent="flex-start"
             style={{ paddingLeft: "10px" }}
           >
-            <Typography variant="h6">Test Runs & Results</Typography>
+            <Typography variant="h6">{testRunDetails?.name}</Typography>
           </Grid>
           <Grid
             item
@@ -250,6 +309,17 @@ export const TestExecution = (props) => {
             checkboxSelection={checkboxSelection}
             handleChangeAssignee={handleChangeAssignee}
           />
+        </Grid>
+        <Grid item>
+          {message && (
+            <>
+              <Toast
+                openToast={openToast}
+                message={JSON.stringify(toastMessage)}
+                handleCloseToast={handleCloseToast}
+              ></Toast>
+            </>
+          )}
         </Grid>
       </Grid>
       <CustomizedDialogs

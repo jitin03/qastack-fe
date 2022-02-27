@@ -25,7 +25,18 @@ const useStyle = makeStyles({
   },
 });
 const Release = () => {
-  const { handleRightDrawer, openToast, handleCloseToast } = useGlobalContext();
+  const {
+    handleRightDrawer,
+    setOpenToast,
+    openToast,
+    toastMessage,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
+    handleCloseToast,
+  } = useGlobalContext();
   const { projectKey: projectId } = useParams();
   console.log("projectId", projectId);
   const {
@@ -130,16 +141,17 @@ const Release = () => {
                 </Tooltip>
               </Grid>
             )}
-            <Grid item></Grid>
-            {isError && (
-              <>
-                <Toast
-                  openToast={openToast}
-                  message={JSON.stringify(error.message)}
-                  handleCloseToast={handleCloseToast}
-                ></Toast>
-              </>
-            )}
+            <Grid item>
+              {message && (
+                <>
+                  <Toast
+                    openToast={openToast}
+                    message={JSON.stringify(toastMessage)}
+                    handleCloseToast={handleCloseToast}
+                  ></Toast>
+                </>
+              )}
+            </Grid>
           </Grid>
         </Grid>
       </Box>

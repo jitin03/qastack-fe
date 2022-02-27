@@ -57,9 +57,15 @@ const useStyles = makeStyles((theme) => ({
 export default function TestRunList() {
   const classes = useStyles();
   const {
-    handleCloseToast,
-    openToast,
     setOpenToast,
+    openToast,
+    toastMessage,
+    handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
     setState,
     state,
     handleRightDrawer,
@@ -154,6 +160,17 @@ export default function TestRunList() {
             projectKey={projectKey}
             waitForProjectTestRuns={waitForProjectTestRuns}
           />
+        </Grid>
+        <Grid item>
+          {message && (
+            <>
+              <Toast
+                openToast={openToast}
+                message={JSON.stringify(toastMessage)}
+                handleCloseToast={handleCloseToast}
+              ></Toast>
+            </>
+          )}
         </Grid>
       </Grid>
     </Box>

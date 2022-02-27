@@ -118,7 +118,6 @@ const ProjectOverview = () => {
                     <>
                       <List dense="true" key={item.index}>
                         <ListItemButton>
-                          <ListItemIcon></ListItemIcon>
                           <ListItemText primary={item.ReleaseName} />
                         </ListItemButton>
                       </List>
@@ -201,7 +200,6 @@ const ProjectOverview = () => {
                     <>
                       <List dense="true" key={item.index}>
                         <ListItemButton>
-                          <ListItemIcon></ListItemIcon>
                           <ListItemText primary={item.name} />
                         </ListItemButton>
                       </List>

@@ -35,7 +35,14 @@ export default function ReleaseForm(props) {
   const [form, setForm] = useState({});
   const {
     handleCloseRightDrawer,
-
+    setOpenToast,
+    openToast,
+    toastMessage,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
     releaseDispatch,
   } = useGlobalContext();
   const queryClient = useQueryClient();
@@ -50,19 +57,20 @@ export default function ReleaseForm(props) {
   const onSubmit = async (data, e) => {
     data.ProjectID = param;
 
-    // data.startDate = moment(data.startDate).format("YYYY-MM-DD");
-    // data.endDate = moment(data.endDate).format("YYYY-MM-DD");
+    try {
+      e.preventDefault();
+      await mutateAsync(data);
+      queryClient.invalidateQueries("releases");
 
-    console.log(data);
-    e.preventDefault();
-    await mutateAsync(data);
-    queryClient.invalidateQueries("releases");
-
-    handleCloseRightDrawer(e, "Add Release", param);
-    // projectDispatch({
-    //   type: "RESET_PROJECT_FORM",
-    // });
-    // navigate("/projects");
+      handleCloseRightDrawer(e, "Add Release", param);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Release is created");
+    } catch (e) {
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
+    }
   };
   const {
     register,

@@ -39,6 +39,12 @@ export default function ProjectList(props) {
     openToast,
     handleCloseToast,
     handleRightDrawer,
+    message,
+    setMessage,
+    toastMessage,
+    projectSuccessMessage,
+    setProjectSuccessMessage,
+    settoastMessage,
   } = useGlobalContext();
   let navigate = useNavigate();
   const headCells = [
@@ -181,35 +187,10 @@ export default function ProjectList(props) {
                   </IconButton>
                 </Tooltip>
                 <DeleteProject item={item} />
-                {/* {isLoading ? (
-                  <CircularProgress />
-                ) : (
-                  <IconButton
-                    edge="start"
-                    aria-label="delete"
-                    onClick={async () => {
-                      await mutateAsync(item.Id);
-                      queryClient.invalidateQueries("project");
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                )} */}
               </CardActions>
             </Card>
           </Grid>
         ))}
-        <Grid item>
-          {isError && (
-            <>
-              <Toast
-                openToast={openToast}
-                message={JSON.stringify(error.message)}
-                handleCloseToast={handleCloseToast}
-              ></Toast>
-            </>
-          )}
-        </Grid>
       </Grid>
     </>
   );

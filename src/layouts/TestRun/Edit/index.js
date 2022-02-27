@@ -64,11 +64,17 @@ export default function EditTestRun(props) {
   const {
     componentDispatch,
     handleCloseRightDrawer,
-    setOpenToast,
-    openToast,
     setState,
     state,
+    setOpenToast,
+    openToast,
+    toastMessage,
     handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
   } = useGlobalContext();
   const { selectedModel, setSelectedModel } = useProjectContext();
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
@@ -120,10 +126,16 @@ export default function EditTestRun(props) {
 
       // setSelectedModel([]);
       handleCloseRightDrawer(e, "Edit TestRun", param);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Test run has updated");
     } catch (error) {
       handleCloseRightDrawer(e, "Edit TestRun", param);
-      console.log(error.message);
+
       setSelectedModel([]);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
     }
   };
 

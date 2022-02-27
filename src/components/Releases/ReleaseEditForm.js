@@ -33,6 +33,14 @@ export const ReleaseEditForm = (props) => {
     releaseState: release,
     editId,
     handleCloseRightDrawer,
+    setOpenToast,
+    openToast,
+    toastMessage,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
   } = useGlobalContext();
 
   const {
@@ -49,10 +57,19 @@ export const ReleaseEditForm = (props) => {
   const { mutateAsync, isLoading } = useMutation(updateRelease);
   const onSubmit = async (data, e) => {
     e.preventDefault();
-    data.editId = param[1];
-    await mutateAsync(data);
-    queryClient.invalidateQueries("releases");
-    handleCloseRightDrawer(e, "Edit Release", param[0]);
+    try {
+      data.editId = param[1];
+      await mutateAsync(data);
+      queryClient.invalidateQueries("releases");
+      handleCloseRightDrawer(e, "Edit Release", param[0]);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Release has updated");
+    } catch (e) {
+      setOpenToast(!openToast);
+      setMessage(!message);
+      settoastMessage("Something went wrong!!");
+    }
   };
   console.log("errors", errors);
   return (

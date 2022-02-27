@@ -45,6 +45,21 @@ const useStyles = makeStyles((theme) => ({
 export default function EditTestCase(props) {
   const { param } = props;
 
+  const {
+    setOpenToast,
+    openToast,
+    toastMessage,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
+    componentDispatch,
+    handleCloseRightDrawer,
+    setState,
+    state,
+    handleCloseToast,
+  } = useGlobalContext();
   let testCaseSteps = [];
   const {
     data: testCase,
@@ -53,21 +68,8 @@ export default function EditTestCase(props) {
     isError: isTestCaseError,
   } = useQuery(["testcase", param[1]], getTestCase, {
     onSuccess: (testCase) => {},
-    onError: (error) => {
-      //   setOpenToast(true);
-      //   componentDispatch({
-      //     type: COMPONENT_LIST_ERROR,
-      //     payload: error.message,
-      //   });
-    },
+    onError: (error) => {},
   });
-
-  // for (const key in testCase?.steps) {
-  //   let step = {};
-  //   step.stepDescription = testCase.steps[key].stepDescription;
-  //   step.expectedResult = testCase.steps[key].expectedResult;
-  //   testCaseSteps.push(step);
-  // }
 
   console.log("testCaseSteps", testCase);
   const [tabValue, setTabValue] = useState(0);
@@ -92,15 +94,7 @@ export default function EditTestCase(props) {
       );
     }
   }, [testCase]);
-  const {
-    componentDispatch,
-    handleCloseRightDrawer,
-    setOpenToast,
-    openToast,
-    setState,
-    state,
-    handleCloseToast,
-  } = useGlobalContext();
+
   let navigate = useNavigate();
 
   const [form, setForm] = useState({});
@@ -127,9 +121,14 @@ export default function EditTestCase(props) {
       await mutateAsync(data);
 
       handleCloseRightDrawer(e, "Edit TestCase", param);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Test Case has updated");
     } catch (error) {
       handleCloseRightDrawer(e, "Edit TestCase", param);
-      console.log(error.message);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
     }
   };
 

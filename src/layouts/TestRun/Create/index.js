@@ -65,11 +65,17 @@ export default function CreateTestRun(props) {
   const {
     componentDispatch,
     handleCloseRightDrawer,
-    setOpenToast,
-    openToast,
     setState,
     state,
+    setOpenToast,
+    openToast,
+    toastMessage,
+    setMessage,
     handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
   } = useGlobalContext();
   const { selectionModel, setSelectionModel } = useProjectContext();
   const { mutateAsync, isLoading, isError, error, data, isSuccess } =
@@ -95,10 +101,15 @@ export default function CreateTestRun(props) {
 
       handleCloseRightDrawer(e, "Add TestRun", param);
       setSelectionModel([]);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Test run is created");
     } catch (error) {
       handleCloseRightDrawer(e, "Add TestRun", param);
-      console.log(error.message);
       setSelectionModel([]);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
     }
   };
 

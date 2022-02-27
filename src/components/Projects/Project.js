@@ -1,5 +1,5 @@
 import { Button, Container, Grid, Tooltip, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useGlobalContext } from "../../context/provider/context";
 
@@ -36,13 +36,19 @@ const Project = () => {
     handleCloseToast,
     openToast,
     setOpenToast,
+    message,
+    setMessage,
+    toastMessage,
+    projectSuccessMessage,
+    setProjectSuccessMessage,
+    settoastMessage,
+    successAtProject,
+    setSuccessAtProject,
   } = useGlobalContext();
   const classes = useStyle();
 
-  console.log(
-    "username",
-    getUserDetailFromToken(localStorage.getItem("token")).username
-  );
+  console.log("---projectSuccessMessage---", projectSuccessMessage);
+  console.log("---successAtProject---", successAtProject);
   const { data: user, isSuccess: userDetails } = useQuery(
     ["users", getUserDetailFromToken(localStorage.getItem("token")).username],
     getUserDetail,
@@ -60,7 +66,10 @@ const Project = () => {
     isError,
   } = useQuery(["project", userId], () => getAllProjects(userId), {
     enabled: !!userId,
-    cacheTime: 0,
+    cacheTime: 5,
+    onError: (error) => {
+      setMessage(!message);
+    },
   });
 
   let { id } = useParams();
@@ -161,16 +170,17 @@ const Project = () => {
                 </Tooltip>
               </Grid>
             )}
-            <Grid item></Grid>
-            {isError && (
-              <>
-                <Toast
-                  openToast
-                  message={JSON.stringify(error.message)}
-                  handleCloseToast={handleCloseToast}
-                ></Toast>
-              </>
-            )}
+            <Grid item>
+              {message && (
+                <>
+                  <Toast
+                    openToast={openToast}
+                    message={JSON.stringify(toastMessage)}
+                    handleCloseToast={handleCloseToast}
+                  ></Toast>
+                </>
+              )}
+            </Grid>
           </Grid>
         </Grid>
       </Box>

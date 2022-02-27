@@ -134,22 +134,66 @@ export default function ReleaseList(props) {
                     <Typography gutterBottom variant="h5" component="div">
                       {item.ReleaseName}
                     </Typography>
-                    <Typography
-                      style={{
-                        fontSize: "12px",
-                        Opacity: "0.5",
-                      }}
+                    <Grid
+                      item
+                      container
+                      justifyContent="space-between"
+                      alignItems="center"
+                      alignContent="center"
                     >
-                      Start date: {dayjs(item.StartDate).format("MM/DD/YYYY")}
-                    </Typography>
-                    <Typography
-                      style={{
-                        fontSize: "12px",
-                        Opacity: "0.5",
-                      }}
+                      <Grid item>
+                        <Typography
+                          style={{
+                            fontSize: "12px",
+                            Opacity: "0.5",
+                          }}
+                          variant="h5"
+                        >
+                          Start date:
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          style={{
+                            fontSize: "12px",
+                            Opacity: "0.5",
+                          }}
+                          variant="h5"
+                        >
+                          {dayjs(item.StartDate).format("MM/DD/YYYY")}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid
+                      item
+                      container
+                      justifyContent="space-between"
+                      alignItems="center"
+                      alignContent="center"
                     >
-                      End date:{dayjs(item.EndDate).format("MM/DD/YYYY")}
-                    </Typography>
+                      <Grid item>
+                        <Typography
+                          style={{
+                            fontSize: "12px",
+                            Opacity: "0.5",
+                          }}
+                          variant="h5"
+                        >
+                          End date:
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          style={{
+                            fontSize: "12px",
+                            Opacity: "0.5",
+                          }}
+                          variant="h5"
+                        >
+                          {dayjs(item.EndDate).format("MM/DD/YYYY")}
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid
                     item

@@ -34,9 +34,15 @@ export default function EditComponent(props) {
     componentState: { component },
     componentDispatch,
     handleCloseRightDrawer,
+    editId,
     setOpenToast,
     openToast,
-    editId,
+    toastMessage,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
     handleCloseToast,
   } = useGlobalContext();
 
@@ -76,6 +82,9 @@ export default function EditComponent(props) {
       queryClient.invalidateQueries("component");
       setForm({});
       handleCloseRightDrawer(e, "Edit Component", param[0]);
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Component has updated");
     } catch (error) {
       componentDispatch({
         type: COMPONENT_CREATE_ERROR,
@@ -83,6 +92,9 @@ export default function EditComponent(props) {
       });
       handleCloseRightDrawer(e, "Edit Component", param[0]);
       setForm({});
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
     }
   };
   return (

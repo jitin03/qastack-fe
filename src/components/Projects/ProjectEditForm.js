@@ -19,30 +19,47 @@ export default function ProjectEditForm() {
   const classes = useStyles();
   let navigate = useNavigate();
   const [form, setForm] = useState({});
-  const { module, state, editId, setEditId, handleRightDrawer } =
-    useGlobalContext();
 
   const {
     projectState,
     handleCloseRightDrawer,
     handleProjectFormInput,
     projectDispatch,
+    message,
+    setMessage,
+    setOpenToast,
+    openToast,
+    settoastMessage,
+    module,
+    state,
+    editId,
+    setEditId,
+    handleRightDrawer,
   } = useGlobalContext();
   const queryClient = useQueryClient();
   const { mutateAsync, isLoading } = useMutation(updateProject);
 
   const handleProjectFormSave = async (e) => {
     e.preventDefault();
-    if (projectState.project.name) {
-      await mutateAsync({ editId, projectState });
-      queryClient.invalidateQueries("project");
+    try {
+      if (projectState.project.name) {
+        await mutateAsync({ editId, projectState });
+        queryClient.invalidateQueries("project");
+      }
+
+      handleCloseRightDrawer(e, "Edit Project");
+      projectDispatch({
+        type: "RESET_PROJECT_FORM",
+      });
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Project has updated");
+    } catch (e) {
+      console.log("invalid call");
+      setOpenToast(!openToast);
+      setMessage(!message);
+      settoastMessage("Something went wrong!!");
     }
-
-    handleCloseRightDrawer(e, "Edit Project");
-
-    projectDispatch({
-      type: "RESET_PROJECT_FORM",
-    });
   };
 
   return (

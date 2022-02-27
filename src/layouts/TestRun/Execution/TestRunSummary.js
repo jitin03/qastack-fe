@@ -62,7 +62,19 @@ const Input = styled("input")({
   display: "none",
 });
 export const TestRunSummary = (props) => {
-  const { testResult, handleCloseRightDrawer } = useGlobalContext();
+  const {
+    testResult,
+    handleCloseRightDrawer,
+    setOpenToast,
+    openToast,
+    toastMessage,
+    handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
+  } = useGlobalContext();
   const classes = useStyles();
   const { params, testRunId } = props;
   console.log(params);
@@ -113,9 +125,14 @@ export const TestRunSummary = (props) => {
       console.log("close called");
       handleCloseRightDrawer(e, "Close Run Summary", closeParam);
       reset();
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Status has updated");
     } catch (error) {
-      // console.log(error.message);
       reset();
+      setOpenToast(!openToast);
+      setMessage(true);
+      settoastMessage("Something went wrong!!");
     }
   };
 
