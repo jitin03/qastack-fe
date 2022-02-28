@@ -1,7 +1,7 @@
 import axiosAppInstance from "../../../helper/componentAppAxios";
 import axios from "axios";
 
-axios.defaults.baseURL = process.env.REACT_APP_COMPONENT_SERVER;
+axios.defaults.baseURL = process.env.REACT_APP_API_SERVER;
 export const getAllComponents = async ({ queryKey }) => {
   const [_key, componentId, pageId] = queryKey;
   const response = await axiosAppInstance().get(

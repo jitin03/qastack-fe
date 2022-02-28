@@ -23,6 +23,7 @@
     "axios": "^0.24.0",
     "date-fns": "^2.14.0",
     "dayjs": "^1.10.7",
+    "downloadjs": "^1.4.7",
     "event-source-polyfill": "^1.0.25",
     "formik": "2.2.6",
     "formik-material-ui": "3.0.1",

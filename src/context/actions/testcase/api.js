@@ -1,4 +1,6 @@
 import axiosAppTestcaseInstance from "../../../helper/testcasAppAxios";
+import download from "downloadjs";
+import axios from "axios";
 
 export const addTestcase = async ({ ...data }) => {
   let payload = JSON.stringify(data);
@@ -123,6 +125,45 @@ export const getTestCaseRunHistory = async ({ queryKey }) => {
   return response.data;
 };
 
+export const getFileToTestCaseRun = async ({ queryKey }) => {
+  const [_key, projectId, testRunId, testCaseId, downloadFile] = queryKey;
+
+  const response = await axiosAppTestcaseInstance().get(
+    `api/testrun/result/download?projectId=${projectId}&testRunId=${testRunId}&testCaseId=${testCaseId}&fileName=${downloadFile}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const downloadViaSignedUrlFile = async ({ queryKey }) => {
+  const [_key, signedUrl, fileName] = queryKey;
+  axios({
+    method: "get",
+    url: `${signedUrl}`,
+    responseType: "blob",
+  }).then(function (response) {
+    download(response.data, fileName);
+  });
+};
+
+export const getTestCaseRunUploadHistory = async ({ queryKey }) => {
+  const [_key, projectId, testRunId, testCaseId] = queryKey;
+  const response = await axiosAppTestcaseInstance().get(
+    `api/testrun/results/download?projectId=${projectId}&testRunId=${testRunId}&testCaseId=${testCaseId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data;
+};
 export const getTestCase = async ({ queryKey }) => {
   const [_key, testCaseId, pageId] = queryKey;
 

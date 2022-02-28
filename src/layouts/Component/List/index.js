@@ -276,7 +276,7 @@ const Components = (props) => {
       {
         field: "create_date",
         headerName: "Create Date",
-        width: 150,
+        width: 350,
       },
     ],
   };

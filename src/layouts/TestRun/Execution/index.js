@@ -155,7 +155,7 @@ export const TestExecution = (props) => {
       data.projectId = projectId;
       console.log(data);
 
-      await mutateAsync([{ ...id.row, status: e.target.value }][0]);
+      await mutateAsync([{ ...id.row, status: e.target.value, }][0]);
       setOpenToast(!openToast);
       setMessage(true);
       settoastMessage("Status has updated");

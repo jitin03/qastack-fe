@@ -11,7 +11,7 @@ import {
   Paper,
   Container,
   CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
 import React, { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { MultipleFileUploadField } from "../../../components/Shared/upload/MultipleFileUploadField";
@@ -163,7 +163,6 @@ export const ImportTestCases = () => {
             xs={12}
             md={12}
             style={{ padding: "20px" }}
-            spacing={24}
           >
             <Typography>Guide to import test cases</Typography>
           </Grid>

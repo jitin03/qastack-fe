@@ -34,6 +34,7 @@ import { useParams } from "react-router-dom";
 import {
   getTestCase,
   getTestCaseRunHistory,
+  getTestCaseRunUploadHistory,
   updateTestStatus,
 } from "../../../context/actions/testcase/api";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -154,6 +155,32 @@ export const TestRunSummary = (props) => {
       enabled: !!params,
     }
   );
+
+  const {
+    data: testCaseRunUploadHistory,
+    error: testCaseRunUploadHistoryError,
+    isLoading: waitForTestCaseRunUploadHistory,
+  } = useQuery(
+    [
+      "testCaseRunUploadHistory",
+      testResult?.projectId,
+      testResult?.testRunId,
+      params?.testcase_id,
+    ],
+    getTestCaseRunUploadHistory,
+    {
+      onError: (error) => {
+        // setOpenToast(true);
+        // componentDispatch({
+        //   type: COMPONENT_LIST_ERROR,
+        //   payload: error.message,
+        // });
+      },
+      enabled: !!testCaseRunHistory,
+    }
+  );
+
+  console.log("--testCaseRunUploadHistory---", testCaseRunUploadHistory);
   const {
     data: testCase,
     error: testCaseError,
@@ -171,7 +198,7 @@ export const TestRunSummary = (props) => {
     enabled: !!params,
   });
 
-  if (waitForTestCaseRunHistory) {
+  if (waitForTestCaseRunUploadHistory) {
     return (
       <>
         <Grid container>
@@ -375,6 +402,10 @@ export const TestRunSummary = (props) => {
                       {testCaseRunHistory?.length ? (
                         <TestRunHistory
                           testCaseRunHistory={testCaseRunHistory}
+                          testCaseRunUploadHistory={testCaseRunUploadHistory}
+                          projectId={testResult?.projectId}
+                          testRunId={testResult?.testRunId}
+                          testCaseId={params?.testcase_id}
                         />
                       ) : (
                         <Typography>No Result</Typography>
