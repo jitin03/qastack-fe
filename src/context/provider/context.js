@@ -48,11 +48,12 @@ const AppProvider = ({ children }) => {
   const [isAddModuleModalOpen, setAddModuleOpen] = useState(false);
   const [moduleName, setModuleName] = useState("");
   const [moduleType, setModuleType] = useState("Module");
-
+  const [elements, setElements] = useState([]);
   const [message, setMessage] = useState(false);
   const [successAtProject, setSuccessAtProject] = useState(false);
   const [toastMessage, settoastMessage] = useState("");
   const [projectSuccessMessage, setProjectSuccessMessage] = useState("");
+  const [workflowNameLog, setWorkflowNameLog] = useState("");
   // Reducer for Release component
   const [releaseState, releaseDispatch] = useReducer(
     release,
@@ -289,6 +290,10 @@ const AppProvider = ({ children }) => {
         setProjectSuccessMessage,
         successAtProject,
         setSuccessAtProject,
+        elements,
+        setElements,
+        workflowNameLog,
+        setWorkflowNameLog,
       }}
     >
       {children}

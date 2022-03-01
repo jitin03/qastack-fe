@@ -168,17 +168,9 @@ const CustomeAttributes = (props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth error={!!errors?.Priority}>
-                  <InputLabel id="demo-simple-select-helper-label">
-                    Priority
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={value}
-                    label="Type"
-                    onChange={onChange}
-                  >
+                <FormControl fullWidth error={!!errors?.Priority} size="small">
+                  <InputLabel>Priority</InputLabel>
+                  <Select value={value} label="Type" onChange={onChange}>
                     <MenuItem value="high">High</MenuItem>
                     <MenuItem value="medium">Medium</MenuItem>
                     <MenuItem value="low">Low</MenuItem>
@@ -199,17 +191,9 @@ const CustomeAttributes = (props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth error={!!errors?.Type}>
-                  <InputLabel id="demo-simple-select-helper-label">
-                    Type
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={value}
-                    label="Type"
-                    onChange={onChange}
-                  >
+                <FormControl fullWidth error={!!errors?.Type} size="small">
+                  <InputLabel>Type</InputLabel>
+                  <Select value={value} label="Type" onChange={onChange}>
                     <MenuItem value="accessiblity">Accessiblity</MenuItem>
                     <MenuItem value="smoke">Smoke</MenuItem>
                     <MenuItem value="performance">Performance</MenuItem>
@@ -225,6 +209,28 @@ const CustomeAttributes = (props) => {
             rules={{ required: "Type is required field!" }}
           />
         </Grid>
+        <Grid item>
+          <Controller
+            name="mode"
+            defaultValue=""
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <>
+                <FormControl fullWidth error={!!errors?.Type} size="small">
+                  <InputLabel>Mode</InputLabel>
+                  <Select value={value} label="Mode" onChange={onChange}>
+                    <MenuItem value="Manual">Manual</MenuItem>
+                    <MenuItem value="Automation">Automation</MenuItem>
+                  </Select>
+                  <FormHelperText error={true}>
+                    {errors?.mode ? errors?.mode.message : null}
+                  </FormHelperText>
+                </FormControl>
+              </>
+            )}
+            rules={{ required: "Mode is required field!" }}
+          />
+        </Grid>
         <Grid item style={{ width: "100%" }}>
           <Controller
             name="componentId"
@@ -232,13 +238,13 @@ const CustomeAttributes = (props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth error={!!errors?.componentId}>
-                  <InputLabel id="demo-simple-select-helper-label">
-                    Select Component
-                  </InputLabel>
+                <FormControl
+                  fullWidth
+                  error={!!errors?.componentId}
+                  size="small"
+                >
+                  <InputLabel>Select Component</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     value={value}
                     label="Select Component"
                     onChange={onChange}

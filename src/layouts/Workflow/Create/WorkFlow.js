@@ -21,6 +21,7 @@ const flowKey = "example-flow";
 const getNodeId = () => `randomnode_${+new Date()}`;
 
 const WorkFlow = ({ elements, setElements }) => {
+  console.log("--elements--", elements);
   const [rfInstance, setRfInstance] = useState(null);
   const onElementsRemove = (elementsToRemove) =>
     setElements((els) => removeElements(elementsToRemove, els));

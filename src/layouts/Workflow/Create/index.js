@@ -2,8 +2,15 @@ import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { Button, Grid, TextField, Tooltip, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import {
+  Box,
+  Button,
+  Grid,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+
 import { Add as AddIcon, Publish as PublishIcon } from "@mui/icons-material";
 import { makeStyles } from "@material-ui/core";
 import isAuthenticated from "../../../context/actions/auth/isAuthenticated";
@@ -54,9 +61,9 @@ export default function CreateWorkflow() {
       name: "parameters",
     }
   );
-  const { handleCloseRightDrawer, handleRightDrawer } = useGlobalContext();
+  const { handleCloseRightDrawer, handleRightDrawer,elements, setElements } = useGlobalContext();
   const [openDialog, setOpenDialog] = useState(false);
-  const [elements, setElements] = useState([]);
+  // const [elements, setElements] = useState([]);
   const [workFlowState, setworkFlowState] = useState([]);
   const [stepsConfig, setStepsConfig] = useState([]);
   const { projectKey: projectId } = useParams();

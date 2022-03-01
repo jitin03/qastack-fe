@@ -181,7 +181,7 @@ export default function TestSteps(props) {
 const CustomeAttributes = (props) => {
   const { control, handleAddStep, remove, fields, components, preloadedData } =
     props;
-
+  console.log("--preloadedData?.mode?.String--", preloadedData?.mode?.String);
   const classes = {};
   return (
     <Card
@@ -224,12 +224,30 @@ const CustomeAttributes = (props) => {
         </Grid>
         <Grid item>
           <Controller
+            name="mode"
+            defaultValue={preloadedData?.mode}
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Mode</InputLabel>
+                  <Select value={value} label="Mode" onChange={onChange}>
+                    <MenuItem value="Manual">Manual</MenuItem>
+                    <MenuItem value="Automation">Automation</MenuItem>
+                  </Select>
+                </FormControl>
+              </>
+            )}
+          />
+        </Grid>
+        <Grid item>
+          <Controller
             name="Type"
             defaultValue={preloadedData?.type || ""}
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth>
+                <FormControl fullWidth size="small">
                   <InputLabel id="demo-simple-select-helper-label">
                     Type
                   </InputLabel>
@@ -258,7 +276,7 @@ const CustomeAttributes = (props) => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <>
-                <FormControl fullWidth>
+                <FormControl fullWidth size="small">
                   <InputLabel id="demo-simple-select-helper-label">
                     Select Component
                   </InputLabel>

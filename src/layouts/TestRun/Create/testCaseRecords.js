@@ -7,6 +7,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState, useEffect, useRef } from "react";
@@ -236,6 +237,12 @@ const TestCaseList = (props) => {
       { field: "title", headerName: "Title", width: 250 },
       { field: "type", headerName: "Type" },
       { field: "priority", headerName: "Priority" },
+      {
+        field: "mode",
+        headerName: "Mode",
+        width: 250,
+        headerAlign: "center",
+      },
     ],
   };
 

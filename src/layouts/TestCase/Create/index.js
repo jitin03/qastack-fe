@@ -132,8 +132,8 @@ export default function CreateTestCase(props) {
           aria-label="basic tabs example"
         >
           <Tab label="Test Case Details" />
-          <Tab label="Link Requirement" />
-          <Tab label="Jira Requirement" />
+          {/* <Tab label="Link Requirement" />
+          <Tab label="Jira Requirement" /> */}
         </Tabs>
 
         <form
@@ -149,7 +149,7 @@ export default function CreateTestCase(props) {
                 width: "100%",
                 maxHeight: "100%",
                 overflowY: "scroll",
-                minHeight: "750px",
+                minHeight: "500px",
               }}
             >
               <TabPanel value={tabValue} index={0}>

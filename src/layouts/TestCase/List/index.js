@@ -429,7 +429,12 @@ const Tests = (props) => {
       },
       { field: "type", headerName: "Type", headerAlign: "center" },
       { field: "priority", headerName: "Priority", headerAlign: "center" },
-
+      {
+        field: "mode",
+        headerName: "Mode",
+        width: 150,
+        headerAlign: "center",
+      },
       {
         field: "actions",
         headerName: "Actions",

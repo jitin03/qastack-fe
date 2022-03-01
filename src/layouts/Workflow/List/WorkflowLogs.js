@@ -6,11 +6,12 @@ import { useGlobalContext } from "../../../context/provider/context";
 
 export default function WorkflowLogs(props) {
   const { handleRightDrawer } = useGlobalContext();
-  const { params, projectId } = props;
+  const { params, workflow_run_name, projectId } = props;
   const handleViewLogs = (projectId, id, workflow_run_name) => {
     let params = [];
     params.push(projectId);
     params.push(id);
+    console.log("---workflow_run_name---", workflow_run_name);
     params.push(workflow_run_name);
     handleRightDrawer("View Logs", params);
   };
@@ -22,7 +23,7 @@ export default function WorkflowLogs(props) {
           aria-label="delete the test run"
           style={{ padding: "10px" }}
           onClick={() =>
-            handleViewLogs(projectId, params.id, params?.row.workflow_run_name)
+            handleViewLogs(projectId, params.id, workflow_run_name)
           }
         >
           <NotesIcon style={{ color: grey[800] }} />

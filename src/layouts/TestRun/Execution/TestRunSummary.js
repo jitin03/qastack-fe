@@ -7,13 +7,12 @@ import {
   FormControl,
   Grid,
   InputLabel,
-  makeStyles,
   MenuItem,
   Paper,
   Select,
   TextField,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Button, Stack } from "@mui/material";
 import { Form, Formik } from "formik";
@@ -41,6 +40,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestRunHistory } from "./TestRunHistory";
 import { useGlobalContext } from "../../../context/provider/context";
 import { blue } from "@material-ui/core/colors";
+import { makeStyles } from "@mui/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {

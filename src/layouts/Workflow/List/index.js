@@ -10,6 +10,7 @@ import {
   IconButton,
   Tooltip,
   Typography,
+  Link,
 } from "@mui/material";
 import React, { useState } from "react";
 import { FormControlLabel } from "@material-ui/core";
@@ -59,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function WorfklowCreate() {
   const classes = useStyles();
+  const { workflowNameLog, setWorkflowNameLog } = useGlobalContext();
   const { projectKey: projectId } = useParams();
 
   const pages = [5, 10, 25];
@@ -191,7 +193,8 @@ const WorkflowList = (props) => {
   const { preloadedData, projectId, waitForAllWorkflows, userDetails } = props;
 
   const userId = userDetails?.data.users_id;
-  const { handleRightDrawer } = useGlobalContext();
+  const { handleRightDrawer, setWorkflowNameLog, workflowNameLog } =
+    useGlobalContext();
 
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
@@ -285,6 +288,7 @@ const WorkflowList = (props) => {
       data.userId = userId;
       let response = await reSubmitNowWorkflow(data);
 
+      setWorkflowNameLog(response?.workflow_run_name);
       await fetchData(response?.workflow_run_name, id, handleFetchEvent);
     } else if (status === "Build Again") {
       setTriggeredWorkflowStatus(true);
@@ -314,6 +318,13 @@ const WorkflowList = (props) => {
         headerName: "Workflow Name",
         width: 200,
         padding: "50px",
+        renderCell: (params) => {
+          return (
+            <Link href={`/project/${projectId}/workflow/${params?.id}`}>
+              {params.value}
+            </Link>
+          );
+        },
       },
       {
         field: "username",
@@ -399,7 +410,13 @@ const WorkflowList = (props) => {
                         workflowTriggeredStatus={workflowTriggeredStatus}
                       />
 
-                      <WorkflowLogs params={params} projectId={projectId} />
+                      <WorkflowLogs
+                        params={params}
+                        workflow_run_name={
+                          workflowNameLog || params?.row.workflow_run_name
+                        }
+                        projectId={projectId}
+                      />
                       {/* <Tooltip title="View Logs" arrow>
                         <IconButton
                           color="secondary"
