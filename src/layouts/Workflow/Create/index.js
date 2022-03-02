@@ -61,9 +61,9 @@ export default function CreateWorkflow() {
       name: "parameters",
     }
   );
-  const { handleCloseRightDrawer, handleRightDrawer,elements, setElements } = useGlobalContext();
+  const { handleCloseRightDrawer, handleRightDrawer } = useGlobalContext();
   const [openDialog, setOpenDialog] = useState(false);
-  // const [elements, setElements] = useState([]);
+  const [elements, setElements] = useState([]);
   const [workFlowState, setworkFlowState] = useState([]);
   const [stepsConfig, setStepsConfig] = useState([]);
   const { projectKey: projectId } = useParams();

@@ -174,6 +174,10 @@ const CustomeAttributes = (props) => {
                     <MenuItem value="high">High</MenuItem>
                     <MenuItem value="medium">Medium</MenuItem>
                     <MenuItem value="low">Low</MenuItem>
+                    <MenuItem value="p0">p0</MenuItem>
+                    <MenuItem value="p1">p1</MenuItem>
+                    <MenuItem value="p2">p2</MenuItem>
+                    <MenuItem value="p3">p3</MenuItem>
                   </Select>
                   <FormHelperText error={true}>
                     {errors?.Priority ? errors?.Priority.message : null}

@@ -131,26 +131,16 @@ export default function TestSteps(props) {
   return (
     <>
       <div style={{ height: 400, width: "100%" }}>
-        {/* <form
-          className={classes.root}
-          autoComplete="off"
-          style={{ height: "100%" }}
-        > */}
         <Grid
           container
           spacing={3}
           direction="row"
           justify="center"
           alignItems="stretch"
-          style={{ height: 200, width: "100%" }}
+          style={{ height: "100%", width: "100%" }}
         >
-          {/* <Grid item xs={12}>
-              <Paper className={classes.paper}>xs=12</Paper>
-            </Grid> */}
-
           <Grid item xs={9}>
             <Grid>
-              {/* <YourCard /> */}
               <TestDetails
                 control={control}
                 handleAddStep={handleAddStep}
@@ -216,6 +206,10 @@ const CustomeAttributes = (props) => {
                     <MenuItem value="high">High</MenuItem>
                     <MenuItem value="medium">Medium</MenuItem>
                     <MenuItem value="low">Low</MenuItem>
+                    <MenuItem value="p0">p0</MenuItem>
+                    <MenuItem value="p1">p1</MenuItem>
+                    <MenuItem value="p2">p2</MenuItem>
+                    <MenuItem value="p3">p3</MenuItem>
                   </Select>
                 </FormControl>
               </>
@@ -259,6 +253,7 @@ const CustomeAttributes = (props) => {
                     onChange={onChange}
                   >
                     <MenuItem value="accessiblity">Accessiblity</MenuItem>
+                    <MenuItem value="acceptance">Acceptance</MenuItem>
                     <MenuItem value="smoke">Smoke</MenuItem>
                     <MenuItem value="performance">Performance</MenuItem>
                     <MenuItem value="functional">Functional</MenuItem>

@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
   bottomDrawer: {
     position: "absolute",
-
+    bottom: "0",
     right: "0px",
     padding: "1rem 1.5rem 1.5rem",
     backgroundColor: "rgb(255, 255, 255)",

@@ -225,7 +225,7 @@ const CustomeAttributes = (props) => {
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={value}
-                    label="Type"
+                    label="Assignee"
                     onChange={onChange}
                   >
                     <MenuItem

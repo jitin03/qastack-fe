@@ -40,6 +40,7 @@ import { Box } from "@mui/system";
 import { useQuery } from "react-query";
 import { getAllRelease } from "../../../context/actions/project/api";
 import { getProjectTestRun } from "../../../context/actions/testcase/api";
+import { getUserDetailFromToken } from "../../../helper/token";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
@@ -192,9 +193,17 @@ const CustomeAttributes = (props) => {
                     label="Type"
                     onChange={onChange}
                   >
-                    <MenuItem value="high">High</MenuItem>
-                    <MenuItem value="medium">Medium</MenuItem>
-                    <MenuItem value="low">Low</MenuItem>
+                    <MenuItem
+                      value={
+                        getUserDetailFromToken(localStorage.getItem("token"))
+                          .username
+                      }
+                    >
+                      {
+                        getUserDetailFromToken(localStorage.getItem("token"))
+                          ?.username
+                      }
+                    </MenuItem>
                   </Select>
                 </FormControl>
               </>

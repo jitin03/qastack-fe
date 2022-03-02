@@ -264,8 +264,21 @@ export const TestRunSummary = (props) => {
                       alignItems="center"
                       //   style={{ paddingLeft: "10px" }}
                     >
-                      <Grid xs={4} item style={{ paddingLeft: "10px" }}>
-                        <StatusChip key="Passed" label="Passed" />
+                      <Grid
+                        xs={4}
+                        item
+                        style={{ paddingLeft: "10px", paddingTop: "10px" }}
+                      >
+                        {testCaseRunHistory ? (
+                          <StatusChip
+                            key={testCaseRunHistory[0]?.status || "Unexecuted"}
+                            label={
+                              testCaseRunHistory[0]?.status || "Unexecuted"
+                            }
+                          />
+                        ) : (
+                          <StatusChip key="Unexecuted" label="Unexecuted" />
+                        )}
                       </Grid>
                       <Grid
                         item
@@ -275,10 +288,14 @@ export const TestRunSummary = (props) => {
                         alignContent="center"
                       >
                         <Grid item xs={12}>
-                          <Typography>Assignee</Typography>
+                          <Typography>Executed by:</Typography>
                         </Grid>
                         <Grid item xs={12} style={{ marginLeft: "5px" }}>
-                          <Typography>Jitin</Typography>
+                          <Typography>
+                            {testCaseRunHistory
+                              ? testCaseRunHistory[0]?.executed_by
+                              : "None"}
+                          </Typography>
                         </Grid>
                       </Grid>
                       <Grid
@@ -289,12 +306,12 @@ export const TestRunSummary = (props) => {
                         alignContent="center"
                         style={{ paddingLeft: "10px", marginTop: "10px" }}
                       >
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                           <Typography>Estimated time</Typography>
                         </Grid>
                         <Grid item xs={12} style={{ marginLeft: "5px" }}>
                           <Typography>15min</Typography>
-                        </Grid>
+                        </Grid> */}
                       </Grid>
                     </Grid>
 
