@@ -27,8 +27,10 @@ export const ConsoleLogs = (props) => {
         background: "transparent",
       },
 
-      fontWeight: 200,
-      // fontFamily: `normal 13px/1.2 "Courier", sans-serif`,
+      fontWeight: 500,
+      fontSize: 13,
+      fontWeightBold: 2,
+      fontFamily: "Courier New",
       rendererType: "dom",
       windowOptions: {
         setWinSizeChars: true,
@@ -40,6 +42,7 @@ export const ConsoleLogs = (props) => {
 
     terminal.current.reset();
     terminal.current.open(document.getElementById("terminal"));
+    fitAddon.fit();
   }, []);
 
   useEffect(() => {

@@ -126,7 +126,7 @@ export default function RightDrawer({ configTitle, width = "550px", params }) {
         configTitle === "Test Run Summary"
           ? list((width = "1300px"))
           : configTitle === "View Logs"
-          ? list((width = "auto"))
+          ? list((width = "1100px"))
           : list(width)}
       </Drawer>
     </>
