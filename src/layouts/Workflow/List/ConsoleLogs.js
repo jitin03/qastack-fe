@@ -4,6 +4,10 @@ import React, { useEffect } from "react";
 import { XTerm } from "xterm-for-react";
 // import { FitAddon } from 'xterm-addon-fit';
 import { isEmpty } from "../../../helper/appHelper";
+import("./logs-viewer.scss");
+import { Terminal } from "xterm";
+
+import { FitAddon } from "xterm-addon-fit";
 
 export const ConsoleLogs = (props) => {
   let { logs } = props;
@@ -12,81 +16,55 @@ export const ConsoleLogs = (props) => {
   if (!isEmpty(logs)) {
     logs = JSON.parse(logs);
     logString = !isEmpty(logs.result.content) ? logs.result.content : "";
-    console.log(logString);
   }
-  if (!logString) {
-    return (
-      <>
-        <Grid container>
-          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
-          <Grid
-            item
-            container
-            justifyContent="center"
-            style={{ padding: "50px 10px" }}
-          >
-            <Container sx={{ display: "flex" }}>
-              <Grid
-                container
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Grid item>
-                  <CircularProgress />
-                </Grid>
-              </Grid>
-            </Container>
-            <Grid item></Grid>
-          </Grid>
-        </Grid>
-      </>
-    );
-  }
+  const terminal = React.useRef();
+  useEffect(() => {
+    terminal.current = new Terminal({
+      scrollback: 99999,
+      allowTransparency: true,
+      theme: {
+        foreground: "#495763",
+        background: "transparent",
+      },
 
-  const xtermRef = React.useRef(null);
-  /* const fitAddon = new FitAddon();
-  setTimeout(() => {
-    fitAddon.fit();
-  }, 0); */
+      fontWeight: 200,
+      // fontFamily: `normal 13px/1.2 "Courier", sans-serif`,
+      rendererType: "dom",
+      windowOptions: {
+        setWinSizeChars: true,
+      },
+    });
+
+    const fitAddon = new FitAddon();
+    terminal.current.loadAddon(fitAddon);
+
+    terminal.current.reset();
+    terminal.current.open(document.getElementById("terminal"));
+  }, []);
 
   useEffect(() => {
-    // xtermRef.current.terminal.writeln(logString);
-
-    xtermRef.current.terminal.writeln(logString);
+    terminal.current.writeln(logString);
   }, [logString]);
 
   return (
-    <XTerm
-      options={{
-        disableStdin: true,
-        rows: 39,
-        allowTransparency: true,
-        logLevel: "info",
-      }}
-      ref={xtermRef}
-      // addons={[fitAddon]}
-      onData={(data) => {
-        console.log("data", data);
-      }}
-      // onData={(data) => {
-      //   const code = data.charCodeAt(0);
-      //   // If the user hits empty and there is something typed echo it.
-      //   if (code === 13 && state.input.length > 0) {
-      //     xtermRef.current.terminal.write(
-      //       "\r\nYou typed: '" + state.input + "'\r\n"
-      //     );
-      //     xtermRef.current.terminal.write("echo> ");
-      //     setState({ input: "" });
-      //   } else if (code < 32 || code === 127) {
-      //     // Disable control Keys such as arrow keys
-      //     return;
-      //   } else {
-      //     // Add general key press characters to the terminal
-      //     xtermRef.current.terminal.write(data);
-      //     setState({ input: state.input + data });
-      //   }
-      // }}
-    />
+    <>
+      <div
+        style={{
+          // fontFamily: `normal 4px/1.2 "Courier", sans-serif`,
+          overflow: "hidden",
+          width: "100%",
+          // lineHeight: "20px",
+        }}
+      >
+        <div
+          style={{
+            height: "100%",
+            width: "100%",
+            border: "1px solid rgb(232, 232, 232)",
+          }}
+          id="terminal"
+        />
+      </div>
+    </>
   );
 };
