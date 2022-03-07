@@ -113,7 +113,8 @@ const AppProvider = ({ children }) => {
     } else if (configTitle === "Edit TestRun") {
       navigate(`${window.location.pathname}/edit/${param[1]}`);
     } else if (configTitle === "View Logs") {
-      navigate(`${window.location.pathname}/workflow/logs/${param[1]}`);
+      console.log(param);
+      navigate(`/project/${param[0]}/workflow/${param[1]}/logs`);
     } else if (configTitle === "Add Step") {
       navigate(`${window.location.pathname}/step`);
     } else if (configTitle === "Test Run Summary") {
@@ -198,7 +199,7 @@ const AppProvider = ({ children }) => {
     } else if (title === "Edit TestRun") {
       navigate(`/project/${params}/testruns`);
     } else if (title === "View Logs") {
-      navigate(`/project/${params}/ciFlow`);
+      navigate(-1);
     } else if (title === "Add Job") {
       navigate(`/project/${params}/ciFlow`);
     } else if (title === "Add Step") {

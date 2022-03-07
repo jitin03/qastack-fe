@@ -11,11 +11,14 @@ import { FitAddon } from "xterm-addon-fit";
 
 export const ConsoleLogs = (props) => {
   let { logs } = props;
-  let logString = "Fetching...";
+  let logString = "Fetching main logs...";
 
   if (!isEmpty(logs)) {
     logs = JSON.parse(logs);
-    logString = !isEmpty(logs.result.content) ? logs.result.content : "";
+    logString = !isEmpty(logs.result.content)
+      ? logs.result?.podName + ":  " + logs.result.content
+      : "";
+    console.log(logString);
   }
   const terminal = React.useRef();
   useEffect(() => {
@@ -27,10 +30,10 @@ export const ConsoleLogs = (props) => {
         background: "transparent",
       },
 
-      fontWeight: 500,
+      fontWeight: 100,
       fontSize: 13,
       fontWeightBold: 2,
-      fontFamily: "Courier New",
+      // fontFamily: "Courier New",
       rendererType: "dom",
       windowOptions: {
         setWinSizeChars: true,
@@ -64,6 +67,7 @@ export const ConsoleLogs = (props) => {
             height: "100%",
             width: "100%",
             border: "1px solid rgb(232, 232, 232)",
+            padding: "20px",
           }}
           id="terminal"
         />

@@ -47,7 +47,7 @@ const Project = () => {
   } = useGlobalContext();
   const classes = useStyle();
 
-  console.log("---projectSuccessMessage---", projectSuccessMessage);
+  console.log("---projectSuccessMessage---", !localStorage.getItem("token"));
   console.log("---successAtProject---", successAtProject);
   const { data: user, isSuccess: userDetails } = useQuery(
     ["users", getUserDetailFromToken(localStorage.getItem("token")).username],

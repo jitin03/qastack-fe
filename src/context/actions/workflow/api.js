@@ -95,9 +95,10 @@ export const retryWorkflowByName = async ({ ...data }) => {
   return response.data;
 };
 
-export const getWorkflowDetail = async (data) => {
+export const getWorkflowDetail = async ({ queryKey }) => {
+  const [_key, id, projectid] = queryKey;
   const response = await axiosAppWorkflowInstance().get(
-    `http://localhost:8094/api/workflow/${data.queryKey[1]}`,
+    `/api/workflow?id=${id}&projectId=${projectid}`,
     {
       headers: {
         "Content-Type": "application/json",

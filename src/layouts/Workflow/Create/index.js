@@ -5,12 +5,13 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import {
   Box,
   Button,
+  Divider,
   Grid,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Add as AddIcon, Publish as PublishIcon } from "@mui/icons-material";
 import { makeStyles } from "@material-ui/core";
 import isAuthenticated from "../../../context/actions/auth/isAuthenticated";
@@ -72,11 +73,25 @@ export default function CreateWorkflow() {
     workFlowDetail.id = elementId;
     const currentNode = {
       id: `${elementId}`,
-      data: { label: `${workFlowDetail.name}` },
+      data: {
+        label: (
+          <Grid
+            container
+            justifyContent="center"
+            alignContent="center"
+            alignItems="center"
+          >
+            <Grid item xs={10}>
+              ${workFlowDetail.name}
+            </Grid>
+          </Grid>
+        ),
+      },
     };
 
     if (elements.length) {
-      currentNode.position = { x: (600 * workFlowState.length) / 2, y: 300 };
+      // currentNode.position = { x: (600 * workFlowState.length) / 2, y: 300 };
+      currentNode.position = { x: 100, y: 0 };
       const updatedElements = [...elements, currentNode];
       if (workFlowDetail.dependencies) {
         // add edge
@@ -84,12 +99,14 @@ export default function CreateWorkflow() {
           id: `${generateId()}`,
           source: `${workFlowDetail.dependencies}`,
           target: `${elementId}`,
+          type: "smoothstep",
         };
         updatedElements.push(edge);
       }
       setElements(updatedElements);
     } else {
-      currentNode.position = { x: 600, y: 100 };
+      // currentNode.position = { x: 600, y: 100 };
+      currentNode.position = { x: 100, y: 0 };
       setElements([currentNode]);
     }
     setworkFlowState([...workFlowState, workFlowDetail]);
@@ -174,7 +191,6 @@ export default function CreateWorkflow() {
         <Grid item container xs={12}>
           <form
             className={classes.root}
-            autoComplete="off"
             style={{ height: "100%", width: "100%" }}
             onSubmit={handleSubmit(onSubmit)}
           >
@@ -274,6 +290,7 @@ export default function CreateWorkflow() {
               </Grid>
             </Grid>
             <Grid
+              xs={12}
               item
               container
               style={{

@@ -20,7 +20,7 @@ import { useForm } from "react-hook-form";
 import DeleteIcon from "@mui/icons-material/Delete";
 import NotesIcon from "@mui/icons-material/Notes";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import Controls from "../../../components/controllers/Controls";
@@ -49,6 +49,7 @@ import DeleteWorkflow from "./DeleteWorkflow";
 import StopWorkflow from "./StopWorkflow";
 import WorkflowLogs from "./WorkflowLogs";
 import { fetchData } from "../../../context/actions/workflow/sseClient";
+import Toast from "../../../components/controllers/Toast";
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -60,7 +61,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function WorfklowCreate() {
   const classes = useStyles();
-  const { workflowNameLog, setWorkflowNameLog } = useGlobalContext();
+  const [isActionComplete, setActionComplete] = useState(false);
+  const {
+    workflowNameLog,
+    setWorkflowNameLog,
+    setOpenToast,
+    openToast,
+    toastMessage,
+    handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
+  } = useGlobalContext();
   const { projectKey: projectId } = useParams();
 
   const pages = [5, 10, 25];
@@ -103,6 +117,35 @@ export default function WorfklowCreate() {
   };
 
   if (waitForAllWorkflows) {
+    return (
+      <>
+        <Grid container>
+          <Grid item style={{ flex: "1" }} color="GrayText"></Grid>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            style={{ padding: "50px 10px" }}
+          >
+            <Container sx={{ display: "flex" }}>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+            </Container>
+            <Grid item></Grid>
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
+  if (isActionComplete) {
     return (
       <>
         <Grid container>
@@ -182,6 +225,8 @@ export default function WorfklowCreate() {
             projectId={projectId}
             waitForAllWorkflows={waitForAllWorkflows}
             userDetails={userDetails}
+            isActionComplete={isActionComplete}
+            setActionComplete={setActionComplete}
           />
         </Grid>
       </Grid>
@@ -190,11 +235,30 @@ export default function WorfklowCreate() {
 }
 
 const WorkflowList = (props) => {
-  const { preloadedData, projectId, waitForAllWorkflows, userDetails } = props;
+  const {
+    preloadedData,
+    projectId,
+    waitForAllWorkflows,
+    userDetails,
+    isActionComplete,
+    setActionComplete,
+  } = props;
 
   const userId = userDetails?.data.users_id;
-  const { handleRightDrawer, setWorkflowNameLog, workflowNameLog } =
-    useGlobalContext();
+  const {
+    handleRightDrawer,
+    setWorkflowNameLog,
+    workflowNameLog,
+    setOpenToast,
+    openToast,
+    toastMessage,
+    handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
+  } = useGlobalContext();
 
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
@@ -251,22 +315,52 @@ const WorkflowList = (props) => {
 
   function handleFetchEvent(message, id, workflowName) {
     // setWorkflowStatus(message.result.object.status.phase);
-    console.log(message.result.object);
+
+    console.log(message);
     // if (message?.result?.object.status.phase !== "Running") {
     let workflowStatus = {};
+    let workflowNodes = [];
+    let workflowNodeStatus = {};
     workflowStatus.user_Id = "3";
     workflowStatus.workflow_name = workflowName;
     workflowStatus.id = id;
     workflowStatus.status = message?.result?.object.status.phase;
-    // setTriggeredWorkflowStatus(message?.result?.object.status.phase);
+
+    // nodestatus
+    for (const key in message?.result?.object.status.nodes) {
+      console.log(message?.result?.object.status.nodes[key]);
+      if (message?.result?.object.status.nodes[key].type === "Pod") {
+        workflowNodes.push({
+          name: message?.result?.object.status.nodes[key].displayName,
+          type: message?.result?.object.status.nodes[key].type,
+          phase: message?.result?.object.status.nodes[key].phase,
+          updateWorkflowName: message?.result?.object.metadata.name,
+        });
+      }
+    }
+    console.log(workflowNodes);
+    workflowStatus.node_status = workflowNodes;
 
     if (
       message?.result?.object.status.phase === "Succeeded" ||
       message?.result?.object.status.phase === "Failed" ||
-      message?.result?.object.status.phase === "Error"
+      message?.result?.object.status.phase === "Error" ||
+      message?.result?.object.status.phase === "Running"
     ) {
       queryClient.invalidateQueries("workflows");
       updateWorkflowStatus(workflowStatus);
+      setActionComplete(false);
+
+      setTriggeredWorkflowStatus(false);
+      setCurrentWorkflowId("");
+    } else {
+      workflowStatus.user_Id = "3";
+      workflowStatus.workflow_name = workflowName;
+      workflowStatus.id = id;
+      workflowStatus.status = "Failed";
+      queryClient.invalidateQueries("workflows");
+      updateWorkflowStatus(workflowStatus);
+      setActionComplete(false);
       setTriggeredWorkflowStatus(false);
       setCurrentWorkflowId("");
     }
@@ -278,6 +372,7 @@ const WorkflowList = (props) => {
     if (status === "Build Now") {
       setTriggeredWorkflowStatus(true);
       setCurrentWorkflowId(id);
+      setActionComplete(true);
       await runNowWorkflow(id, userId);
 
       let response = await fetchData(name, id, handleFetchEvent);
@@ -285,13 +380,15 @@ const WorkflowList = (props) => {
       setTriggeredWorkflowStatus(true);
       setCurrentWorkflowId(id);
       data.workflowName = name;
+      setActionComplete(true);
       data.userId = userId;
       let response = await reSubmitNowWorkflow(data);
 
-      setWorkflowNameLog(response?.workflow_run_name);
       await fetchData(response?.workflow_run_name, id, handleFetchEvent);
-    } else if (status === "Build Again") {
+      setWorkflowNameLog(response?.workflow_run_name);
+    } else if (status === "Build Again" || status === "Failed") {
       setTriggeredWorkflowStatus(true);
+      setActionComplete(true);
       setCurrentWorkflowId(id);
       data.workflowName = name;
       data.userId = userId;
@@ -320,7 +417,10 @@ const WorkflowList = (props) => {
         padding: "50px",
         renderCell: (params) => {
           return (
-            <Link href={`/project/${projectId}/workflow/${params?.id}`}>
+            <Link
+              component={NavLink}
+              to={`/project/${projectId}/workflow/${params?.id}`}
+            >
               {params.value}
             </Link>
           );
@@ -347,13 +447,20 @@ const WorkflowList = (props) => {
             size="small"
             style={{ marginLeft: 16 }}
           >
-            <WorkflowStatus
-              params={params}
-              waitForWorkflowRun={waitForWorkflowRun}
-              workflowEventStatus={workflowTriggeredStatus}
-              currentWorkflowId={currentWorkflowId}
-              key={params?.id}
-            />
+            <>
+              <Grid container justifyItems="center" justifyContent="center">
+                {params.value === "Running" ? (
+                  <Grid item>
+                    <Typography>
+                      Running
+                      <CircularProgress size={15} />
+                    </Typography>
+                  </Grid>
+                ) : (
+                  params?.row.workflow_status
+                )}
+              </Grid>
+            </>
           </Typography>
         ),
       },
@@ -410,26 +517,13 @@ const WorkflowList = (props) => {
                         workflowTriggeredStatus={workflowTriggeredStatus}
                       />
 
-                      <WorkflowLogs
+                      {/* <WorkflowLogs
                         params={params}
                         workflow_run_name={
                           workflowNameLog || params?.row.workflow_run_name
                         }
                         projectId={projectId}
-                      />
-                      {/* <Tooltip title="View Logs" arrow>
-                        <IconButton
-                          color="secondary"
-                          aria-label="delete the test run"
-                          style={{ padding: "10px" }}
-                          onClick={() => handleViewLogs(params.id)}
-                        >
-                          <NotesIcon style={{ color: grey[500] }} />
-                          {waitForDeleteWorkflow && (
-                            <CircularProgress key={params?.id} />
-                          )}
-                        </IconButton>
-                      </Tooltip> */}
+                      /> */}
                     </div>
                   </>
                 }
@@ -470,8 +564,19 @@ const WorkflowList = (props) => {
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         rowsPerPageOptions={[20, 50, 100, 150]}
-        // loading={waitForAllWorkflows}
+        loading={isActionComplete}
       />
+      <Grid item>
+        {message && (
+          <>
+            <Toast
+              openToast={openToast}
+              message={JSON.stringify(toastMessage)}
+              handleCloseToast={handleCloseToast}
+            ></Toast>
+          </>
+        )}
+      </Grid>
     </Grid>
   );
 };

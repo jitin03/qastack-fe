@@ -171,8 +171,8 @@ const routes = [
     needsAuth: true,
   },
   {
-    path: "/project/:projectKey/ciFlow/workflow/logs/:workflowname",
-    component: <WorkflowList />,
+    path: "/project/:projectKey/workflow/:id/logs",
+    component: <WorkflowReview />,
     title: "CI Flow",
     needsAuth: true,
   },

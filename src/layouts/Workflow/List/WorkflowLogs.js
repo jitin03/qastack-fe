@@ -3,6 +3,7 @@ import React from "react";
 import NotesIcon from "@mui/icons-material/Notes";
 import { grey } from "@material-ui/core/colors";
 import { useGlobalContext } from "../../../context/provider/context";
+import { Button } from "@mui/material";
 
 export default function WorkflowLogs(props) {
   const { handleRightDrawer } = useGlobalContext();
@@ -18,16 +19,26 @@ export default function WorkflowLogs(props) {
   return (
     <>
       <Tooltip title="View Logs" arrow>
-        <IconButton
-          color="secondary"
-          aria-label="delete the test run"
-          style={{ padding: "10px" }}
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<NotesIcon style={{ color: grey[800] }} />}
           onClick={() =>
             handleViewLogs(projectId, params.id, workflow_run_name)
           }
         >
-          <NotesIcon style={{ color: grey[800] }} />
+          View logs
+        </Button>
+        {/* <IconButton
+          color="secondary"
+     
+          onClick={() =>
+            
+          }
+        >
+          <NotesIcon  /> 
         </IconButton>
+          */}
       </Tooltip>
     </>
   );

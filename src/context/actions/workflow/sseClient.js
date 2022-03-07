@@ -10,7 +10,42 @@ export async function fetchData(workflowName, id, onMessage) {
     token = localStorage.token;
   }
 
-  let eventResponse = await fetchEventSource(
+  // let eventResponse = await fetchEventSource(
+  //   `https://test.qastack.io/api/event/workflow?workflowName=${workflowName}`,
+  //   {
+  //     method: "GET",
+  //     headers: {
+  //       Accept: "text/event-stream",
+  //       Authorization: `Bearer ${token}`,
+  //     },
+
+  //     onopen(res) {
+  //       if (res.ok && res.status === 200) {
+  //         console.log("Connection made ", res);
+  //       } else if (
+  //         res.status >= 400 &&
+  //         res.status < 500 &&
+  //         res.status !== 429
+  //       ) {
+  //         console.log("Client side error ", res);
+  //       }
+  //     },
+  //     onmessage(event) {
+  //       const parsedData = JSON.parse(event.data);
+  //       workflowEvent = parsedData;
+
+  //       onMessage(parsedData, id, workflowName);
+  //     },
+  //     onclose() {
+  //       console.log("Connection closed by the server");
+  //     },
+  //     onerror(err) {
+  //       console.log("There was an error from server", err);
+  //     },
+  //   }
+  // );
+
+  let evtSource = new EventSourcePolyfill(
     `https://test.qastack.io/api/event/workflow?workflowName=${workflowName}`,
     {
       method: "GET",
@@ -18,31 +53,34 @@ export async function fetchData(workflowName, id, onMessage) {
         Accept: "text/event-stream",
         Authorization: `Bearer ${token}`,
       },
-
-      onopen(res) {
-        if (res.ok && res.status === 200) {
-          console.log("Connection made ", res);
-        } else if (
-          res.status >= 400 &&
-          res.status < 500 &&
-          res.status !== 429
-        ) {
-          console.log("Client side error ", res);
-        }
-      },
-      onmessage(event) {
-        const parsedData = JSON.parse(event.data);
-        workflowEvent = parsedData;
-        onMessage(parsedData, id, workflowName);
-      },
-      onclose() {
-        console.log("Connection closed by the server");
-      },
-      onerror(err) {
-        console.log("There was an error from server", err);
-      },
+      openWhenHidden: false,
+      lastEventIdQueryParameterName: "Last-Event-Id",
+      heartbeatTimeout: 145000, // no activity timeout
     }
   );
+  evtSource.onopen = (res) => {
+    if (res.ok && res.status === 200) {
+      console.log("Connection made ", res);
+    } else if (res.status >= 400 && res.status < 500 && res.status !== 429) {
+      console.log("Client side error ", res);
+    }
+  };
+  evtSource.onmessage = (event) => {
+    const parsedData = JSON.parse(event.data);
+    workflowEvent = parsedData;
+
+    onMessage(parsedData, id, workflowName);
+  };
+  evtSource.onclose = (err) => {
+    console.log("Connection closed by the server");
+    // throw new RetriableError();
+    throw err;
+  };
+  evtSource.onerror = (err) => {
+    console.log("There was an error from server", err);
+    // evtSource.close();
+    // throw err;
+  };
   return workflowEvent;
 }
 

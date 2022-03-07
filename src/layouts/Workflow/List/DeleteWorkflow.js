@@ -4,9 +4,21 @@ import { useMutation, useQueryClient } from "react-query";
 import { deleteWorkflow } from "../../../context/actions/workflow/api";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { grey } from "@material-ui/core/colors";
+import { useGlobalContext } from "../../../context/provider/context";
 const DeleteWorkflow = (props) => {
   const { params, workflowTriggeredStatus } = props;
   const queryClient = useQueryClient();
+  const {
+    setOpenToast,
+    openToast,
+    toastMessage,
+    handleCloseToast,
+    settoastMessage,
+    setSuccessAtProject,
+    setProjectSuccessMessage,
+    message,
+    setMessage,
+  } = useGlobalContext();
   const { mutateAsync, isLoading: waitForDeleteWorkflow } = useMutation(
     deleteWorkflow,
     {
@@ -21,6 +33,9 @@ const DeleteWorkflow = (props) => {
     params.push(id);
     await mutateAsync(id);
     queryClient.invalidateQueries("workflows");
+    setOpenToast(!openToast);
+    setMessage(true);
+    settoastMessage("Workflow has deleted");
   };
   return (
     <>
