@@ -82,7 +82,7 @@ export default function CreateWorkflow() {
             alignItems="center"
           >
             <Grid item xs={10}>
-              ${workFlowDetail.name}
+              {workFlowDetail.name}
             </Grid>
           </Grid>
         ),

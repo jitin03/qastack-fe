@@ -55,7 +55,8 @@ export async function fetchData(workflowName, id, onMessage) {
       },
       openWhenHidden: false,
       lastEventIdQueryParameterName: "Last-Event-Id",
-      heartbeatTimeout: 145000, // no activity timeout
+      heartbeatTimeout: 545000, // no activity timeout
+      readTimeoutMillis: 30000,
     }
   );
   evtSource.onopen = (res) => {
@@ -66,9 +67,9 @@ export async function fetchData(workflowName, id, onMessage) {
     }
   };
   evtSource.onmessage = (event) => {
+    console.log(event.data);
     const parsedData = JSON.parse(event.data);
     workflowEvent = parsedData;
-
     onMessage(parsedData, id, workflowName);
   };
   evtSource.onclose = (err) => {
@@ -136,6 +137,7 @@ export async function fetchWorkflowLogs(workflowName, id, onMessage) {
       openWhenHidden: false,
       lastEventIdQueryParameterName: "Last-Event-Id",
       heartbeatTimeout: 25000, // no activity timeout
+      readTimeoutMillis: 30000,
     }
   );
   evtSource.onopen = (res) => {

@@ -30,8 +30,6 @@ import JobDisplayLogs from "../layouts/Workflow/List/JobDisplayLogs";
 import AddStep from "../layouts/Workflow/Create/AddStep";
 import { TestRunSummary } from "../layouts/TestRun/Execution/TestRunSummary";
 
-// import AddStep from "../layouts/CIFlow/Create/AddStep";
-
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",

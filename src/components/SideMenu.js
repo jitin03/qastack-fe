@@ -4,18 +4,12 @@ import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import { Grid, Toolbar, Typography } from "@mui/material";
 import List from "@mui/material/List";
-import {
-  useParams,
-  NavLink,
-  Routes,
-} from "react-router-dom";
+import { useParams, NavLink, Routes } from "react-router-dom";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { submenus } from "../data/data";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import {
-  Route,
-} from "react-router-dom";
+import { Route } from "react-router-dom";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
