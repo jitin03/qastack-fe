@@ -99,7 +99,6 @@ export default function WorfklowCreate() {
     error,
     isLoading: waitForAllWorkflows,
     isError,
-    isRefetching,
   } = useQuery(["workflows", projectId, rowsPerPage], getAllWorkFlows, {
     onError: (error) => {
       // setOpenToast(true);
@@ -228,7 +227,6 @@ export default function WorfklowCreate() {
             userDetails={userDetails}
             isActionComplete={isActionComplete}
             setActionComplete={setActionComplete}
-            isRefetching={isRefetching}
           />
         </Grid>
       </Grid>
@@ -244,7 +242,6 @@ const WorkflowList = (props) => {
     userDetails,
     isActionComplete,
     setActionComplete,
-    isRefetching,
   } = props;
 
   const userId = userDetails?.data.users_id;
@@ -331,7 +328,7 @@ const WorkflowList = (props) => {
 
     // nodestatus
     for (const key in message?.result?.object.status.nodes) {
-      // console.log(message?.result?.object.status.nodes[key]);
+      console.log(message?.result?.object.status.nodes[key]);
       if (message?.result?.object.status.nodes[key].type === "Pod") {
         workflowNodes.push({
           name: message?.result?.object.status.nodes[key].displayName,
@@ -341,7 +338,7 @@ const WorkflowList = (props) => {
         });
       }
     }
-    // console.log(workflowNodes);
+    console.log(workflowNodes);
     workflowStatus.node_status = workflowNodes;
 
     if (
@@ -352,10 +349,10 @@ const WorkflowList = (props) => {
     ) {
       queryClient.invalidateQueries("workflows");
       updateWorkflowStatus(workflowStatus);
+      setActionComplete(false);
 
       setTriggeredWorkflowStatus(false);
       setCurrentWorkflowId("");
-      setActionComplete(false);
     } else {
       workflowStatus.user_Id = "3";
       workflowStatus.workflow_name = workflowName;
@@ -363,9 +360,9 @@ const WorkflowList = (props) => {
       workflowStatus.status = "Failed";
       queryClient.invalidateQueries("workflows");
       updateWorkflowStatus(workflowStatus);
+      setActionComplete(false);
       setTriggeredWorkflowStatus(false);
       setCurrentWorkflowId("");
-      setActionComplete(false);
     }
     // }
   }

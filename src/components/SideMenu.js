@@ -58,7 +58,7 @@ export default function SideMenu(props) {
         <Toolbar />
         <Box sx={{ overflow: "auto" }}>
           <List>
-            <ListItem button key="0" component={NavLink} to={`/projects`}>
+            <ListItem button component={NavLink} to={`/projects`}>
               <Grid item container direction="column">
                 <Grid item xs={6}>
                   <ListItemIcon sx={{ pt: 2 }}>
@@ -75,6 +75,42 @@ export default function SideMenu(props) {
                 </Grid>
               </Grid>
             </ListItem>
+
+            {/* <ListItem button component={NavLink} to={`/role`}>
+              <Grid item container direction="column">
+                <Grid item xs={6}>
+                  <ListItemIcon sx={{ pt: 2 }}>
+                    <AssignmentIcon />
+                  </ListItemIcon>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="span"
+                    sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+                  >
+                    Roles
+                  </Typography>
+                </Grid>
+              </Grid>
+            </ListItem> */}
+
+            {/* <ListItem button component={NavLink} to={`/users`}>
+              <Grid item container direction="column">
+                <Grid item xs={6}>
+                  <ListItemIcon sx={{ pt: 2 }}>
+                    <AssignmentIcon />
+                  </ListItemIcon>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="span"
+                    sx={{ lineHeight: 2, fontWeight: "light", fontSize: 11 }}
+                  >
+                    Users
+                  </Typography>
+                </Grid>
+              </Grid>
+            </ListItem> */}
 
             <Routes>
               {submenus.map((route, index) => (

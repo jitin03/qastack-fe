@@ -290,7 +290,7 @@ const Records = (props) => {
   const classes = {};
   const [selectionModel, setSelectionModel] = useState([]);
 
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(20);
 
   const [rowsState, setRowsState] = useState({
     page: 0,
@@ -347,7 +347,7 @@ const Records = (props) => {
               }
               pageSize={pageSize}
               onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-              rowsPerPageOptions={[5, 10, 20]}
+              rowsPerPageOptions={[20, 50, 80]}
               loading={waitForComponents}
               onSelectionModelChange={(newSelectionModel) => {
                 console.log("newSelectionModel", newSelectionModel);

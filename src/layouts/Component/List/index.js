@@ -67,7 +67,7 @@ export default function ComponentList() {
 
   let { id } = useParams();
   let { projectKey: projectId } = useParams();
-  const pages = [10, 20, 50];
+  const pages = [20, 50, 80];
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
 
@@ -205,11 +205,12 @@ const Components = (props) => {
   const { preloadedData, projectKey, waitForComponents, setRowsPerPage } =
     props;
   const { handleRightDrawer } = useGlobalContext();
+
   const { selectionModel, setSelectionModel } = useProjectContext();
   const classes = {};
 
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(20);
   const [loading, setLoading] = useState(false);
 
   const [rowsState, setRowsState] = useState({
@@ -305,7 +306,7 @@ const Components = (props) => {
           setPageSize(newPageSize);
           setRowsPerPage(newPageSize);
         }}
-        rowsPerPageOptions={[10, 15, 25]}
+        rowsPerPageOptions={[20, 50, 80]}
         loading={waitForComponents}
         selectionModel={selectionModel}
         onSelectionModelChange={(newSelectionModel) => {

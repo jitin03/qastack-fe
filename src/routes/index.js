@@ -21,6 +21,8 @@ import ForgotPassword from "../layouts/ForgotPassword";
 import ResetPassword from "../layouts/ForgotPassword/resetPassword";
 import { ImportTestCases } from "../layouts/TestCase/Import";
 import { WorkflowReview } from "../layouts/Workflow/Review";
+import Roles from "../layouts/Roles/List";
+import Users from "../layouts/Users/List";
 
 const routes = [
   // {
@@ -87,6 +89,19 @@ const routes = [
     path: "/projects",
     component: <Project />,
     title: "All Projects",
+    needsAuth: true,
+  },
+  {
+    path: "/role",
+    component: <Roles />,
+    title: "Roles",
+    needsAuth: true,
+  },
+
+  {
+    path: "/users",
+    component: <Users />,
+    title: "Users",
     needsAuth: true,
   },
   {
